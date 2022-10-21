@@ -4,4 +4,3 @@ local.settings.json
 test
 .venv
 references
-.flake8
