@@ -21,6 +21,7 @@ def identifier(req: func.HttpRequest):
 
 def email(req: func.HttpRequest):
     '''Get the user's email'''
+    return req.headers.get("x-ms-client-principal-name")
 
 
 def name(req: func.HttpRequest):
