@@ -1,21 +1,35 @@
-import azure.functions as func
+'''
+Pull out user-related information from the request headers.
+
+Functions:
+  identifier(req) -> string
+  email(req) -> string
+  name(req) -> string
+  picture_url -> string
+'''
+
 import base64
 import json
 
-
-def id(req: func.HttpRequest):
-    return req.headers.get("x-ms-client-principal-id")
+import azure.functions as func
 
 
 def identifier(req: func.HttpRequest):
-    return req.headers.get("x-ms-client-principal-name")
+    '''Get the unique identifier for the user'''
+    return req.headers.get("x-ms-client-principal-id")
+
+
+def email(req: func.HttpRequest):
+    '''Get the user's email'''
 
 
 def name(req: func.HttpRequest):
+    '''Get the user's name'''
     return __get_claim(req, "name")
 
 
 def picture_url(req: func.HttpRequest):
+    '''Get the URL for the user's picture'''
     return __get_claim(req, "picture")
 
 
