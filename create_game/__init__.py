@@ -18,5 +18,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     logging.info('Python HTTP trigger function processed a request.')
 
-    return func.HttpResponse(json.dumps({'id': user.identifier(req), 'identifier': user.email(
-        req), 'name': user.name(req), 'picture': user.picture_url(req)}))
+    return func.HttpResponse(
+        json.dumps(
+            {'id': user.identifier(req),
+             'identifier': user.email(req),
+             'name': user.name(req),
+             'picture': user.picture_url(req)}))
