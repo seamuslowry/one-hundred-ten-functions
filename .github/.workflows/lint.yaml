@@ -1,5 +1,5 @@
-name: Checks
-on: [pull_request]
+name: Lint Python
+  on: [pull_request]
 
 jobs:
   build:
