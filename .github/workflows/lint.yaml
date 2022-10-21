@@ -2,6 +2,7 @@ name: Lint Python
 on:
   push:
     branches:
+      - "**"
       - !main
 
 jobs:
