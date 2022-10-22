@@ -7,3 +7,4 @@ references
 .pylintrc
 .coverage
 .coveragerc
+requirements-*.txt
