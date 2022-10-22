@@ -8,8 +8,6 @@ import azure.functions as func
 from auth.user import User
 
 
-
-
 def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Currently, return found authentication information for the user.
