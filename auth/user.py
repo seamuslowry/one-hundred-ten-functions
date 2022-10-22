@@ -23,6 +23,10 @@ class User:
         self.name = name
         self.picture_url = picture_url
 
+    def to_json(self):
+        '''Return a JSON representation of the user'''
+        return str(self)
+
     @staticmethod
     def from_request(req: func.HttpRequest):
         '''Create a user object from a passed request'''
