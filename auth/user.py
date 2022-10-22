@@ -1,9 +1,5 @@
 '''
 Pull out user-related information from the request headers.
-
-Classes:
-    User
-    GoogleUser
 '''
 
 import base64
