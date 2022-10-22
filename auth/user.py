@@ -14,31 +14,50 @@ import json
 import azure.functions as func
 
 
-def identifier(req: func.HttpRequest):
-    '''Get the unique identifier for the user'''
-    return req.headers.get("x-ms-client-principal-id")
+class User:
+    '''A class to interact with users using information from the request'''
 
+    def __init__(self, identifier, email, name, picture_url):
+        self.identifier = identifier
+        self.email = email
+        self.name = name
+        self.picture_url = picture_url
 
-def email(req: func.HttpRequest):
-    '''Get the user's email'''
-    return req.headers.get("x-ms-client-principal-name")
+    @staticmethod
+    def from_request(req: func.HttpRequest):
+        '''Create a user object from a passed request'''
+        return User(
+            User.__identifier(req),
+            User.__email(req),
+            User.__name(req),
+            User.__picture_url(req))
 
+    @staticmethod
+    def __identifier(req: func.HttpRequest):
+        '''Get the unique identifier for the user'''
+        return req.headers.get("x-ms-client-principal-id")
 
-def name(req: func.HttpRequest):
-    '''Get the user's name'''
-    return __get_claim(req, "name")
+    @staticmethod
+    def __email(req: func.HttpRequest):
+        '''Get the user's email'''
+        return req.headers.get("x-ms-client-principal-name")
 
+    @staticmethod
+    def __name(req: func.HttpRequest):
+        '''Get the user's name'''
+        return User.__get_claim(req, "name")
 
-def picture_url(req: func.HttpRequest):
-    '''Get the URL for the user's picture'''
-    return __get_claim(req, "picture")
+    @staticmethod
+    def __picture_url(req: func.HttpRequest):
+        '''Get the URL for the user's picture'''
+        return User.__get_claim(req, "picture")
 
+    @staticmethod
+    def __get_claims(req: func.HttpRequest):
+        token = req.headers.get("x-ms-client-principal")
+        return json.loads(base64.b64decode(token).decode('utf-8'))['claims'] if token else []
 
-def __get_claims(req: func.HttpRequest):
-    token = req.headers.get("x-ms-client-principal")
-    return json.loads(base64.b64decode(token).decode('utf-8'))['claims'] if token else []
-
-
-def __get_claim(req: func.HttpRequest, claim: str):
-    claims = __get_claims(req)
-    return next((x for x in claims if x['typ'] == claim), {'val': None})['val']
+    @staticmethod
+    def __get_claim(req: func.HttpRequest, claim: str):
+        claims = User.__get_claims(req)
+        return next((x for x in claims if x['typ'] == claim), {'val': None})['val']
