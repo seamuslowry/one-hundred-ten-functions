@@ -12,38 +12,6 @@ import json
 import azure.functions as func
 
 
-def parse_user_type(req: func.HttpRequest):
-    '''Get the authentication provider for the user'''
-    return req.headers.get("x-ms-client-principal-idp")
-
-
-def parse_identifier(req: func.HttpRequest):
-    '''Get the unique identifier for the user'''
-    return req.headers.get("x-ms-client-principal-id")
-
-
-def parse_name(req: func.HttpRequest):
-    '''Get the user's name'''
-    return get_claim(req, "name")
-
-
-def parse_picture_url(req: func.HttpRequest):
-    '''Get the URL for the user's picture'''
-    return get_claim(req, "picture")
-
-
-def get_claims(req: func.HttpRequest):
-    '''Get the claims array from the request'''
-    token = req.headers.get("x-ms-client-principal")
-    return json.loads(base64.b64decode(token).decode('utf-8'))['claims'] if token else []
-
-
-def get_claim(req: func.HttpRequest, claim: str):
-    '''Get a specific claim from the request'''
-    claims = get_claims(req)
-    return next((x for x in claims if x['typ'] == claim), {'val': None})['val']
-
-
 class User:
     '''A class to interact with users using information from the request'''
 
@@ -61,7 +29,7 @@ class User:
         if parse_user_type(req) == "google":
             return GoogleUser.from_request(req)
 
-        raise NotImplementedError("Unauthenticated or authenticated with an unknown value")
+        return User(parse_identifier(req), parse_name(req))
 
 
 class GoogleUser(User):
@@ -76,5 +44,32 @@ class GoogleUser(User):
         '''Create a Google user object from a passed request'''
         return GoogleUser(
             parse_identifier(req),
-            parse_name(req),
-            parse_picture_url(req))
+            get_claim(req, "name"),
+            get_claim(req, "picture"))
+
+
+def parse_user_type(req: func.HttpRequest):
+    '''Get the authentication provider for the user'''
+    return req.headers.get("x-ms-client-principal-idp")
+
+
+def parse_identifier(req: func.HttpRequest):
+    '''Get the unique identifier for the user'''
+    return req.headers.get("x-ms-client-principal-id")
+
+
+def parse_name(req: func.HttpRequest):
+    '''Get the user's name'''
+    return req.headers.get("x-ms-client-principal-name")
+
+
+def get_claims(req: func.HttpRequest):
+    '''Get the claims array from the request'''
+    token = req.headers.get("x-ms-client-principal")
+    return json.loads(base64.b64decode(token).decode('utf-8'))['claims'] if token else []
+
+
+def get_claim(req: func.HttpRequest, claim: str):
+    '''Get a specific claim from the request'''
+    claims = get_claims(req)
+    return next((x for x in claims if x['typ'] == claim), {'val': None})['val']
