@@ -5,3 +5,4 @@ tests
 .venv
 references
 .pylintrc
+.coverage
