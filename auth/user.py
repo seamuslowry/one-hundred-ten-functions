@@ -1,11 +1,8 @@
 '''
 Pull out user-related information from the request headers.
 
-Functions:
-  identifier(req) -> string
-  email(req) -> string
-  name(req) -> string
-  picture_url -> string
+Classes:
+    User
 '''
 
 import base64
