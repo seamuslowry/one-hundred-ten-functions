@@ -4,3 +4,4 @@ local.settings.json
 tests
 .venv
 references
+.pylintrc

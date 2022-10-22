@@ -1,23 +1,18 @@
-'''
-Pull out user-related information from the request headers.
-'''
+'''Pull out user-related information from the request headers.'''
 
 import base64
 import json
 
 import azure.functions as func
+from serialization.serializable import Serializable
 
 
-class User:
+class User(Serializable):
     '''A class to interact with users using information from the request'''
 
     def __init__(self, identifier, name):
         self.identifier = identifier
         self.name = name
-
-    def to_json(self):
-        '''Return a JSON representation of the user'''
-        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True)
 
     @staticmethod
     def from_request(req: func.HttpRequest):
