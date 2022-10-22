@@ -1,5 +1,4 @@
 '''Create game unit tests'''
-import json
 import unittest
 
 import azure.functions as func
