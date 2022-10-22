@@ -6,3 +6,4 @@ tests
 references
 .pylintrc
 .coverage
+.coveragerc
