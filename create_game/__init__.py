@@ -1,7 +1,6 @@
 '''
 Expose a function for Azure Functions to call to create a new game
 '''
-import json
 import logging
 
 import azure.functions as func
