@@ -28,6 +28,6 @@ jobs:
           python-version: 3.x
       - run: pip install --upgrade pip
       - run: pip install -r requirements.txt
-      - run: pip install pytest==v1.1.3 coverage==6.5.0
+      - run: pip install pytest==1.1.3 coverage==6.5.0
       - run: coverage run -m pytest tests
       - run: coverage report --fail-under=100
