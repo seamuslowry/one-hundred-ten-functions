@@ -8,7 +8,7 @@ import json
 import logging
 
 import azure.functions as func
-from auth import user
+from auth.user import User
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
@@ -18,9 +18,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     logging.info('Python HTTP trigger function processed a request.')
 
-    return func.HttpResponse(
-        json.dumps(
-            {'id': user.identifier(req),
-             'identifier': user.email(req),
-             'name': user.name(req),
-             'picture': user.picture_url(req)}))
+    return func.HttpResponse(User.from_request(req).to_json())
