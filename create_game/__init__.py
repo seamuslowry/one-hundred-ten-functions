@@ -1,10 +1,6 @@
 '''
 Expose a function for Azure Functions to call to create a new game
-
-Functions:
-    main(req) -> res
 '''
-import json
 import logging
 
 import azure.functions as func

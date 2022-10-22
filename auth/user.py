@@ -1,8 +1,5 @@
 '''
 Pull out user-related information from the request headers.
-
-Classes:
-    User
 '''
 
 import base64
@@ -14,11 +11,9 @@ import azure.functions as func
 class User:
     '''A class to interact with users using information from the request'''
 
-    def __init__(self, identifier, email, name, picture_url):
+    def __init__(self, identifier, name):
         self.identifier = identifier
-        self.email = email
         self.name = name
-        self.picture_url = picture_url
 
     def to_json(self):
         '''Return a JSON representation of the user'''
@@ -27,38 +22,50 @@ class User:
     @staticmethod
     def from_request(req: func.HttpRequest):
         '''Create a user object from a passed request'''
-        return User(
-            User.__identifier(req),
-            User.__email(req),
-            User.__name(req),
-            User.__picture_url(req))
+        if parse_user_type(req) == "google":
+            return GoogleUser.from_request(req)
+
+        return User(parse_identifier(req), parse_name(req))
+
+
+class GoogleUser(User):
+    '''A class to interact with Google authenticated users using information from the request'''
+
+    def __init__(self, identifier, name, picture_url):
+        super().__init__(identifier, name)
+        self.picture_url = picture_url
 
     @staticmethod
-    def __identifier(req: func.HttpRequest):
-        '''Get the unique identifier for the user'''
-        return req.headers.get("x-ms-client-principal-id")
+    def from_request(req: func.HttpRequest):
+        '''Create a Google user object from a passed request'''
+        return GoogleUser(
+            parse_identifier(req),
+            get_claim(req, "name"),
+            get_claim(req, "picture"))
 
-    @staticmethod
-    def __email(req: func.HttpRequest):
-        '''Get the user's email'''
-        return req.headers.get("x-ms-client-principal-name")
 
-    @staticmethod
-    def __name(req: func.HttpRequest):
-        '''Get the user's name'''
-        return User.__get_claim(req, "name")
+def parse_user_type(req: func.HttpRequest):
+    '''Get the authentication provider for the user'''
+    return req.headers.get("x-ms-client-principal-idp")
 
-    @staticmethod
-    def __picture_url(req: func.HttpRequest):
-        '''Get the URL for the user's picture'''
-        return User.__get_claim(req, "picture")
 
-    @staticmethod
-    def __get_claims(req: func.HttpRequest):
-        token = req.headers.get("x-ms-client-principal")
-        return json.loads(base64.b64decode(token).decode('utf-8'))['claims'] if token else []
+def parse_identifier(req: func.HttpRequest):
+    '''Get the unique identifier for the user'''
+    return req.headers.get("x-ms-client-principal-id")
 
-    @staticmethod
-    def __get_claim(req: func.HttpRequest, claim: str):
-        claims = User.__get_claims(req)
-        return next((x for x in claims if x['typ'] == claim), {'val': None})['val']
+
+def parse_name(req: func.HttpRequest):
+    '''Get the user's name'''
+    return req.headers.get("x-ms-client-principal-name")
+
+
+def get_claims(req: func.HttpRequest):
+    '''Get the claims array from the request'''
+    token = req.headers.get("x-ms-client-principal")
+    return json.loads(base64.b64decode(token).decode('utf-8'))['claims'] if token else []
+
+
+def get_claim(req: func.HttpRequest, claim: str):
+    '''Get a specific claim from the request'''
+    claims = get_claims(req)
+    return next((x for x in claims if x['typ'] == claim), {'val': None})['val']
