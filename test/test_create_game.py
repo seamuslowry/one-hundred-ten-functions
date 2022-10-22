@@ -1,7 +1,7 @@
 '''Create game unit tests'''
 import unittest
+from test.helpers import build_request
 
-import azure.functions as func
 from auth.user import User
 from create_game import main
 
@@ -9,13 +9,12 @@ from create_game import main
 class TestCreateGame(unittest.TestCase):
     '''Create Game unit tests'''
 
-    def test_run_without_auth(self):
+    URL = '/api/create_game'
+    METHOD = 'GET'
+
+    def test_run(self):
         '''Test running the function without auth info'''
-        req = func.HttpRequest(
-            method='GET',
-            body=b'',
-            url='/api/create_game'
-        )
+        req = build_request()
 
         resp = main(req)
 
