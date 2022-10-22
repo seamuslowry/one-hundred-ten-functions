@@ -1,9 +1,10 @@
 '''Create game unit tests'''
 import unittest
-from test.helpers import build_request
 
 from auth.user import User
 from create_game import main
+
+from tests.helpers import build_request
 
 
 class TestCreateGame(unittest.TestCase):
