@@ -1,9 +1,6 @@
 name: Code Quality
 on:
-  push:
-    branches:
-      - "**"
-      - "!main"
+  - push
 
 jobs:
   lint:
