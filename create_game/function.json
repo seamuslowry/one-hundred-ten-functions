@@ -9,6 +9,15 @@
       "methods": ["post"]
     },
     {
+      "type": "cosmosDB",
+      "direction": "out",
+      "name": "cosmos",
+      "databaseName": "hundred-and-ten-db",
+      "collectionName": "game",
+      "createIfNotExists": "true",
+      "connectionStringSetting": "CosmosDb"
+    },
+    {
       "type": "http",
       "direction": "out",
       "name": "$return"
