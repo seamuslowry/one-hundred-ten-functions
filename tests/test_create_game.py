@@ -1,5 +1,6 @@
 '''Create game unit tests'''
 import unittest
+import unittest.mock as mock
 
 from auth.user import User
 from create_game import main
@@ -13,11 +14,13 @@ class TestCreateGame(unittest.TestCase):
     URL = '/api/create_game'
     METHOD = 'GET'
 
-    def test_run(self):
+    @mock.patch('azure.functions.Out')
+    def test_run(self, cosmos_mock):
         '''Test running the function without auth info'''
         req = build_request()
 
-        resp = main(req)
+        resp = main(req, cosmos_mock)
 
+        cosmos_mock.set.assert_called_once()
         self.assertEqual(resp.get_body(),
                          User(None, None).to_json().encode('utf-8'))
