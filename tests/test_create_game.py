@@ -11,9 +11,6 @@ from tests.helpers import build_request
 class TestCreateGame(unittest.TestCase):
     '''Create Game unit tests'''
 
-    URL = '/api/create_game'
-    METHOD = 'GET'
-
     @mock.patch('azure.functions.Out')
     def test_run(self, cosmos_mock):
         '''Test running the function without auth info'''
