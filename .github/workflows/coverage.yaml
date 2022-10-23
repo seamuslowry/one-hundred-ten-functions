@@ -14,5 +14,5 @@ jobs:
       - run: pip install --upgrade pip
       - run: pip install -r requirements.txt
       - run: pip install -r requirements-tests.txt
-      - run: coverage run -m pytest tests
+      - run: coverage run --branch -m pytest tests
       - run: coverage report --fail-under=100
