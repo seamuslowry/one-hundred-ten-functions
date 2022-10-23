@@ -1,6 +1,5 @@
 '''Create game unit tests'''
-import unittest
-import unittest.mock as mock
+from unittest import TestCase, mock
 
 from auth.user import User
 from create_game import main
@@ -8,7 +7,7 @@ from create_game import main
 from tests.helpers import build_request
 
 
-class TestCreateGame(unittest.TestCase):
+class TestCreateGame(TestCase):
     '''Create Game unit tests'''
 
     @mock.patch('azure.functions.Out')
