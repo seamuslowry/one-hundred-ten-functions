@@ -19,5 +19,8 @@ class TestCreateGame(unittest.TestCase):
 
         resp = main(req)
 
-        self.assertEqual(resp.get_body(),
-                         User(None, None).to_json().encode('utf-8'))
+        self.assertEqual(
+            resp.get_body(),
+            User(
+                req.headers.get('x-ms-client-principal-id') or '',
+                req.headers.get('x-ms-client-principal-name') or '').to_json().encode('utf-8'))
