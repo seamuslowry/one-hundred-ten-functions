@@ -18,5 +18,8 @@ class TestCreateGame(TestCase):
         resp = main(req, cosmos_mock)
 
         cosmos_mock.set.assert_called_once()
-        self.assertEqual(resp.get_body(),
-                         User(None, None).to_json().encode('utf-8'))
+        self.assertEqual(
+            resp.get_body(),
+            User(
+                req.headers.get('x-ms-client-principal-id') or '',
+                req.headers.get('x-ms-client-principal-name') or '').to_json().encode('utf-8'))
