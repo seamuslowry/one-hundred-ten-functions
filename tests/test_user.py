@@ -1,4 +1,6 @@
 '''User unit tests'''
+import base64
+import json
 import unittest
 
 from auth.user import GoogleUser, User
@@ -18,7 +20,18 @@ class TestUser(unittest.TestCase):
 
     def test_google_user(self):
         '''Init a user from Google'''
-        user = User.from_request(build_request(headers={'x-ms-client-principal-idp': 'google'}))
+        user = User.from_request(
+            build_request(
+                headers={'x-ms-client-principal-idp': 'google',
+                         'x-ms-client-principal': base64.b64encode(json.dumps({'claims': []})
+                                                                   .encode()).decode()}))
 
         self.assertTrue(isinstance(user, User))
         self.assertTrue(isinstance(user, GoogleUser))
+
+    def test_invalid_user(self):
+        '''Do not allow initializing an invalid user'''
+        req = build_request(
+            headers={'x-ms-client-principal-idp': ''})
+
+        self.assertRaises(ValueError, User.from_request, req)
