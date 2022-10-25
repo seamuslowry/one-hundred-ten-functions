@@ -26,7 +26,7 @@ class User(Serializable):
 class GoogleUser(User):
     '''A class to interact with Google authenticated users using information from the request'''
 
-    def __init__(self, identifier, name, picture_url):
+    def __init__(self, identifier: str, name: str, picture_url: str):
         super().__init__(identifier, name)
         self.picture_url = picture_url
 
@@ -63,7 +63,7 @@ def get_claims(req: func.HttpRequest):
 def get_claim(req: func.HttpRequest, claim: str):
     '''Get a specific claim from the request'''
     claims = get_claims(req)
-    return next((x for x in claims if x['typ'] == claim), {'val': None})['val']
+    return next((x for x in claims if x['typ'] == claim), {'val': ''})['val']
 
 
 def get_header(req: func.HttpRequest, key: str) -> str:
