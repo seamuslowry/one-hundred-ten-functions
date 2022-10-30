@@ -4,15 +4,4 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-    name: PyTest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: 3.9
-      - run: pip install --upgrade pip
-      - run: pip install -r requirements.txt
-      - run: pip install -r requirements-tests.txt
-      - run: coverage run --branch -m pytest tests
-      - run: coverage report --fail-under=100
+    uses: seamuslowry/workflows/.github/workflows/test_python.yml@main
