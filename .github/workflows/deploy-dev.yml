@@ -1,0 +1,14 @@
+name: Deploy to Dev
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  test:
+    environment: dev
+    uses: seamuslowry/hundred-and-ten/.github/workflows/deploy.yml@main
+    with:
+      name: hundredandten
+    secrets:
+      azure_publish_profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
