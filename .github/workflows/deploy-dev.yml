@@ -10,3 +10,5 @@ jobs:
     with:
       name: hundredandten
       environment: dev
+    secrets:
+      azure_publish_profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
