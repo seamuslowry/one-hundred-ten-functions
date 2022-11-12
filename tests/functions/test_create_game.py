@@ -9,8 +9,8 @@ class TestCreateGame(TestCase):
     '''Create Game unit tests'''
 
     @mock.patch('azure.functions.Out')
-    def test_run(self, cosmos_mock):
-        '''Test running the function without auth info'''
+    def test_creates_game(self, cosmos_mock):
+        '''On hitting the create request a game is created and returned'''
         req = build_request()
 
         resp = main(req, cosmos_mock)
