@@ -7,7 +7,7 @@ on:
 jobs:
   test:
     environment: dev
-    uses: seamuslowry/hundred-and-ten-serverless/.github/workflows/deploy.yml@main
+    uses: seamuslowry/hundred-and-ten-serverless/.github/workflows/deploy.yml@feature/ci_deploy
     with:
       name: hundredandten
     secrets:
