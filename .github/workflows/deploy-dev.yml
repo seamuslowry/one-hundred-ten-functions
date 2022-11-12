@@ -6,7 +6,6 @@ on:
 
 jobs:
   deploy:
-    environment: dev
     uses: seamuslowry/hundred-and-ten-serverless/.github/workflows/deploy.yml@feature/ci_deploy
     with:
       name: hundredandten
