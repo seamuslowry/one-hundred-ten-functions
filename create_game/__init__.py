@@ -5,6 +5,7 @@ import logging
 import uuid
 
 import azure.functions as func
+from hundredandten import HundredAndTen
 
 from auth.user import User
 
@@ -16,8 +17,22 @@ def main(req: func.HttpRequest, cosmos: func.Out[func.Document]) -> func.HttpRes
     '''
     logging.info('Python HTTP trigger function processed a request.')
 
+    user = User.from_request(req)
+
+    game = HundredAndTen()
+    game.join(user.identifier)
+
     cosmos.set(func.Document.from_dict({
-        'id': str(uuid.uuid4())
+        'id': game.seed,
+        'seed': game.seed,
+        'people': list(map(
+            lambda p: {
+                'identifier': p.identifier,
+                'roles': list(map(lambda r: r.name, p.roles)),
+                'automate': p.automate
+            },
+            game.people)),
+        'rounds': []
     }))
 
     return func.HttpResponse(User.from_request(req).to_json())
