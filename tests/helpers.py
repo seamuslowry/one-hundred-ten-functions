@@ -1,4 +1,5 @@
 '''Helpers to perform common functions during testing'''
+import json
 from typing import Optional
 
 import azure.functions as func
@@ -13,3 +14,8 @@ def build_request(
                  'x-ms-client-principal-name': 'name',
                  **(headers or {})},
         params=params)
+
+
+def read_response_body(body: bytes) -> dict:
+    '''Read the response body and return it as a dict'''
+    return json.loads(body.decode('utf-8'))
