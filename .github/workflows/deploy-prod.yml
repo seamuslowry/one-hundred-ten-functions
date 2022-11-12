@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    uses: seamuslowry/hundred-and-ten-serverless/.github/workflows/deploy.yml@feature/ci_deploy
+    uses: seamuslowry/workflows/.github/workflows/deploy_python_functions.yml@feature/deploy_python_function
     with:
       name: hundredandten
     secrets:
