@@ -4,10 +4,9 @@ import base64
 import json
 
 import azure.functions as func
-from serialization.serializable import Serializable
 
 
-class User(Serializable):
+class User:
     '''A class to interact with users using information from the request'''
 
     def __init__(self, identifier: str, name: str):

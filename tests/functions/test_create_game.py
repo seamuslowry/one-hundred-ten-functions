@@ -1,10 +1,8 @@
 '''Create game unit tests'''
 from unittest import TestCase, mock
 
-from auth.user import User
 from create_game import main
-
-from tests.helpers import build_request
+from tests.helpers import build_request, read_response_body
 
 
 class TestCreateGame(TestCase):
@@ -18,8 +16,4 @@ class TestCreateGame(TestCase):
         resp = main(req, cosmos_mock)
 
         cosmos_mock.set.assert_called_once()
-        self.assertEqual(
-            resp.get_body(),
-            User(
-                req.headers.get('x-ms-client-principal-id') or '',
-                req.headers.get('x-ms-client-principal-name') or '').to_json().encode('utf-8'))
+        self.assertIsNotNone(read_response_body(resp.get_body())['id'])

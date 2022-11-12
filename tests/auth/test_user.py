@@ -4,7 +4,6 @@ import json
 import unittest
 
 from auth.user import GoogleUser, User
-
 from tests.helpers import build_request
 
 
