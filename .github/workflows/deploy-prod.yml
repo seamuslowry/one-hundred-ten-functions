@@ -2,16 +2,16 @@ name: Deploy to Prod
 on:
   push:
     branches:
-      - main
+      - feature/create_game
 
 jobs:
-  tag-new-version:
-    uses: seamuslowry/workflows/.github/workflows/tag.yml@main
-    secrets:
-      gh_token: ${{ secrets.GITHUB_TOKEN }}
+  # tag-new-version:
+  #   uses: seamuslowry/workflows/.github/workflows/tag.yml@main
+  #   secrets:
+  #     gh_token: ${{ secrets.GITHUB_TOKEN }}
 
   deploy:
-    needs: tag-new-version # does not currently use output, but should run after tagging
+    # needs: tag-new-version # does not currently use output, but should run after tagging
     uses: seamuslowry/workflows/.github/workflows/deploy_python_functions.yml@main
     with:
       name: hundredandten
