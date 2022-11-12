@@ -5,6 +5,13 @@ on:
       - main
 
 jobs:
+  tag-new-version:
+    uses: seamuslowry/workflows/.github/workflows/tag.yml@main
+    secrets:
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
+
+
+jobs:
   deploy:
     uses: seamuslowry/workflows/.github/workflows/deploy_python_functions.yml@main
     with:
