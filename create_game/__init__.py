@@ -13,12 +13,13 @@ from service import GameService
 
 def main(req: func.HttpRequest, cosmos: func.Out[func.Document]) -> func.HttpResponse:
     '''
-    Currently, return found authentication information for the user.
-    Eventually, create a new 110 game.
+    Create a new 110 game.
     '''
-    logging.info('Python HTTP trigger function processed a request.')
+    logging.info('Initiating create game request.')
 
     user = User.from_request(req)
+
+    logging.debug('Creating game for %s', user.identifier)
 
     game = HundredAndTen()
     game.join(user.identifier)
@@ -26,5 +27,7 @@ def main(req: func.HttpRequest, cosmos: func.Out[func.Document]) -> func.HttpRes
     db_game = GameService.to_db_dict(game)
 
     cosmos.set(func.Document.from_dict(db_game))
+
+    logging.debug('Game %s created successfully', db_game['id'])
 
     return func.HttpResponse(json.dumps(db_game))
