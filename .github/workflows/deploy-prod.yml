@@ -1,0 +1,13 @@
+name: Deploy to Prod
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    uses: seamuslowry/hundred-and-ten-serverless/.github/workflows/deploy.yml@feature/ci_deploy
+    with:
+      name: hundredandten
+    secrets:
+      azure_publish_profile: ${{ secrets.AZURE_PROD_PUBLISH }}
