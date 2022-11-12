@@ -9,6 +9,5 @@ jobs:
     uses: seamuslowry/hundred-and-ten-serverless/.github/workflows/deploy.yml@feature/ci_deploy
     with:
       name: hundredandten
-      environment: dev
     secrets:
-      azure_publish_profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+      azure_publish_profile: ${{ secrets.AZURE_DEV_PUBLISH }}
