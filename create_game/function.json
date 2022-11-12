@@ -12,7 +12,7 @@
       "type": "cosmosDB",
       "direction": "out",
       "name": "cosmos",
-      "databaseName": "hundred-and-ten-db",
+      "databaseName": "dev",
       "collectionName": "game",
       "createIfNotExists": "true",
       "connectionStringSetting": "CosmosDb"

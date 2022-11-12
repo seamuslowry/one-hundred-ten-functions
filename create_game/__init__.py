@@ -5,6 +5,7 @@ import logging
 import uuid
 
 import azure.functions as func
+
 from auth.user import User
 
 
@@ -16,8 +17,7 @@ def main(req: func.HttpRequest, cosmos: func.Out[func.Document]) -> func.HttpRes
     logging.info('Python HTTP trigger function processed a request.')
 
     cosmos.set(func.Document.from_dict({
-        'id': '1',
-        'uuid': str(uuid.uuid4())
+        'id': str(uuid.uuid4())
     }))
 
     return func.HttpResponse(User.from_request(req).to_json())
