@@ -26,7 +26,7 @@ class GoogleUser(User):
     '''A class to interact with Google authenticated users using information from the request'''
 
     def __init__(self, identifier: str, name: str, picture_url: str):
-        super().__init__(identifier, name)
+        super().__init__(f'goog-{identifier}', name)
         self.picture_url = picture_url
 
     @staticmethod
