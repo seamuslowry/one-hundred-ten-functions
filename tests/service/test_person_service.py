@@ -1,7 +1,7 @@
-'''Game Service unit tests'''
+'''Person Service unit tests'''
 from unittest import TestCase
 
-from hundredandten.group import Person
+from hundredandten.group import Person, Player
 
 from service import person
 
@@ -9,6 +9,14 @@ from service import person
 class TestPersonService(TestCase):
     '''Unit tests to ensure person translations work as expected'''
 
-    def test_game_to_db(self):
-        '''HundredAndTen can be converted for DB save'''
-        self.assertIsNotNone(person.to_db_dict(Person('')))
+    def test_person_to_db(self):
+        '''Person can be converted for DB save'''
+        converted = person.to_db_dict(Person(''))
+        self.assertIsNotNone(converted)
+        self.assertFalse('hand' in converted.keys())
+
+    def test_player_to_db(self):
+        '''Player can be converted for DB save'''
+        converted = person.to_db_dict(Player(''))
+        self.assertIsNotNone(converted)
+        self.assertTrue('hand' in converted.keys())
