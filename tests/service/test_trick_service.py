@@ -14,7 +14,7 @@ class TestTrickService(TestCase):
 
     def test_trick_to_db(self):
         '''Trick can be converted for DB save'''
-        self.assertIsNotNone(trick.to_db_dict(
+        self.assertIsNotNone(trick.to_db(
             Trick(
                 SelectableSuit.CLUBS,
                 [Play('', Card(CardNumber.ACE, SelectableSuit.CLUBS))])))

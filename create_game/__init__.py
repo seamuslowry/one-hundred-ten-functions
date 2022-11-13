@@ -24,7 +24,7 @@ def main(req: func.HttpRequest, cosmos: func.Out[func.Document]) -> func.HttpRes
     game = HundredAndTen()
     game.join(user.identifier)
 
-    db_game = GameService.to_db_dict(game)
+    db_game = GameService.to_db(game)
 
     cosmos.set(func.Document.from_dict(db_game))
 

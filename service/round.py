@@ -7,15 +7,15 @@ from hundredandten.round import Round
 from service import card, person, trick
 
 
-def to_db_dict(game_round: Round) -> dict:
+def to_db(game_round: Round) -> dict:
     '''Convert the provided round into the dict structure used by the DB'''
     return {
-        'players': list(map(person.to_db_dict, game_round.players)),
+        'players': list(map(person.to_db, game_round.players)),
         'bids': list(map(bid_to_db_dict, game_round.bids)),
         'deck': deck_to_db_dict(game_round.deck),
         'trump': game_round.trump.name if game_round.trump else None,
         'discards': list(map(discard_to_db_dict, game_round.discards)),
-        'tricks': list(map(trick.to_db_dict, game_round.tricks))
+        'tricks': list(map(trick.to_db, game_round.tricks))
     }
 
 
@@ -39,5 +39,5 @@ def discard_to_db_dict(discard: Discard) -> dict:
     '''Convert the provided discard into the dict structure used by the DB'''
     return {
         'identifier': discard.identifier,
-        'discards': list(map(card.to_db_dict, discard.cards))
+        'discards': list(map(card.to_db, discard.cards))
     }
