@@ -1,4 +1,4 @@
-name: Deploy to Prod
+name: Deploy to Staging
 on:
   push:
     branches:
@@ -16,4 +16,4 @@ jobs:
     with:
       name: hundredandten
     secrets:
-      azure_publish_profile: ${{ secrets.AZURE_PROD_PUBLISH }}
+      azure_publish_profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
