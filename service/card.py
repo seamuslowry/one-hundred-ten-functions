@@ -3,7 +3,7 @@
 from hundredandten.deck import Card
 
 
-def to_db_dict(card: Card) -> dict:
+def to_db(card: Card) -> dict:
     '''Convert the provided card into the dict structure used by the DB'''
     return {
         'suit': card.suit.name,

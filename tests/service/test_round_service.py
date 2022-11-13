@@ -16,12 +16,12 @@ class TestRoundService(TestCase):
 
     def test_blank_round_to_db(self):
         '''Initial round can be converted for DB save'''
-        self.assertIsNotNone(RoundService.to_db_dict(
+        self.assertIsNotNone(RoundService.to_db(
             Round()))
 
     def test_no_trump_round_to_db(self):
         '''Round in bidding can be converted for DB save'''
-        self.assertIsNotNone(RoundService.to_db_dict(
+        self.assertIsNotNone(RoundService.to_db(
             Round(
                 players=Group([Player('')]),
                 bids=[Bid('', BidAmount.PASS)],
@@ -30,7 +30,7 @@ class TestRoundService(TestCase):
 
     def test_trump_round_to_db(self):
         '''Round in discard can be converted for DB save'''
-        self.assertIsNotNone(RoundService.to_db_dict(
+        self.assertIsNotNone(RoundService.to_db(
             Round(
                 players=Group([Player('')]),
                 bids=[Bid('', BidAmount.PASS)],
@@ -40,7 +40,7 @@ class TestRoundService(TestCase):
 
     def test_discard_round_to_db(self):
         '''Round discarding can be converted for DB save'''
-        self.assertIsNotNone(RoundService.to_db_dict(
+        self.assertIsNotNone(RoundService.to_db(
             Round(
                 players=Group([Player('')]),
                 bids=[Bid('', BidAmount.PASS)],
@@ -51,7 +51,7 @@ class TestRoundService(TestCase):
 
     def test_tricks_round_to_db(self):
         '''Round playing tricks can be converted for DB save'''
-        self.assertIsNotNone(RoundService.to_db_dict(
+        self.assertIsNotNone(RoundService.to_db(
             Round(
                 players=Group([Player('')]),
                 bids=[Bid('', BidAmount.PASS)],
