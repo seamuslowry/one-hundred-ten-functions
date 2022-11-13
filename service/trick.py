@@ -14,7 +14,7 @@ def to_db_dict(trick: Trick) -> dict:
 
 
 def play_to_db_dict(play: Play) -> dict:
-    '''Convert the provided plays into the dict structure used by the DB'''
+    '''Convert the provided play into the dict structure used by the DB'''
     return {
         'identifier': play.identifier,
         'card': card.to_db_dict(play.card)
