@@ -2,7 +2,7 @@ name: Deploy to Staging
 on:
   push:
     branches:
-      - main
+      - chore/staging_env
 
 jobs:
   tag-new-version:
