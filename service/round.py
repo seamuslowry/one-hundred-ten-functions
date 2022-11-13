@@ -11,15 +11,15 @@ def to_db(game_round: Round) -> dict:
     '''Convert the provided round into the dict structure used by the DB'''
     return {
         'players': list(map(person.to_db, game_round.players)),
-        'bids': list(map(bid_to_db_dict, game_round.bids)),
-        'deck': deck_to_db_dict(game_round.deck),
+        'bids': list(map(__bid_to_db, game_round.bids)),
+        'deck': __deck_to_db(game_round.deck),
         'trump': game_round.trump.name if game_round.trump else None,
-        'discards': list(map(discard_to_db_dict, game_round.discards)),
+        'discards': list(map(__discard_to_db, game_round.discards)),
         'tricks': list(map(trick.to_db, game_round.tricks))
     }
 
 
-def deck_to_db_dict(deck: Deck) -> dict:
+def __deck_to_db(deck: Deck) -> dict:
     '''Convert the provided deck into the dict structure used by the DB'''
     return {
         'seed': deck.seed,
@@ -27,7 +27,7 @@ def deck_to_db_dict(deck: Deck) -> dict:
     }
 
 
-def bid_to_db_dict(bid: Bid) -> dict:
+def __bid_to_db(bid: Bid) -> dict:
     '''Convert the provided bid into the dict structure used by the DB'''
     return {
         'identifier': bid.identifier,
@@ -35,7 +35,7 @@ def bid_to_db_dict(bid: Bid) -> dict:
     }
 
 
-def discard_to_db_dict(discard: Discard) -> dict:
+def __discard_to_db(discard: Discard) -> dict:
     '''Convert the provided discard into the dict structure used by the DB'''
     return {
         'identifier': discard.identifier,
