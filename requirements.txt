@@ -1,2 +1,2 @@
 azure-functions==1.12.0
-hundredandten==1.0.0
+hundredandten==1.0.1
