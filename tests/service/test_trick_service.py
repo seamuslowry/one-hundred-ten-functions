@@ -18,3 +18,11 @@ class TestTrickService(TestCase):
             Trick(
                 SelectableSuit.CLUBS,
                 [Play('', Card(CardNumber.ACE, SelectableSuit.CLUBS))])))
+
+    def test_trick_from_db(self):
+        '''Trick can be converted from DB save'''
+        initial_trick = Trick(
+            SelectableSuit.CLUBS,
+            [Play('', Card(CardNumber.ACE, SelectableSuit.CLUBS))])
+
+        self.assertEqual(initial_trick, trick.from_db(trick.to_db(initial_trick)))
