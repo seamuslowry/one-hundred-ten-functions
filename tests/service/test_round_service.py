@@ -14,49 +14,59 @@ from service import round as RoundService
 class TestRoundService(TestCase):
     '''Unit tests to ensure round translations work as expected'''
 
-    def test_blank_round_to_db(self):
-        '''Initial round can be converted for DB save'''
-        self.assertIsNotNone(RoundService.to_db(
-            Round()))
+    def test_blank_round_conversion(self):
+        '''Initial round can be converted to and from a DB save'''
+        initial_round = Round()
 
-    def test_no_trump_round_to_db(self):
-        '''Round in bidding can be converted for DB save'''
-        self.assertIsNotNone(RoundService.to_db(
-            Round(
-                players=Group([Player('')]),
-                bids=[Bid('', BidAmount.PASS)],
-                deck=Deck()
-            )))
+        self.assertEqual(initial_round, RoundService.from_db(RoundService.to_db(
+            initial_round)))
 
-    def test_trump_round_to_db(self):
-        '''Round in discard can be converted for DB save'''
-        self.assertIsNotNone(RoundService.to_db(
-            Round(
-                players=Group([Player('')]),
-                bids=[Bid('', BidAmount.PASS)],
-                deck=Deck(),
-                trump=SelectableSuit.CLUBS
-            )))
+    def test_no_trump_round_conversion(self):
+        '''Round in bidding can be converted to and from a DB save'''
+        initial_round = Round(
+            players=Group([Player('')]),
+            bids=[Bid('', BidAmount.PASS)],
+            deck=Deck()
+        )
 
-    def test_discard_round_to_db(self):
-        '''Round discarding can be converted for DB save'''
-        self.assertIsNotNone(RoundService.to_db(
-            Round(
-                players=Group([Player('')]),
-                bids=[Bid('', BidAmount.PASS)],
-                deck=Deck(),
-                trump=SelectableSuit.CLUBS,
-                discards=[Discard('', [])]
-            )))
+        self.assertEqual(initial_round, RoundService.from_db(RoundService.to_db(
+            initial_round)))
 
-    def test_tricks_round_to_db(self):
-        '''Round playing tricks can be converted for DB save'''
-        self.assertIsNotNone(RoundService.to_db(
-            Round(
-                players=Group([Player('')]),
-                bids=[Bid('', BidAmount.PASS)],
-                deck=Deck(),
-                trump=SelectableSuit.CLUBS,
-                discards=[Discard('', [])],
-                tricks=[Trick(SelectableSuit.CLUBS, [])]
-            )))
+    def test_trump_round_conversion(self):
+        '''Round in discard can be converted to and from a DB save'''
+        initial_round = Round(
+            players=Group([Player('')]),
+            bids=[Bid('', BidAmount.PASS)],
+            deck=Deck(),
+            trump=SelectableSuit.CLUBS
+        )
+
+        self.assertEqual(initial_round, RoundService.from_db(RoundService.to_db(
+            initial_round)))
+
+    def test_discard_round_conversion(self):
+        '''Round discarding can be converted to and from a DB save'''
+        initial_round = Round(
+            players=Group([Player('')]),
+            bids=[Bid('', BidAmount.PASS)],
+            deck=Deck(),
+            trump=SelectableSuit.CLUBS,
+            discards=[Discard('', [])]
+        )
+
+        self.assertEqual(initial_round, RoundService.from_db(RoundService.to_db(
+            initial_round)))
+
+    def test_tricks_round_conversion(self):
+        '''Round playing tricks can be converted to and from a DB save'''
+        initial_round = Round(
+            players=Group([Player('')]),
+            bids=[Bid('', BidAmount.PASS)],
+            deck=Deck(),
+            trump=SelectableSuit.CLUBS,
+            discards=[Discard('', [])],
+            tricks=[Trick(SelectableSuit.CLUBS, [])]
+        )
+
+        self.assertEqual(initial_round, RoundService.from_db(RoundService.to_db(
+            initial_round)))
