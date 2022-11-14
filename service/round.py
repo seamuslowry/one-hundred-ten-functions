@@ -1,7 +1,9 @@
 '''Facilitate interaction with rounds in the DB'''
 
 from hundredandten.actions import Bid, Discard
+from hundredandten.constants import BidAmount, SelectableSuit
 from hundredandten.deck import Deck
+from hundredandten.group import Group
 from hundredandten.round import Round
 
 from service import card, person, trick
@@ -19,12 +21,35 @@ def to_db(game_round: Round) -> dict:
     }
 
 
+def from_db(game_round: dict) -> Round:
+    '''Convert the provided dict from the DB into a Round instance'''
+    trump_name = game_round['trump']
+    trump = SelectableSuit[game_round['trump']] if trump_name else None
+
+    return Round(
+        players=Group(list(map(person.player_from_db, game_round['players']))),
+        bids=list(map(__bid_from_db, game_round['bids'])),
+        deck=__deck_from_db(game_round['deck']),
+        discards=list(map(__discard_from_db, game_round['discards'])),
+        trump=trump,
+        tricks=list(map(trick.from_db, game_round['tricks']))
+    )
+
+
 def __deck_to_db(deck: Deck) -> dict:
     '''Convert the provided deck into the dict structure used by the DB'''
     return {
         'seed': deck.seed,
         'pulled': deck.pulled
     }
+
+
+def __deck_from_db(deck: dict) -> Deck:
+    '''Convert the provided dict from the DB into a Deck instance'''
+    return Deck(
+        seed=deck['seed'],
+        pulled=deck['pulled']
+    )
 
 
 def __bid_to_db(bid: Bid) -> dict:
@@ -35,9 +60,25 @@ def __bid_to_db(bid: Bid) -> dict:
     }
 
 
+def __bid_from_db(bid: dict) -> Bid:
+    '''Convert the provided dict from the DB into a Bid instance'''
+    return Bid(
+        identifier=bid['identifier'],
+        amount=BidAmount(bid['amount'])
+    )
+
+
 def __discard_to_db(discard: Discard) -> dict:
     '''Convert the provided discard into the dict structure used by the DB'''
     return {
         'identifier': discard.identifier,
-        'discards': list(map(card.to_db, discard.cards))
+        'cards': list(map(card.to_db, discard.cards))
     }
+
+
+def __discard_from_db(discard: dict) -> Discard:
+    '''Convert the provided dict from the DB into a Discard instance'''
+    return Discard(
+        identifier=discard['identifier'],
+        cards=list(map(card.from_db, discard['cards']))
+    )
