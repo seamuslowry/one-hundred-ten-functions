@@ -11,7 +11,7 @@ def to_db(trick: Trick) -> dict:
     '''Convert the provided trick into the dict structure used by the DB'''
     return {
         'plays': list(map(__play_to_db, trick.plays)),
-        'round_trump': trick.round_trump
+        'round_trump': trick.round_trump.name
     }
 
 

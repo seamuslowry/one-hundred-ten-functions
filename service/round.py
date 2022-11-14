@@ -24,7 +24,7 @@ def to_db(game_round: Round) -> dict:
 def from_db(game_round: dict) -> Round:
     '''Convert the provided dict from the DB into a Round instance'''
     trump_name = game_round['trump']
-    trump = SelectableSuit[game_round['trump']] if trump_name else None
+    trump = SelectableSuit[trump_name] if trump_name else None
 
     return Round(
         players=Group(list(map(person.player_from_db, game_round['players']))),
