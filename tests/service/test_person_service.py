@@ -15,11 +15,16 @@ class TestPersonService(TestCase):
     def test_person_conversion(self):
         '''Person can be converted to and from a DB save'''
         initial_person = Person('', roles={GameRole.ORGANIZER})
-        self.assertEqual(initial_person, person.person_from_db(person.to_db(initial_person)))
+        converted_person = person.person_from_db(person.to_db(initial_person))
+        self.assertEqual(initial_person, converted_person)
+        self.assertGreater(len(converted_person.roles), 0)
 
     def test_player_conversion(self):
         '''Player can be converted to and from a DB save'''
         initial_player = Player(
             '', roles={RoundRole.DEALER},
             hand=[Card(CardNumber.ACE, SelectableSuit.CLUBS)])
-        self.assertEqual(initial_player, person.player_from_db(person.to_db(initial_player)))
+        converted_player = person.player_from_db(person.to_db(initial_player))
+        self.assertEqual(initial_player, person.player_from_db(person.to_db(converted_player)))
+        self.assertGreater(len(converted_player.roles), 0)
+        self.assertGreater(len(converted_player.hand), 0)
