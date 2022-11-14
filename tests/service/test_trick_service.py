@@ -12,15 +12,8 @@ from service import trick
 class TestTrickService(TestCase):
     '''Unit tests to ensure trick translations work as expected'''
 
-    def test_trick_to_db(self):
-        '''Trick can be converted for DB save'''
-        self.assertIsNotNone(trick.to_db(
-            Trick(
-                SelectableSuit.CLUBS,
-                [Play('', Card(CardNumber.ACE, SelectableSuit.CLUBS))])))
-
-    def test_trick_from_db(self):
-        '''Trick can be converted from DB save'''
+    def test_trick_conversion(self):
+        '''Trick can be converted to and from a DB save'''
         initial_trick = Trick(
             SelectableSuit.CLUBS,
             [Play('', Card(CardNumber.ACE, SelectableSuit.CLUBS))])
