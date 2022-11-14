@@ -15,4 +15,6 @@ class TestGameService(TestCase):
 
     def test_game_from_db(self):
         '''HundredAndTen can be converted from DB save'''
-        self.assertIsNotNone(GameService.from_db(GameService.to_db(HundredAndTen())))
+        initial_game = HundredAndTen(seed='test_game')
+
+        self.assertEqual(initial_game, GameService.from_db(GameService.to_db(initial_game)))

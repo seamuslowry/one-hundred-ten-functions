@@ -1,6 +1,7 @@
 '''Facilitate interaction with the game DB'''
 
 from hundredandten import HundredAndTen
+from hundredandten.constants import Accessibility
 from hundredandten.group import Group
 
 from service import person
@@ -22,7 +23,7 @@ def from_db(game: dict) -> HundredAndTen:
     '''Convert the provided dict from the DB into a HundredAndTen instance'''
     return HundredAndTen(
         seed=game['seed'],
-        accessibility=game['accessibility'],
+        accessibility=Accessibility[game['accessibility']],
         people=Group(list(map(person.person_from_db, game['people']))),
         rounds=list(map(round_service.from_db, game['rounds']))
     )
