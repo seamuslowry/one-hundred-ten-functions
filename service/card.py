@@ -16,23 +16,21 @@ def to_db(card: Card) -> dict:
 def from_db(card: dict) -> Card:
     '''Convert the provided dict from the DB into a Card instance'''
 
-    selectable_suit = None
-    unselectable_suit = None
+    suit = None
 
     try:
-        selectable_suit = SelectableSuit[card['suit']]
+        suit = SelectableSuit[card['suit']]
     except KeyError:
         pass
 
     try:
-        unselectable_suit = UnselectableSuit[card['suit']]
+        suit = UnselectableSuit[card['suit']]
     except KeyError:
         pass
 
-    if not (selectable_suit and unselectable_suit):
-        raise KeyError('Invalid suit passed for card')
+    assert suit
 
     return Card(
-        suit=selectable_suit or unselectable_suit,
+        suit=suit,
         number=CardNumber[card['number']]
     )
