@@ -12,3 +12,7 @@ class TestGameService(TestCase):
     def test_game_to_db(self):
         '''HundredAndTen can be converted for DB save'''
         self.assertIsNotNone(GameService.to_db(HundredAndTen()))
+
+    def test_game_from_db(self):
+        '''HundredAndTen can be converted from DB save'''
+        self.assertIsNotNone(GameService.from_db(GameService.to_db(HundredAndTen())))

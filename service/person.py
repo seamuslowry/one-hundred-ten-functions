@@ -2,7 +2,7 @@
 
 from typing import Union
 
-from hundredandten.constants import GameRole
+from hundredandten.constants import GameRole, RoundRole
 from hundredandten.group import Person, Player
 
 from service import card
@@ -32,6 +32,6 @@ def player_from_db(person: dict) -> Player:
     return Player(
         identifier=person['identifier'],
         automate=person['automate'],
-        roles=set(map(lambda r: GameRole[r], person['roles'])),
+        roles=set(map(lambda r: RoundRole[r], person['roles'])),
         hand=list(map(card.from_db, person['hand']))
     )
