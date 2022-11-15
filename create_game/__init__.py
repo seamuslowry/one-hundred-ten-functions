@@ -26,8 +26,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     game.join(user.identifier)
     game.people.add_role(user.identifier, GameRole.ORGANIZER)
 
-    db_game = GameService.save(game)
+    game = GameService.save(game)
 
-    logging.debug('Game %s created successfully', db_game['id'])
+    logging.debug('Game %s created successfully', game.seed)
 
-    return func.HttpResponse(json.dumps(db_game))
+    return func.HttpResponse(json.dumps(GameService.to_client(game)))
