@@ -6,12 +6,13 @@ import logging
 
 import azure.functions as func
 from hundredandten import HundredAndTen
+from hundredandten.constants import GameRole
 
 from auth.user import User
 from service import GameService
 
 
-def main(req: func.HttpRequest, cosmos: func.Out[func.Document]) -> func.HttpResponse:
+def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Create a new 110 game.
     '''
@@ -23,10 +24,9 @@ def main(req: func.HttpRequest, cosmos: func.Out[func.Document]) -> func.HttpRes
 
     game = HundredAndTen()
     game.join(user.identifier)
+    game.people.add_role(user.identifier, GameRole.ORGANIZER)
 
-    db_game = GameService.to_db(game)
-
-    cosmos.set(func.Document.from_dict(db_game))
+    db_game = GameService.save(game)
 
     logging.debug('Game %s created successfully', db_game['id'])
 

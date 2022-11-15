@@ -10,15 +10,6 @@
       "route": "createGame"
     },
     {
-      "type": "cosmosDB",
-      "direction": "out",
-      "name": "cosmos",
-      "databaseName": "%DatabaseName%",
-      "collectionName": "game",
-      "createIfNotExists": "true",
-      "connectionStringSetting": "CosmosDb"
-    },
-    {
       "type": "http",
       "direction": "out",
       "name": "$return"
