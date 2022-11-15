@@ -6,6 +6,12 @@ from hundredandten.group import Group
 
 from service import person
 from service import round as round_service
+from service.cosmos import game_client
+
+
+def save(game: HundredAndTen) -> dict:
+    '''Save the provided game to the DB'''
+    return game_client.upsert_item(to_db(game))
 
 
 def to_db(game: HundredAndTen) -> dict:

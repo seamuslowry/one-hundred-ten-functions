@@ -8,12 +8,15 @@ from tests.helpers import build_request, read_response_body
 class TestCreateGame(TestCase):
     '''Create Game unit tests'''
 
-    @mock.patch('azure.functions.Out')
-    def test_creates_game(self, cosmos_mock):
+    @mock.patch('service.GameService.save', return_value={})
+    def test_creates_game(self, save):
         '''On hitting the create request a game is created and returned'''
         req = build_request()
+        saved_value = {'id': 'new-id'}
 
-        resp = main(req, cosmos_mock)
+        save.return_value = saved_value
 
-        cosmos_mock.set.assert_called_once()
-        self.assertIsNotNone(read_response_body(resp.get_body())['id'])
+        resp = main(req)
+
+        save.assert_called_once()
+        self.assertEqual(read_response_body(resp.get_body()), saved_value)
