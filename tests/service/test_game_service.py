@@ -20,5 +20,5 @@ class TestGameService(TestCase):
         '''HundredAndTen can be saved to the DB'''
         game = HundredAndTen(seed='test_game')
 
-        GameService.save(game)
+        self.assertIsNotNone(GameService.save(game))
         game_client.upsert_item.assert_called_once()
