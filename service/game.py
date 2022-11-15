@@ -9,9 +9,9 @@ from service import round as round_service
 from service.cosmos import game_client
 
 
-def save(game: HundredAndTen) -> dict:
+def save(game: HundredAndTen) -> HundredAndTen:
     '''Save the provided game to the DB'''
-    return game_client.upsert_item(to_db(game))
+    return from_db(game_client.upsert_item(to_db(game)))
 
 
 def to_db(game: HundredAndTen) -> dict:
@@ -33,3 +33,8 @@ def from_db(game: dict) -> HundredAndTen:
         people=Group(list(map(person.person_from_db, game['people']))),
         rounds=list(map(round_service.from_db, game['rounds']))
     )
+
+
+def to_client(game: HundredAndTen) -> dict:
+    '''Convert the provided game into the structure it should provide the client'''
+    return to_db(game)
