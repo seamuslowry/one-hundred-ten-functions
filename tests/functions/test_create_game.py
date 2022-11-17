@@ -4,7 +4,7 @@ from unittest import TestCase, mock
 from create_game import main
 from models import Game
 from services import GameService
-from tests.helpers import build_request, read_response_body
+from tests.helpers import DEFAULT_ID, build_request, read_response_body
 
 
 class TestCreateGame(TestCase):
@@ -21,4 +21,6 @@ class TestCreateGame(TestCase):
         resp = main(req)
 
         save.assert_called_once()
-        self.assertEqual(read_response_body(resp.get_body()), GameService.json(saved_value))
+        self.assertEqual(
+            read_response_body(resp.get_body()),
+            GameService.json(saved_value, DEFAULT_ID))

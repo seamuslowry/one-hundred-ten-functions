@@ -28,4 +28,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     logging.debug('Game %s created successfully', game.seed)
 
-    return func.HttpResponse(json.dumps(GameService.json(game)))
+    return func.HttpResponse(json.dumps(GameService.json(game, user.identifier)))
