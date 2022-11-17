@@ -21,6 +21,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.debug('Creating game for %s', user.identifier)
 
     game = Game()
+    game.name = req.get_json().get('name', f'{user.name}\'s Game')
     game.join(user.identifier)
     game.people.add_role(user.identifier, GameRole.ORGANIZER)
 

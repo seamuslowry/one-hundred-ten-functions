@@ -1,4 +1,5 @@
 '''Create game unit tests'''
+import json
 from unittest import TestCase, mock
 
 from create_game import main
@@ -13,7 +14,7 @@ class TestCreateGame(TestCase):
     @mock.patch('services.GameService.save', return_value={})
     def test_creates_game(self, save):
         '''On hitting the create request a game is created and returned'''
-        req = build_request()
+        req = build_request(body=json.dumps({'name': 'test name'}).encode('utf-8'))
         saved_value = Game()
 
         save.return_value = saved_value
