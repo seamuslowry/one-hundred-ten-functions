@@ -35,6 +35,11 @@ def from_db(game: dict) -> HundredAndTen:
     )
 
 
-def to_client(game: HundredAndTen) -> dict:
+def json(game: HundredAndTen) -> dict:
     '''Convert the provided game into the structure it should provide the client'''
-    return to_db(game)
+    return {
+        'id': game.seed,
+        'accessibility': game.accessibility.name,
+        'people': list(map(person.json, game.people)),
+        'rounds': list(map(round_service.json, game.rounds))
+    }

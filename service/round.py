@@ -82,3 +82,19 @@ def __discard_from_db(discard: dict) -> Discard:
         identifier=discard['identifier'],
         cards=list(map(card.from_db, discard['cards']))
     )
+
+
+def json(game_round: Round) -> dict:
+    '''Convert the provided round into the structure it should provide the client'''
+    bidder = game_round.active_bidder
+    current_bid = game_round.active_bid
+
+    return {
+        'players': list(map(person.json, game_round.players)),
+        'bidder': person.json(bidder) if bidder else None,
+        'dealer': person.json(game_round.dealer),
+        'active_player': person.json(game_round.active_player),
+        'bid': current_bid.name if current_bid else None,
+        'trump': game_round.trump.name if game_round.trump else None,
+        'tricks': list(map(trick.json, game_round.tricks))
+    }

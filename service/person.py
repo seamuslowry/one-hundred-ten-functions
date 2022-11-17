@@ -1,6 +1,6 @@
 '''Facilitate interaction with persons in the DB'''
 
-from typing import Union
+from typing import Optional, Union
 
 from hundredandten.constants import GameRole, RoundRole
 from hundredandten.group import Person, Player
@@ -35,3 +35,14 @@ def player_from_db(person: dict) -> Player:
         roles=set(map(lambda r: RoundRole[r], person['roles'])),
         hand=list(map(card.from_db, person['hand']))
     )
+
+
+def json(person: Union[Person, Player], identifier: Optional[str] = '') -> dict:
+    '''Convert the provided person or player into the structure it should provide the client'''
+    return {
+        'identifier': person.identifier,
+        'roles': list(map(lambda r: r.name, person.roles)),
+        # hand should only be provided if the client is this individual
+        **({'hand': list(map(card.json, person.hand))}
+           if identifier == person.identifier and isinstance(person, Player) else {})
+    }

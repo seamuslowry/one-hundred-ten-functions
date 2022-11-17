@@ -34,3 +34,11 @@ def from_db(card: dict) -> Card:
         suit=suit,
         number=CardNumber[card['number']]
     )
+
+
+def json(card: Card) -> dict:
+    '''Convert the provided card into the structure it should provide the client'''
+    return {
+        'suit': card.suit.name,
+        'number': card.number.name
+    }

@@ -22,4 +22,4 @@ class TestCreateGame(TestCase):
         resp = main(req)
 
         save.assert_called_once()
-        self.assertEqual(read_response_body(resp.get_body()), GameService.to_client(saved_value))
+        self.assertEqual(read_response_body(resp.get_body()), GameService.json(saved_value))
