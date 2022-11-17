@@ -6,9 +6,8 @@ import logging
 
 import azure.functions as func
 
-from auth.user import User
 from models import Game, GameRole
-from services import GameService
+from services import GameService, UserService
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
@@ -17,7 +16,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     logging.info('Initiating create game request.')
 
-    user = User.from_request(req)
+    user = UserService.from_request(req)
 
     logging.debug('Creating game for %s', user.identifier)
 

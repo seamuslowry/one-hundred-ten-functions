@@ -1,25 +1,26 @@
-'''User unit tests'''
+'''User Service unit tests'''
 import base64
 import json
-import unittest
+from unittest import TestCase
 
-from auth.user import GoogleUser, User
+from models import GoogleUser, User
+from services import UserService
 from tests.helpers import build_request
 
 
-class TestUser(unittest.TestCase):
-    '''User unit tests'''
+class TestUserService(TestCase):
+    '''Unit tests to ensure user operations work as expected'''
 
     def test_unknown_user(self):
         '''Init a user from an unknown source'''
-        user = User.from_request(build_request())
+        user = UserService.from_request(build_request())
 
         self.assertTrue(isinstance(user, User))
         self.assertFalse(isinstance(user, GoogleUser))
 
     def test_google_user(self):
         '''Init a user from Google'''
-        user = User.from_request(
+        user = UserService.from_request(
             build_request(
                 headers={'x-ms-client-principal-idp': 'google',
                          'x-ms-client-principal': base64.b64encode(json.dumps({'claims': []})
@@ -33,4 +34,4 @@ class TestUser(unittest.TestCase):
         req = build_request(
             headers={'x-ms-client-principal-idp': ''})
 
-        self.assertRaises(ValueError, User.from_request, req)
+        self.assertRaises(ValueError, UserService.from_request, req)

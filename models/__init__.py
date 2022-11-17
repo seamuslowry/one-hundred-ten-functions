@@ -10,3 +10,4 @@ from hundredandten.round import Round
 from hundredandten.trick import Trick
 
 from models.game import Game
+from models.user import GoogleUser, User
