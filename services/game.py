@@ -1,11 +1,19 @@
 '''Facilitate interaction with the game DB'''
 
+from enum import Enum
 from typing import Union
 
 from models import Accessibility, Game, GameStatus, Group, RoundStatus
 from services import person
 from services import round as round_service
 from services.cosmos import game_client
+
+
+class PartitionKey(Enum):
+    '''Enum value for partition keys'''
+    WAITING_FOR_PLAYERS = GameStatus.WAITING_FOR_PLAYERS.name
+    WON = GameStatus.WON.name
+    PLAYING = 'PLAYING'
 
 
 def save(game: Game) -> Game:
@@ -17,7 +25,7 @@ def to_db(game: Game) -> dict:
     '''Convert the provided game into the dict structure used by the DB'''
     return {
         'id': game.id,
-        'status': __partition_status(game.status),
+        'status': __partition_key(game.status).name,
         'name': game.name,
         'seed': game.seed,
         'accessibility': game.accessibility.name,
@@ -52,7 +60,7 @@ def json(game: Game, client: str) -> dict:
     }
 
 
-def __partition_status(status: Union[GameStatus, RoundStatus]) -> str:
+def __partition_key(status: Union[GameStatus, RoundStatus]) -> PartitionKey:
     if isinstance(status, RoundStatus):
-        return 'PLAYING'
-    return status.name
+        return PartitionKey.PLAYING
+    return PartitionKey(status.name)
