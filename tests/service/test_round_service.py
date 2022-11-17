@@ -1,13 +1,8 @@
 '''Round Service unit tests'''
 from unittest import TestCase
 
-from hundredandten.actions import Bid, Discard
-from hundredandten.constants import BidAmount, SelectableSuit
-from hundredandten.deck import Deck
-from hundredandten.group import Group, Player
-from hundredandten.round import Round
-from hundredandten.trick import Trick
-
+from models import (Bid, BidAmount, Deck, Discard, Group, Player, Round,
+                    SelectableSuit, Trick)
 from service import round as RoundService
 
 

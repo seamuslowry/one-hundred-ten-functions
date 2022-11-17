@@ -1,10 +1,7 @@
 '''Card Service unit tests'''
 from unittest import TestCase
 
-from hundredandten.constants import (CardNumber, SelectableSuit,
-                                     UnselectableSuit)
-from hundredandten.deck import Card
-
+from models import Card, CardNumber, SelectableSuit, UnselectableSuit
 from service import card
 
 

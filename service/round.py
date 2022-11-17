@@ -1,11 +1,6 @@
 '''Facilitate interaction with rounds in the DB'''
 
-from hundredandten.actions import Bid, Discard
-from hundredandten.constants import BidAmount, SelectableSuit
-from hundredandten.deck import Deck
-from hundredandten.group import Group
-from hundredandten.round import Round
-
+from models import Bid, BidAmount, Deck, Discard, Group, Round, SelectableSuit
 from service import card, person, trick
 
 

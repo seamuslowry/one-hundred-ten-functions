@@ -1,23 +1,21 @@
 '''Facilitate interaction with the game DB'''
 
-from hundredandten import HundredAndTen
-from hundredandten.constants import Accessibility
-from hundredandten.group import Group
-
+from models import Accessibility, Game, Group
 from service import person
 from service import round as round_service
 from service.cosmos import game_client
 
 
-def save(game: HundredAndTen) -> HundredAndTen:
+def save(game: Game) -> Game:
     '''Save the provided game to the DB'''
     return from_db(game_client.upsert_item(to_db(game)))
 
 
-def to_db(game: HundredAndTen) -> dict:
+def to_db(game: Game) -> dict:
     '''Convert the provided game into the dict structure used by the DB'''
     return {
-        'id': game.seed,
+        'id': game.id,
+        'name': game.name,
         'seed': game.seed,
         'accessibility': game.accessibility.name,
         'people': list(map(person.to_db, game.people)),
@@ -25,9 +23,11 @@ def to_db(game: HundredAndTen) -> dict:
     }
 
 
-def from_db(game: dict) -> HundredAndTen:
-    '''Convert the provided dict from the DB into a HundredAndTen instance'''
-    return HundredAndTen(
+def from_db(game: dict) -> Game:
+    '''Convert the provided dict from the DB into a Game instance'''
+    return Game(
+        id=game['id'],
+        name=game['name'],
         seed=game['seed'],
         accessibility=Accessibility[game['accessibility']],
         people=Group(list(map(person.person_from_db, game['people']))),
@@ -35,10 +35,11 @@ def from_db(game: dict) -> HundredAndTen:
     )
 
 
-def json(game: HundredAndTen) -> dict:
+def json(game: Game) -> dict:
     '''Convert the provided game into the structure it should provide the client'''
     return {
-        'id': game.seed,
+        'id': game.id,
+        'name': game.name,
         'accessibility': game.accessibility.name,
         'people': list(map(person.json, game.people)),
         'rounds': list(map(round_service.json, game.rounds))

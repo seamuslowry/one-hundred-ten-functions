@@ -1,11 +1,8 @@
 '''Person Service unit tests'''
 from unittest import TestCase
 
-from hundredandten.constants import (CardNumber, GameRole, RoundRole,
-                                     SelectableSuit)
-from hundredandten.deck import Card
-from hundredandten.group import Person, Player
-
+from models import (Card, CardNumber, GameRole, Person, Player, RoundRole,
+                    SelectableSuit)
 from service import person
 
 

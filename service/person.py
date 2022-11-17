@@ -2,9 +2,7 @@
 
 from typing import Optional, Union
 
-from hundredandten.constants import GameRole, RoundRole
-from hundredandten.group import Person, Player
-
+from models import GameRole, Person, Player, RoundRole
 from service import card
 
 

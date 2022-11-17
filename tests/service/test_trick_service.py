@@ -1,11 +1,7 @@
 '''Trick Service unit tests'''
 from unittest import TestCase
 
-from hundredandten.actions import Play
-from hundredandten.constants import CardNumber, SelectableSuit
-from hundredandten.deck import Card
-from hundredandten.trick import Trick
-
+from models import Card, CardNumber, Play, SelectableSuit, Trick
 from service import trick
 
 

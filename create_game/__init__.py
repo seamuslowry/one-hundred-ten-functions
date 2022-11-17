@@ -5,10 +5,9 @@ import json
 import logging
 
 import azure.functions as func
-from hundredandten import HundredAndTen
-from hundredandten.constants import GameRole
 
 from auth.user import User
+from models import Game, GameRole
 from service import GameService
 
 
@@ -22,7 +21,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     logging.debug('Creating game for %s', user.identifier)
 
-    game = HundredAndTen()
+    game = Game()
     game.join(user.identifier)
     game.people.add_role(user.identifier, GameRole.ORGANIZER)
 

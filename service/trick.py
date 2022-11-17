@@ -1,9 +1,6 @@
 '''Facilitate interaction with tricks in the DB'''
 
-from hundredandten.actions import Play
-from hundredandten.constants import SelectableSuit
-from hundredandten.trick import Trick
-
+from models import Play, SelectableSuit, Trick
 from service import card
 
 
