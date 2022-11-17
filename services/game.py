@@ -1,6 +1,8 @@
 '''Facilitate interaction with the game DB'''
 
-from models import Accessibility, Game, Group
+from typing import Union
+
+from models import Accessibility, Game, GameStatus, Group, RoundStatus
 from services import person
 from services import round as round_service
 from services.cosmos import game_client
@@ -15,6 +17,7 @@ def to_db(game: Game) -> dict:
     '''Convert the provided game into the dict structure used by the DB'''
     return {
         'id': game.id,
+        'status': __partition_status(game.status),
         'name': game.name,
         'seed': game.seed,
         'accessibility': game.accessibility.name,
@@ -47,3 +50,9 @@ def json(game: Game, client: str) -> dict:
         'invitees': list(map(person.json, game.invitees)),
         'rounds': list(map(lambda r: round_service.json(r, client), game.rounds))
     }
+
+
+def __partition_status(status: Union[GameStatus, RoundStatus]) -> str:
+    if isinstance(status, RoundStatus):
+        return 'PLAYING'
+    return status.name

@@ -15,6 +15,21 @@ class TestGameService(TestCase):
 
         self.assertEqual(initial_game, GameService.from_db(GameService.to_db(initial_game)))
 
+    def test_game_conversion_partitions_waiting(self):
+        '''Game converts status to the name when waiting for players'''
+        initial_game = Game(id='test', seed='test_game')
+
+        self.assertEqual(initial_game.status.name,
+                         GameService.to_db(initial_game).get('status', ''))
+
+    def test_game_conversion_partitions_playing(self):
+        '''Game converts status to generic playing when in rounds'''
+        initial_game = Game(id='test', seed='test_game', rounds=[Round(
+            players=Group([Player(identifier='', roles={RoundRole.DEALER})]))])
+
+        self.assertNotEqual(initial_game.status.name,
+                            GameService.to_db(initial_game).get('status', ''))
+
     def test_game_client_conversion(self):
         '''Game can be converted to client json'''
         initial_game = Game(id='test', seed='test_game', rounds=[Round(
