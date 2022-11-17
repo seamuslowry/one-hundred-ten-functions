@@ -15,3 +15,11 @@ class TestTrickService(TestCase):
             [Play('', Card(CardNumber.ACE, SelectableSuit.CLUBS))])
 
         self.assertEqual(initial_trick, trick.from_db(trick.to_db(initial_trick)))
+
+    def test_trick_client_conversion(self):
+        '''Trick can be converted to client value'''
+        initial_trick = Trick(
+            SelectableSuit.CLUBS,
+            [Play('', Card(CardNumber.ACE, SelectableSuit.CLUBS))])
+
+        self.assertIsNotNone(trick.json(initial_trick))

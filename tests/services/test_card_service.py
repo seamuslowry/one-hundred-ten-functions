@@ -22,7 +22,7 @@ class TestCardService(TestCase):
         self.assertEqual(initial_card, card.from_db(
             card.to_db(initial_card)))
 
-    def test_client_conversion(self):
+    def test_card_client_conversion(self):
         '''Card can be converted to client value'''
         initial_card = Card(CardNumber.JOKER, UnselectableSuit.JOKER)
 
