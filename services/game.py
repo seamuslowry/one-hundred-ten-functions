@@ -1,9 +1,9 @@
 '''Facilitate interaction with the game DB'''
 
 from models import Accessibility, Game, Group
-from service import person
-from service import round as round_service
-from service.cosmos import game_client
+from services import person
+from services import round as round_service
+from services.cosmos import game_client
 
 
 def save(game: Game) -> Game:

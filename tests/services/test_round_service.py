@@ -3,7 +3,7 @@ from unittest import TestCase
 
 from models import (Bid, BidAmount, Deck, Discard, Group, Player, Round,
                     SelectableSuit, Trick)
-from service import round as RoundService
+from services import round as RoundService
 
 
 class TestRoundService(TestCase):

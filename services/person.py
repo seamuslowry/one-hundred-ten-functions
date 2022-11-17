@@ -3,7 +3,7 @@
 from typing import Optional, Union
 
 from models import GameRole, Person, Player, RoundRole
-from service import card
+from services import card
 
 
 def to_db(person: Union[Person, Player]) -> dict:

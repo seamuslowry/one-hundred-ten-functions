@@ -3,7 +3,7 @@ from unittest import TestCase, mock
 
 from create_game import main
 from models import Game
-from service import GameService
+from services import GameService
 from tests.helpers import build_request, read_response_body
 
 

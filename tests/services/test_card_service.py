@@ -2,7 +2,7 @@
 from unittest import TestCase
 
 from models import Card, CardNumber, SelectableSuit, UnselectableSuit
-from service import card
+from services import card
 
 
 class TestCardService(TestCase):

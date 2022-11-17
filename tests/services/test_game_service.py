@@ -2,8 +2,8 @@
 from unittest import TestCase
 
 from models import Game
-from service import GameService
-from service.cosmos import game_client
+from services import GameService
+from services.cosmos import game_client
 
 
 class TestGameService(TestCase):

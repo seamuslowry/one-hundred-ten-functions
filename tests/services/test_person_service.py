@@ -3,7 +3,7 @@ from unittest import TestCase
 
 from models import (Card, CardNumber, GameRole, Person, Player, RoundRole,
                     SelectableSuit)
-from service import person
+from services import person
 
 
 class TestPersonService(TestCase):

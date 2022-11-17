@@ -3,7 +3,7 @@ import importlib
 import os
 from unittest import TestCase, mock
 
-import service.cosmos
+import services.cosmos
 
 
 class TestDbConnection(TestCase):
@@ -12,7 +12,7 @@ class TestDbConnection(TestCase):
     @mock.patch('azure.cosmos.CosmosClient.from_connection_string')
     def test_doesnt_try_connect(self, try_connect):
         '''Won't try to connect if there's no connection string in the ENV'''
-        importlib.reload(service.cosmos)
+        importlib.reload(services.cosmos)
 
         try_connect.assert_not_called()
 
@@ -20,6 +20,6 @@ class TestDbConnection(TestCase):
     @mock.patch('azure.cosmos.CosmosClient.from_connection_string')
     def test_does_try_connect(self, try_connect):
         '''Will try to connect if there's no connection string in the ENV'''
-        importlib.reload(service.cosmos)
+        importlib.reload(services.cosmos)
 
         try_connect.assert_called_once()

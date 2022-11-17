@@ -2,7 +2,7 @@
 from unittest import TestCase
 
 from models import Card, CardNumber, Play, SelectableSuit, Trick
-from service import trick
+from services import trick
 
 
 class TestTrickService(TestCase):

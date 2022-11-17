@@ -8,7 +8,7 @@ import azure.functions as func
 
 from auth.user import User
 from models import Game, GameRole
-from service import GameService
+from services import GameService
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
