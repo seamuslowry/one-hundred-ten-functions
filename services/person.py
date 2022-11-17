@@ -35,12 +35,12 @@ def player_from_db(person: dict) -> Player:
     )
 
 
-def json(person: Union[Person, Player], identifier: Optional[str] = '') -> dict:
+def json(person: Union[Person, Player], client: Optional[str] = None) -> dict:
     '''Convert the provided person or player into the structure it should provide the client'''
     return {
         'identifier': person.identifier,
         'roles': list(map(lambda r: r.name, person.roles)),
         # hand should only be provided if the client is this individual
         **({'hand': list(map(card.json, person.hand))}
-           if identifier == person.identifier and isinstance(person, Player) else {})
+           if client == person.identifier and isinstance(person, Player) else {})
     }

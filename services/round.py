@@ -79,13 +79,13 @@ def __discard_from_db(discard: dict) -> Discard:
     )
 
 
-def json(game_round: Round) -> dict:
+def json(game_round: Round, client: str) -> dict:
     '''Convert the provided round into the structure it should provide the client'''
     bidder = game_round.active_bidder
     current_bid = game_round.active_bid
 
     return {
-        'players': list(map(person.json, game_round.players)),
+        'players': list(map(lambda p: person.json(p, client), game_round.players)),
         'active_player': person.json(game_round.active_player),
         'dealer': person.json(game_round.dealer),
         'bidder': person.json(bidder) if bidder else None,
