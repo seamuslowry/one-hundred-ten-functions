@@ -40,7 +40,10 @@ def json(game: Game, client: str) -> dict:
     return {
         'id': game.id,
         'name': game.name,
+        'status': game.status.name,
         'accessibility': game.accessibility.name,
-        'people': list(map(person.json, game.people)),
+        'organizer': person.json(game.organizer),
+        'players': list(map(person.json, game.players)),
+        'invitees': list(map(person.json, game.invitees)),
         'rounds': list(map(lambda r: round_service.json(r, client), game.rounds))
     }
