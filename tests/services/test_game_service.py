@@ -1,7 +1,7 @@
 '''Game Service unit tests'''
 from unittest import TestCase
 
-from models import Game
+from models import Game, Group, Player, Round, RoundRole
 from services import GameService
 from services.cosmos import game_client
 
@@ -14,6 +14,13 @@ class TestGameService(TestCase):
         initial_game = Game(id='test', seed='test_game')
 
         self.assertEqual(initial_game, GameService.from_db(GameService.to_db(initial_game)))
+
+    def test_game_client_conversion(self):
+        '''Game can be converted to client json'''
+        initial_game = Game(id='test', seed='test_game', rounds=[Round(
+            players=Group([Player(identifier='', roles={RoundRole.DEALER})]))])
+
+        self.assertIsNotNone(GameService.json(initial_game, ''))
 
     def test_game_save(self):
         '''Game can be saved to the DB'''

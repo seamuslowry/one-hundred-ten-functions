@@ -1,6 +1,7 @@
 '''Facilitate interaction with rounds in the DB'''
 
-from models import Bid, BidAmount, Deck, Discard, Group, Round, SelectableSuit
+from models import (Bid, BidAmount, Deck, Discard, Group, Round, RoundStatus,
+                    SelectableSuit)
 from services import card, person, trick
 
 
@@ -86,10 +87,13 @@ def json(game_round: Round, client: str) -> dict:
 
     return {
         'players': list(map(lambda p: person.json(p, client), game_round.players)),
-        'active_player': person.json(game_round.active_player),
         'dealer': person.json(game_round.dealer),
         'bidder': person.json(bidder) if bidder else None,
         'bid': current_bid.name if current_bid else None,
         'trump': game_round.trump.name if game_round.trump else None,
-        'tricks': list(map(trick.json, game_round.tricks))
+        'tricks': list(map(trick.json, game_round.tricks)),
+        # only active rounds have active players
+        **({'acive_player': game_round.active_player}
+           if game_round.status not in [RoundStatus.COMPLETED_NO_BIDDERS, RoundStatus.COMPLETED]
+           else {})
     }

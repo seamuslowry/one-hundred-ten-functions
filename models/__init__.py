@@ -2,8 +2,8 @@
 
 from hundredandten.actions import Bid, Discard, Play, SelectTrump, Unpass
 from hundredandten.constants import (Accessibility, BidAmount, CardNumber,
-                                     GameRole, RoundRole, SelectableSuit,
-                                     UnselectableSuit)
+                                     GameRole, RoundRole, RoundStatus,
+                                     SelectableSuit, UnselectableSuit)
 from hundredandten.deck import Card, Deck
 from hundredandten.group import Group, Person, Player
 from hundredandten.round import Round
