@@ -2,18 +2,58 @@
 
 import base64
 import json
+from enum import Enum
 
 import azure.functions as func
 
 from models import GoogleUser, User
+from services.cosmos import user_client
+
+
+class PartitionKey(str, Enum):
+    '''Enum value for partition keys'''
+    GOOGLE = "google"
+    UNKNOWN = "unknown"
 
 
 def from_request(req: func.HttpRequest) -> User:
     '''Create a user object from a passed request'''
-    if __parse_user_type(req) == "google":
+    return save(__from_request(req))
+
+
+def save(user: User) -> User:
+    '''Save the provided user to the DB'''
+    return __from_db(user_client.upsert_item(__to_db(user)))
+
+
+def __from_request(req: func.HttpRequest) -> User:
+    '''Create a user object from a passed request'''
+    if __parse_user_type(req) == PartitionKey.GOOGLE:
         return __google_user_from_request(req)
 
     return User(__parse_identifier(req), __parse_name(req))
+
+
+def __to_db(user: User) -> dict:
+    return {
+        'id': user.identifier,
+        'name': user.name,
+        'type': __partition_key(user).value,
+        **({'picture_url': user.picture_url} if isinstance(user, GoogleUser) else {})
+    }
+
+
+def __from_db(user: dict) -> User:
+    print(user)
+    if user['type'] == PartitionKey.GOOGLE:
+        return GoogleUser(user['id'], user['name'], user['picture_url'])
+    return User(user['id'], user['name'])
+
+
+def __partition_key(user: User) -> PartitionKey:
+    if isinstance(user, GoogleUser):
+        return PartitionKey.GOOGLE
+    return PartitionKey.UNKNOWN
 
 
 def __google_user_from_request(req: func.HttpRequest) -> GoogleUser:
