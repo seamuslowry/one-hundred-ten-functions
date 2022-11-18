@@ -25,7 +25,7 @@ def to_db(game: Game) -> dict:
     '''Convert the provided game into the dict structure used by the DB'''
     return {
         'id': game.id,
-        'status': __partition_key(game.status).name,
+        'status': __partition_key(game.status).value,
         'name': game.name,
         'seed': game.seed,
         'accessibility': game.accessibility.name,
