@@ -5,6 +5,7 @@ from unittest import TestCase
 
 from models import GoogleUser, User
 from services import UserService
+from services.cosmos import user_client
 from tests.helpers import build_request
 
 
@@ -20,14 +21,18 @@ class TestUserService(TestCase):
 
     def test_google_user(self):
         '''Init a user from Google'''
+        user_client.upsert_item.return_value = {
+            'type': 'google', 'identifier': '', 'name': '', 'picture_url': ''}
+
         user = UserService.from_request(
             build_request(
                 headers={'x-ms-client-principal-idp': 'google',
                          'x-ms-client-principal': base64.b64encode(json.dumps({'claims': []})
                                                                    .encode()).decode()}))
-
         self.assertTrue(isinstance(user, User))
         self.assertTrue(isinstance(user, GoogleUser))
+
+        user_client.upsert_item.reset_mock(return_value=True)
 
     def test_invalid_user(self):
         '''Do not allow initializing an invalid user'''
