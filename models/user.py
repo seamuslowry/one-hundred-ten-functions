@@ -19,6 +19,3 @@ class User:
 class GoogleUser(User):
     '''A class to interact with Google authenticated users'''
     picture_url: str = field(compare=False)
-
-    def __post_init__(self):
-        super().__init__(f'goog-{self.identifier}', self.name)
