@@ -5,11 +5,9 @@ import json
 import logging
 
 import azure.functions as func
-from hundredandten import HundredAndTen
-from hundredandten.constants import GameRole
 
-from auth.user import User
-from service import GameService
+from models import Game, GameRole
+from services import GameService, UserService
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
@@ -18,11 +16,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     logging.info('Initiating create game request.')
 
-    user = User.from_request(req)
+    user = UserService.from_request(req)
 
     logging.debug('Creating game for %s', user.identifier)
 
-    game = HundredAndTen()
+    game = Game()
+    game.name = req.get_json().get('name', f'{user.name}\'s Game')
     game.join(user.identifier)
     game.people.add_role(user.identifier, GameRole.ORGANIZER)
 
@@ -30,4 +29,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     logging.debug('Game %s created successfully', game.seed)
 
-    return func.HttpResponse(json.dumps(GameService.to_client(game)))
+    return func.HttpResponse(json.dumps(GameService.json(game, user.identifier)))

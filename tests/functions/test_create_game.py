@@ -1,25 +1,27 @@
 '''Create game unit tests'''
+import json
 from unittest import TestCase, mock
 
-from hundredandten import HundredAndTen
-
 from create_game import main
-from service import GameService
-from tests.helpers import build_request, read_response_body
+from models import Game
+from services import GameService
+from tests.helpers import DEFAULT_ID, build_request, read_response_body
 
 
 class TestCreateGame(TestCase):
     '''Create Game unit tests'''
 
-    @mock.patch('service.GameService.save', return_value={})
+    @mock.patch('services.GameService.save', return_value={})
     def test_creates_game(self, save):
         '''On hitting the create request a game is created and returned'''
-        req = build_request()
-        saved_value = HundredAndTen()
+        req = build_request(body=json.dumps({'name': 'test name'}).encode('utf-8'))
+        saved_value = Game()
 
         save.return_value = saved_value
 
         resp = main(req)
 
         save.assert_called_once()
-        self.assertEqual(read_response_body(resp.get_body()), GameService.to_client(saved_value))
+        self.assertEqual(
+            read_response_body(resp.get_body()),
+            GameService.json(saved_value, DEFAULT_ID))

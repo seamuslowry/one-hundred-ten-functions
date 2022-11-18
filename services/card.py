@@ -1,8 +1,6 @@
 '''Facilitate interaction with cards in the DB'''
 
-from hundredandten.constants import (CardNumber, SelectableSuit,
-                                     UnselectableSuit)
-from hundredandten.deck import Card
+from models import Card, CardNumber, SelectableSuit, UnselectableSuit
 
 
 def to_db(card: Card) -> dict:
@@ -34,3 +32,11 @@ def from_db(card: dict) -> Card:
         suit=suit,
         number=CardNumber[card['number']]
     )
+
+
+def json(card: Card) -> dict:
+    '''Convert the provided card into the structure it should provide the client'''
+    return {
+        'suit': card.suit.name,
+        'number': card.number.name
+    }

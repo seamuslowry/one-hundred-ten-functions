@@ -1,12 +1,8 @@
 '''Facilitate interaction with rounds in the DB'''
 
-from hundredandten.actions import Bid, Discard
-from hundredandten.constants import BidAmount, SelectableSuit
-from hundredandten.deck import Deck
-from hundredandten.group import Group
-from hundredandten.round import Round
-
-from service import card, person, trick
+from models import (Bid, BidAmount, Deck, Discard, Group, Round, RoundStatus,
+                    SelectableSuit)
+from services import card, person, trick
 
 
 def to_db(game_round: Round) -> dict:
@@ -82,3 +78,25 @@ def __discard_from_db(discard: dict) -> Discard:
         identifier=discard['identifier'],
         cards=list(map(card.from_db, discard['cards']))
     )
+
+
+def json(game_round: Round, client: str) -> dict:
+    '''Convert the provided round into the structure it should provide the client'''
+    bidder = game_round.active_bidder
+    current_bid = game_round.active_bid
+
+    return {
+        'players': list(map(lambda p: person.json(p, client), game_round.players)),
+        'dealer': person.json(game_round.dealer),
+        'bidder': person.json(bidder) if bidder else None,
+        'bid': current_bid.name if current_bid else None,
+        'trump': game_round.trump.name if game_round.trump else None,
+        'tricks': list(map(trick.json, game_round.tricks)),
+        # only active rounds have active players
+        'active_player': (game_round.active_player
+                          if game_round.status not in [
+                              RoundStatus.COMPLETED_NO_BIDDERS,
+                              RoundStatus.COMPLETED
+                          ]
+                          else None)
+    }

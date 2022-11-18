@@ -1,10 +1,7 @@
 '''Facilitate interaction with tricks in the DB'''
 
-from hundredandten.actions import Play
-from hundredandten.constants import SelectableSuit
-from hundredandten.trick import Trick
-
-from service import card
+from models import Play, SelectableSuit, Trick
+from services import card
 
 
 def to_db(trick: Trick) -> dict:
@@ -37,3 +34,22 @@ def __play_from_db(play: dict) -> Play:
         identifier=play['identifier'],
         card=card.from_db(play['card'])
     )
+
+
+def json(trick: Trick) -> dict:
+    '''Convert the provided trick into the structure it should provide the client'''
+    winning_play = trick.winning_play
+
+    return {
+        'winning_play': __play_json(winning_play) if winning_play else None,
+        'bleeding': trick.bleeding,
+        'plays': list(map(__play_json, trick.plays)),
+    }
+
+
+def __play_json(play: Play) -> dict:
+    '''Convert the provided play into the structure it should provide the client'''
+    return {
+        'identifier': play.identifier,
+        'card': card.json(play.card)
+    }
