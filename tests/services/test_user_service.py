@@ -22,7 +22,7 @@ class TestUserService(TestCase):
     def test_google_user(self):
         '''Init a user from Google'''
         user_client.upsert_item.return_value = {
-            'type': 'google', 'identifier': '', 'name': '', 'picture_url': ''}
+            'type': 'google', 'id': '', 'name': '', 'picture_url': ''}
 
         user = UserService.from_request(
             build_request(
