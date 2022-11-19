@@ -29,11 +29,15 @@ class TestLeaveGame(TestCase):
 
     @mock.patch('services.GameService.save', side_effect=return_input)
     @mock.patch('services.UserService.save', mock.Mock(side_effect=return_input))
-    @mock.patch('services.GameService.get', mock.Mock(
-        return_value=Game(
-            people=Group([Person(DEFAULT_ID),
-                          Person(DEFAULT_ID + '2')]), rounds=[Round(
-                              players=Group([Player(identifier='', roles={RoundRole.DEALER})]))])))
+    @mock.patch(
+        'services.GameService.get', mock.Mock(
+            return_value=Game(
+                people=Group([]),
+                rounds=[
+                    Round(
+                        players=Group(
+                            [Player(identifier=DEFAULT_ID, roles={RoundRole.DEALER}),
+                             Player(identifier=DEFAULT_ID + '2')]))])))
     @mock.patch('services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
     def test_automates_player(self, game_save):
         '''On hitting the leave endpoint in an started game, the player is automated'''
@@ -43,6 +47,6 @@ class TestLeaveGame(TestCase):
         resp_dict = read_response_body(resp.get_body())
 
         game_save.assert_called_once()
-        player_dict = resp_dict['organizer']
+        player_dict = resp_dict['round']['dealer']
 
         self.assertTrue(player_dict['automate'])

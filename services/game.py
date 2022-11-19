@@ -1,5 +1,5 @@
 '''Facilitate interaction with the game DB'''
-from models import Accessibility, Game, Group, RoundStatus
+from models import Accessibility, Game, GameStatus, Group
 from services import person
 from services import round as round_service
 from services.cosmos import game_client
@@ -47,11 +47,25 @@ def json(game: Game, client: str) -> dict:
         'id': game.id,
         'name': game.name,
         'status': game.status.name,
+        # properties that are only relevant while waiting for the game to begin
+        **(__waiting_game_properties(game)
+           if game.status == GameStatus.WAITING_FOR_PLAYERS
+           # properties that are only relevant once the game has begun
+           else __started_game_properties(game, client))
+    }
+
+
+def __waiting_game_properties(game: Game) -> dict:
+    return {
         'accessibility': game.accessibility.name,
         'organizer': person.json(game.organizer),
         'players': list(map(person.json, game.players)),
-        'invitees': list(map(person.json, game.invitees)),
-        'round': (round_service.json(game.active_round, client)
-                  if isinstance(game.status, RoundStatus)
-                  else None)
+        'invitees': list(map(person.json, game.invitees))
+    }
+
+
+def __started_game_properties(game: Game, client: str) -> dict:
+    return {
+        'round': round_service.json(game.active_round, client),
+        'scores': game.scores
     }
