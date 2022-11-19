@@ -59,8 +59,8 @@ def __waiting_game_properties(game: Game) -> dict:
     return {
         'accessibility': game.accessibility.name,
         'organizer': person.json(game.organizer),
-        'players': list(map(person.json, game.players)),
-        'invitees': list(map(person.json, game.invitees))
+        'players': list(map(person.json, [p for p in game.players if p != game.organizer])),
+        'invitees': list(map(person.json, [p for p in game.invitees if p not in game.players]))
     }
 
 
