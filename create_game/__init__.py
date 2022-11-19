@@ -7,7 +7,7 @@ import logging
 import azure.functions as func
 
 from decorators import catcher
-from models import Game, GameRole
+from models import Accessibility, Game, GameRole
 from services import GameService, UserService
 
 
@@ -22,10 +22,13 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     logging.debug('Creating game for %s', user.identifier)
 
+    body = req.get_json()
+
     game = Game()
-    game.name = req.get_json().get('name', f'{user.name}\'s Game')
     game.join(user.identifier)
     game.people.add_role(user.identifier, GameRole.ORGANIZER)
+    game.name = body.get('name', f'{user.name}\'s Game')
+    game.accessibility = Accessibility[body.get('accessibility', Accessibility.PUBLIC.name)]
 
     game = GameService.save(game)
 
