@@ -7,7 +7,7 @@
       "direction": "in",
       "name": "req",
       "methods": ["post"],
-      "route": "leave/{id}"
+      "route": "start/{id}"
     },
     {
       "type": "http",
