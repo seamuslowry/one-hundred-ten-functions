@@ -11,16 +11,14 @@ class TestJoinGame(TestCase):
     '''Create Game unit tests'''
 
     @mock.patch('services.GameService.save', side_effect=return_input)
-    @mock.patch('services.UserService.save', side_effect=return_input)
-    @mock.patch('services.GameService.get', return_value=Game())
-    def test_creates_game(self, save_game, save_user, get):
+    @mock.patch('services.UserService.save', mock.Mock(side_effect=return_input))
+    @mock.patch('services.GameService.get', mock.Mock(return_value=Game()))
+    def test_creates_game(self, game_save):
         '''On hitting the join endpoint the logged in player joins the game'''
         req = build_request(route_params={'id': 'id'})
 
         resp = main(req)
         resp_dict = read_response_body(resp.get_body())
 
-        save_game.assert_called_once()
-        save_user.assert_called_once()
-        get.assert_called_once()
+        game_save.assert_called_once()
         self.assertIn(DEFAULT_ID, map(lambda pd: pd['identifier'], resp_dict['players']))
