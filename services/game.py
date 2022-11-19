@@ -10,6 +10,11 @@ def save(game: Game) -> Game:
     return from_db(game_client.upsert_item(to_db(game)))
 
 
+def get(game_id: str) -> Game:
+    '''Retrieve the game with the provided ID'''
+    return from_db(game_client.read_item(game_id, game_id))
+
+
 def to_db(game: Game) -> dict:
     '''Convert the provided game into the dict structure used by the DB'''
     return {
