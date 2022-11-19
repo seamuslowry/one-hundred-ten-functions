@@ -4,7 +4,12 @@ from typing import Optional
 
 import azure.functions as func
 
+from models import User
+
 DEFAULT_ID = 'id'
+DEFAULT_NAME = 'name'
+
+DEFAULT_USER = User(DEFAULT_ID, DEFAULT_NAME)
 
 
 def build_request(method='GET', body=b'', route_params=None,

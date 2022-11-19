@@ -3,8 +3,8 @@ from unittest import TestCase, mock
 
 from join_game import main
 from models import Game
-from tests.helpers import (DEFAULT_ID, build_request, read_response_body,
-                           return_input)
+from tests.helpers import (DEFAULT_ID, DEFAULT_USER, build_request,
+                           read_response_body, return_input)
 
 
 class TestJoinGame(TestCase):
@@ -13,6 +13,7 @@ class TestJoinGame(TestCase):
     @mock.patch('services.GameService.save', side_effect=return_input)
     @mock.patch('services.UserService.save', mock.Mock(side_effect=return_input))
     @mock.patch('services.GameService.get', mock.Mock(return_value=Game()))
+    @mock.patch('services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
     def test_joins_game(self, game_save):
         '''On hitting the join endpoint the logged in player joins the game'''
         req = build_request(route_params={'id': 'id'})
