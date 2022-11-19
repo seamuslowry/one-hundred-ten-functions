@@ -1,5 +1,5 @@
 '''
-Expose a function for Azure Functions to call to create a new game
+Endpoint to create a new game
 '''
 import json
 import logging
