@@ -7,7 +7,7 @@
       "direction": "in",
       "name": "req",
       "methods": ["post"],
-      "route": "leaveGame/{id}"
+      "route": "leave/{id}"
     },
     {
       "type": "http",
