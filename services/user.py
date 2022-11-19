@@ -10,7 +10,7 @@ from models import GoogleUser, User
 from services.cosmos import user_client
 
 
-class PartitionKey(str, Enum):
+class UserType(str, Enum):
     '''Enum value for partition keys'''
     GOOGLE = "google"
     UNKNOWN = "unknown"
@@ -28,7 +28,7 @@ def save(user: User) -> User:
 
 def __from_request(req: func.HttpRequest) -> User:
     '''Create a user object from a passed request'''
-    if __parse_user_type(req) == PartitionKey.GOOGLE:
+    if __parse_user_type(req) == UserType.GOOGLE:
         return __google_user_from_request(req)
 
     return User(__parse_identifier(req), __parse_name(req))
@@ -38,28 +38,27 @@ def __to_db(user: User) -> dict:
     return {
         'id': user.identifier,
         'name': user.name,
-        'type': __partition_key(user).value,
+        'type': __user_type(user).value,
         **({'picture_url': user.picture_url} if isinstance(user, GoogleUser) else {})
     }
 
 
 def __from_db(user: dict) -> User:
-    print(user)
-    if user['type'] == PartitionKey.GOOGLE:
+    if user['type'] == UserType.GOOGLE:
         return GoogleUser(user['id'], user['name'], user['picture_url'])
     return User(user['id'], user['name'])
 
 
-def __partition_key(user: User) -> PartitionKey:
+def __user_type(user: User) -> UserType:
     if isinstance(user, GoogleUser):
-        return PartitionKey.GOOGLE
-    return PartitionKey.UNKNOWN
+        return UserType.GOOGLE
+    return UserType.UNKNOWN
 
 
 def __google_user_from_request(req: func.HttpRequest) -> GoogleUser:
     '''Create a Google user object from a passed request'''
     return GoogleUser(
-        __parse_identifier(req),
+        f'{UserType.GOOGLE}-{__parse_identifier(req)}',
         __get_claim(req, "name"),
         __get_claim(req, "picture"))
 
