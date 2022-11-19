@@ -1,3 +1,3 @@
 azure-functions==1.12.0
 azure-cosmos==4.3.0
-hundredandten==1.0.1
+hundredandten==1.0.2

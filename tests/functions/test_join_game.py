@@ -8,12 +8,12 @@ from tests.helpers import (DEFAULT_ID, build_request, read_response_body,
 
 
 class TestJoinGame(TestCase):
-    '''Create Game unit tests'''
+    '''Join Game unit tests'''
 
     @mock.patch('services.GameService.save', side_effect=return_input)
     @mock.patch('services.UserService.save', mock.Mock(side_effect=return_input))
     @mock.patch('services.GameService.get', mock.Mock(return_value=Game()))
-    def test_creates_game(self, game_save):
+    def test_joins_game(self, game_save):
         '''On hitting the join endpoint the logged in player joins the game'''
         req = build_request(route_params={'id': 'id'})
 
