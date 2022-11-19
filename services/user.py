@@ -59,7 +59,7 @@ def __user_type(user: User) -> UserType:
 def __google_user_from_request(req: func.HttpRequest) -> GoogleUser:
     '''Create a Google user object from a passed request'''
     return GoogleUser(
-        __parse_identifier(req),
+        f'{UserType.GOOGLE}-{__parse_identifier(req)}',
         __get_claim(req, "name"),
         __get_claim(req, "picture"))
 
