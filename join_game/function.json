@@ -7,7 +7,7 @@
       "direction": "in",
       "name": "req",
       "methods": ["post"],
-      "route": "joinGame/{id}"
+      "route": "join/{id}"
     },
     {
       "type": "http",
