@@ -15,5 +15,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     user = UserService.from_request(req)
     game = GameService.get(req.route_params['id'])
     game.join(user.identifier)
+    game = GameService.save(game)
 
     return func.HttpResponse(json.dumps(GameService.json(game, user.identifier)))

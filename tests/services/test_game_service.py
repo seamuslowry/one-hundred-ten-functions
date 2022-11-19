@@ -30,3 +30,12 @@ class TestGameService(TestCase):
 
         self.assertIsNotNone(GameService.save(game))
         game_client.upsert_item.assert_called_once()
+
+    def test_game_get(self):
+        '''Game can be retrieved to the DB'''
+        game = Game(id='test', seed='test_game')
+
+        game_client.read_item.return_value = GameService.to_db(game)
+
+        self.assertIsNotNone(GameService.get(game.id))
+        game_client.read_item.assert_called_once()
