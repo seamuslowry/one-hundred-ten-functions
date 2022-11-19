@@ -1,5 +1,4 @@
 '''Start game unit tests'''
-import json
 from unittest import TestCase, mock
 
 from models import Game, GameRole, Group, Person
@@ -22,10 +21,7 @@ class TestStartGame(TestCase):
     @mock.patch('services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
     def test_starts_game_if_organizer(self, game_save):
         '''When the organizer hits the start endpoint the game begins'''
-        invitee = 'invitee'
-        req = build_request(
-            route_params={'id': 'id'},
-            body=json.dumps({'invitees': [invitee]}).encode('utf-8'))
+        req = build_request(route_params={'id': 'id'})
 
         resp = main(req)
         resp_dict = read_response_body(resp.get_body())
@@ -44,10 +40,7 @@ class TestStartGame(TestCase):
     @mock.patch('services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
     def test_starts_game_if_not_organizer(self, game_save):
         '''When someone not organizer hits the start endpoint, nothing happens'''
-        invitee = 'invitee'
-        req = build_request(
-            route_params={'id': 'id'},
-            body=json.dumps({'invitees': [invitee]}).encode('utf-8'))
+        req = build_request(route_params={'id': 'id'})
 
         resp = main(req)
         resp_dict = read_response_body(resp.get_body())
