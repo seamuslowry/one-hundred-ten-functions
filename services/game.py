@@ -42,6 +42,7 @@ def from_db(game: dict) -> Game:
 
 def json(game: Game, client: str) -> dict:
     '''Convert the provided game into the structure it should provide the client'''
+
     return {
         'id': game.id,
         'name': game.name,
