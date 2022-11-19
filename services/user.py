@@ -26,6 +26,11 @@ def save(user: User) -> User:
     return __from_db(user_client.upsert_item(__to_db(user)))
 
 
+def get(user_id: str) -> User:
+    '''Retrieve the game with the provided ID'''
+    return __from_db(user_client.read_item(user_id, user_id))
+
+
 def __from_request(req: func.HttpRequest) -> User:
     '''Create a user object from a passed request'''
     if __parse_user_type(req) == UserType.GOOGLE:
