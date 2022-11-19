@@ -1,5 +1,5 @@
 '''Facilitate interaction with the game DB'''
-from models import Accessibility, Game, Group
+from models import Accessibility, Game, Group, RoundStatus
 from services import person
 from services import round as round_service
 from services.cosmos import game_client
@@ -50,5 +50,7 @@ def json(game: Game, client: str) -> dict:
         'organizer': person.json(game.organizer),
         'players': list(map(person.json, game.players)),
         'invitees': list(map(person.json, game.invitees)),
-        'rounds': list(map(lambda r: round_service.json(r, client), game.rounds))
+        'round': (round_service.json(game.active_round, client)
+                  if isinstance(game.status, RoundStatus)
+                  else None)
     }
