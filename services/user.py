@@ -44,7 +44,6 @@ def __to_db(user: User) -> dict:
 
 
 def __from_db(user: dict) -> User:
-    print(user)
     if user['type'] == UserType.GOOGLE:
         return GoogleUser(user['id'], user['name'], user['picture_url'])
     return User(user['id'], user['name'])
