@@ -50,5 +50,7 @@ def json(game: Game, client: str) -> dict:
         'organizer': person.json(game.organizer),
         'players': list(map(person.json, game.players)),
         'invitees': list(map(person.json, game.invitees)),
-        'round': round_service.json(game.active_round, client) if isinstance(game.status, RoundStatus) else None
+        'round': (round_service.json(game.active_round, client)
+                  if isinstance(game.status, RoundStatus)
+                  else None)
     }
