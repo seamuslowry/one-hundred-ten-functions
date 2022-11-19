@@ -93,10 +93,10 @@ def json(game_round: Round, client: str) -> dict:
         'trump': game_round.trump.name if game_round.trump else None,
         'tricks': list(map(trick.json, game_round.tricks)),
         # only active rounds have active players
-        'active_player': (game_round.active_player
+        'active_player': (person.json(game_round.active_player)
                           if game_round.status not in [
                               RoundStatus.COMPLETED_NO_BIDDERS,
                               RoundStatus.COMPLETED
-                          ]
-                          else None)
+        ]
+            else None)
     }
