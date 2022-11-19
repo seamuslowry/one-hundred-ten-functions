@@ -5,9 +5,11 @@ import json
 
 import azure.functions as func
 
+from decorators import catcher
 from services import GameService, UserService
 
 
+@catcher
 def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Join a 110 game

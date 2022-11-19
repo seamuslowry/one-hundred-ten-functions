@@ -7,6 +7,7 @@ from hundredandten.constants import (Accessibility, BidAmount, CardNumber,
                                      UnselectableSuit)
 from hundredandten.deck import Card, Deck
 from hundredandten.group import Group, Person, Player
+from hundredandten.hundred_and_ten_error import HundredAndTenError
 from hundredandten.round import Round
 from hundredandten.trick import Trick
 
