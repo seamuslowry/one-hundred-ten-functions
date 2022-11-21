@@ -1,7 +1,7 @@
 '''Facilitate interaction with rounds in the DB'''
 
 from models import (Bid, BidAmount, Deck, Discard, Group, Round, RoundStatus,
-                    SelectableSuit)
+                    SelectableSuit, SelectTrump)
 from services import card, person, trick
 
 
@@ -22,14 +22,20 @@ def from_db(game_round: dict) -> Round:
     trump_name = game_round['trump']
     trump = SelectableSuit[trump_name] if trump_name else None
 
-    return Round(
+    model_round = Round(
         players=Group(list(map(person.player_from_db, game_round['players']))),
         bids=list(map(__bid_from_db, game_round['bids'])),
         deck=__deck_from_db(game_round['deck']),
         discards=list(map(__discard_from_db, game_round['discards'])),
-        trump=trump,
         tricks=list(map(trick.from_db, game_round['tricks']))
     )
+
+    # set selction of trump using round's computation of bidder
+    active_bidder = model_round.active_bidder
+    model_round.selection = SelectTrump(active_bidder.identifier,
+                                        trump) if (active_bidder and trump) else None
+
+    return model_round
 
 
 def __deck_to_db(deck: Deck) -> dict:
@@ -82,14 +88,16 @@ def __discard_from_db(discard: dict) -> Discard:
 
 def json(game_round: Round, client: str) -> dict:
     '''Convert the provided round into the structure it should provide the client'''
-    bidder = game_round.active_bidder
-    current_bid = game_round.active_bid
+
+    non_zero_bids = [bid for bid in game_round.bids if bid.amount > 0]
+    current_bid = non_zero_bids[-1] if non_zero_bids else Bid('', BidAmount.PASS)
+    bidder = game_round.players.by_identifier(current_bid.identifier)
 
     return {
         'players': list(map(lambda p: person.json(p, client), game_round.players)),
         'dealer': person.json(game_round.dealer),
         'bidder': person.json(bidder) if bidder else None,
-        'bid': current_bid.name if current_bid else None,
+        'bid': current_bid.amount.name if current_bid.amount else None,
         'trump': game_round.trump.name if game_round.trump else None,
         'tricks': list(map(trick.json, game_round.tricks)),
         # only active rounds have active players
