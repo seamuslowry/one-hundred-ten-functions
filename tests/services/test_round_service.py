@@ -1,8 +1,8 @@
 '''Round Service unit tests'''
 from unittest import TestCase
 
-from models import (Bid, BidAmount, Deck, Discard, Group, Player, Round,
-                    RoundRole, SelectableSuit, SelectTrump, Trick)
+from models import (Bid, BidAmount, Deck, DetailedDiscard, Group, Player,
+                    Round, RoundRole, SelectableSuit, SelectTrump, Trick)
 from services import round as RoundService
 
 
@@ -46,7 +46,7 @@ class TestRoundService(TestCase):
             bids=[Bid('', BidAmount.FIFTEEN)],
             deck=Deck(),
             selection=SelectTrump('', SelectableSuit.CLUBS),
-            discards=[Discard('', [])]
+            discards=[DetailedDiscard('', [], [])]
         )
 
         self.assertEqual(initial_round, RoundService.from_db(RoundService.to_db(
@@ -59,7 +59,7 @@ class TestRoundService(TestCase):
             bids=[Bid('', BidAmount.FIFTEEN)],
             deck=Deck(),
             selection=SelectTrump('', SelectableSuit.CLUBS),
-            discards=[Discard('', [])],
+            discards=[DetailedDiscard('', [], [])],
             tricks=[Trick(SelectableSuit.CLUBS, [])]
         )
 
@@ -102,7 +102,7 @@ class TestRoundService(TestCase):
             bids=[Bid('1', BidAmount.FIFTEEN), Bid('2', BidAmount.PASS)],
             deck=Deck(),
             selection=SelectTrump('', SelectableSuit.CLUBS),
-            discards=[Discard('1', [])]
+            discards=[DetailedDiscard('1', [], [])]
         )
 
         self.assertIsNotNone(RoundService.json(initial_round, ''))
@@ -114,7 +114,7 @@ class TestRoundService(TestCase):
             bids=[Bid('1', BidAmount.FIFTEEN), Bid('2', BidAmount.PASS)],
             deck=Deck(),
             selection=SelectTrump('', SelectableSuit.CLUBS),
-            discards=[Discard('1', []), Discard('2', [])],
+            discards=[DetailedDiscard('1', [], []), DetailedDiscard('2', [], [])],
             tricks=[Trick(SelectableSuit.CLUBS, [])]
         )
 
