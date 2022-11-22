@@ -6,13 +6,14 @@ import azure.functions as func
 
 from models import (Bid, BidAmount, DetailedDiscard, GameRole, GameStatus,
                     Group, Person, RoundStatus, SelectableSuit, SelectTrump,
-                    User)
+                    Trick, User)
 from models.game import Game
 
 DEFAULT_ID = 'id'
 DEFAULT_NAME = 'name'
 
 DEFAULT_USER = User(DEFAULT_ID, DEFAULT_NAME)
+USER_ONE = User('1', DEFAULT_NAME)
 
 
 def build_request(method='GET', body=b'', route_params=None,
@@ -102,5 +103,9 @@ def __get_tricks_game() -> Game:
     new_game = __get_discard_game()
     new_game.active_round.discards = [DetailedDiscard(
         p.identifier, [], p.hand) for p in new_game.active_round.players]
+
+    trump = new_game.active_round.trump
+    assert trump
+    new_game.active_round.tricks = [Trick(trump)]
 
     return new_game
