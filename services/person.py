@@ -43,6 +43,7 @@ def json(person: Union[Person, Player], client: Optional[str] = None) -> dict:
         'identifier': person.identifier,
         'name': db_user.name,
         'automate': person.automate,
+        'prepassed': RoundRole.PRE_PASSED in person.roles,
         # hand should only be provided if the client is this individual
         **({'hand': list(map(card.json, person.hand))}
            if client == person.identifier and isinstance(person, Player) else {})
