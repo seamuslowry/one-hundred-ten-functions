@@ -18,7 +18,7 @@ class TestDiscard(TestCase):
     @mock.patch('services.UserService.from_request', mock.Mock(return_value=DEFAULT_USER))
     @mock.patch('services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
     def test_distard(self, game_get, game_save):
-        '''On hitting the discard endpoint, the logged in user discards the listed cards'''
+        '''On hitting the discard endpoint, the logged in user discards the provided cards'''
         original_hand = game_get.return_value.active_round.active_player.hand
 
         req = build_request(route_params={'id': 'id'}, body=json.dumps({'cards': [CardService.json(
