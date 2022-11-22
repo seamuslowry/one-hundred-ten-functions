@@ -1,7 +1,7 @@
 '''Facilitate interaction with rounds in the DB'''
 
-from models import (Bid, BidAmount, Deck, Discard, Group, Round, RoundStatus,
-                    SelectableSuit, SelectTrump)
+from models import (Bid, BidAmount, Deck, DetailedDiscard, Group, Round,
+                    RoundStatus, SelectableSuit, SelectTrump)
 from services import card, person, trick
 
 
@@ -70,19 +70,21 @@ def __bid_from_db(bid: dict) -> Bid:
     )
 
 
-def __discard_to_db(discard: Discard) -> dict:
+def __discard_to_db(discard: DetailedDiscard) -> dict:
     '''Convert the provided discard into the dict structure used by the DB'''
     return {
         'identifier': discard.identifier,
-        'cards': list(map(card.to_db, discard.cards))
+        'cards': list(map(card.to_db, discard.cards)),
+        'kept':  list(map(card.to_db, discard.kept))
     }
 
 
-def __discard_from_db(discard: dict) -> Discard:
+def __discard_from_db(discard: dict) -> DetailedDiscard:
     '''Convert the provided dict from the DB into a Discard instance'''
-    return Discard(
+    return DetailedDiscard(
         identifier=discard['identifier'],
-        cards=list(map(card.from_db, discard['cards']))
+        cards=list(map(card.from_db, discard['cards'])),
+        kept=list(map(card.from_db, discard['kept']))
     )
 
 

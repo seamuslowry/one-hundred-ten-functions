@@ -4,8 +4,9 @@ from typing import Optional, Union
 
 import azure.functions as func
 
-from models import (Bid, BidAmount, Discard, GameRole, GameStatus, Group,
-                    Person, RoundStatus, SelectableSuit, SelectTrump, User)
+from models import (Bid, BidAmount, DetailedDiscard, GameRole, GameStatus,
+                    Group, Person, RoundStatus, SelectableSuit, SelectTrump,
+                    User)
 from models.game import Game
 
 DEFAULT_ID = 'id'
@@ -99,6 +100,7 @@ def __get_discard_game() -> Game:
 def __get_tricks_game() -> Game:
     '''Return a game in the tricks status'''
     new_game = __get_discard_game()
-    new_game.active_round.discards = [Discard(p.identifier, []) for p in new_game.players]
+    new_game.active_round.discards = [DetailedDiscard(
+        p.identifier, [], p.hand) for p in new_game.active_round.players]
 
     return new_game
