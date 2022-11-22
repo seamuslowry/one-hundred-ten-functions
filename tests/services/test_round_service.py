@@ -1,8 +1,8 @@
 '''Round Service unit tests'''
 from unittest import TestCase
 
-from models import (Bid, BidAmount, Deck, Discard, Group, Player, Round,
-                    RoundRole, SelectableSuit, Trick)
+from models import (Bid, BidAmount, Deck, DetailedDiscard, Group, Player,
+                    Round, RoundRole, SelectableSuit, SelectTrump, Trick)
 from services import round as RoundService
 
 
@@ -31,9 +31,9 @@ class TestRoundService(TestCase):
         '''Round in discard can be converted to and from a DB save'''
         initial_round = Round(
             players=Group([Player('')]),
-            bids=[Bid('', BidAmount.PASS)],
+            bids=[Bid('', BidAmount.FIFTEEN)],
             deck=Deck(),
-            trump=SelectableSuit.CLUBS
+            selection=SelectTrump('', SelectableSuit.CLUBS)
         )
 
         self.assertEqual(initial_round, RoundService.from_db(RoundService.to_db(
@@ -43,10 +43,10 @@ class TestRoundService(TestCase):
         '''Round discarding can be converted to and from a DB save'''
         initial_round = Round(
             players=Group([Player('')]),
-            bids=[Bid('', BidAmount.PASS)],
+            bids=[Bid('', BidAmount.FIFTEEN)],
             deck=Deck(),
-            trump=SelectableSuit.CLUBS,
-            discards=[Discard('', [])]
+            selection=SelectTrump('', SelectableSuit.CLUBS),
+            discards=[DetailedDiscard('', [], [])]
         )
 
         self.assertEqual(initial_round, RoundService.from_db(RoundService.to_db(
@@ -56,10 +56,10 @@ class TestRoundService(TestCase):
         '''Round playing tricks can be converted to and from a DB save'''
         initial_round = Round(
             players=Group([Player('')]),
-            bids=[Bid('', BidAmount.PASS)],
+            bids=[Bid('', BidAmount.FIFTEEN)],
             deck=Deck(),
-            trump=SelectableSuit.CLUBS,
-            discards=[Discard('', [])],
+            selection=SelectTrump('', SelectableSuit.CLUBS),
+            discards=[DetailedDiscard('', [], [])],
             tricks=[Trick(SelectableSuit.CLUBS, [])]
         )
 
@@ -90,7 +90,7 @@ class TestRoundService(TestCase):
             players=Group([Player('1', roles={RoundRole.DEALER}), Player('2')]),
             bids=[Bid('1', BidAmount.FIFTEEN), Bid('2', BidAmount.PASS)],
             deck=Deck(),
-            trump=SelectableSuit.CLUBS
+            selection=SelectTrump('', SelectableSuit.CLUBS)
         )
 
         self.assertIsNotNone(RoundService.json(initial_round, ''))
@@ -101,8 +101,8 @@ class TestRoundService(TestCase):
             players=Group([Player('1', roles={RoundRole.DEALER}), Player('2')]),
             bids=[Bid('1', BidAmount.FIFTEEN), Bid('2', BidAmount.PASS)],
             deck=Deck(),
-            trump=SelectableSuit.CLUBS,
-            discards=[Discard('1', [])]
+            selection=SelectTrump('', SelectableSuit.CLUBS),
+            discards=[DetailedDiscard('1', [], [])]
         )
 
         self.assertIsNotNone(RoundService.json(initial_round, ''))
@@ -113,8 +113,8 @@ class TestRoundService(TestCase):
             players=Group([Player('1', roles={RoundRole.DEALER}), Player('2')]),
             bids=[Bid('1', BidAmount.FIFTEEN), Bid('2', BidAmount.PASS)],
             deck=Deck(),
-            trump=SelectableSuit.CLUBS,
-            discards=[Discard('1', []), Discard('2', [])],
+            selection=SelectTrump('', SelectableSuit.CLUBS),
+            discards=[DetailedDiscard('1', [], []), DetailedDiscard('2', [], [])],
             tricks=[Trick(SelectableSuit.CLUBS, [])]
         )
 
