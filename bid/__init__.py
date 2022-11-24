@@ -17,7 +17,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     user = UserService.from_request(req)
     game = GameService.get(req.route_params['id'])
-
     initial_event_knowledge = len(game.events)
 
     body = req.get_json()
