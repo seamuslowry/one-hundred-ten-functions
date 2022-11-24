@@ -34,4 +34,4 @@ class TestDiscard(TestCase):
 
         game_save.assert_called_once()
         self.assertNotEqual(original_hand, new_hand)
-        self.assertEqual(DEFAULT_USER.identifier, resp_dict['events'][0]['identifier'])
+        self.assertEqual(DEFAULT_USER.identifier, resp_dict['results'][0]['identifier'])

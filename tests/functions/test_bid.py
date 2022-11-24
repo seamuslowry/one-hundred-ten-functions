@@ -28,4 +28,4 @@ class TestBid(TestCase):
         game_save.assert_called_once()
         self.assertEqual(DEFAULT_USER.identifier,
                          resp_dict['round']['bidder']['identifier'])
-        self.assertEqual(DEFAULT_USER.identifier, resp_dict['events'][0]['identifier'])
+        self.assertEqual(DEFAULT_USER.identifier, resp_dict['results'][0]['identifier'])

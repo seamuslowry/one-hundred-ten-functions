@@ -65,8 +65,8 @@ def json(game: Game, client: str, initial_event_knowledge: Optional[int] = None)
 
     return {
         **__json(game, client),
-        'events': (event.json(game.events[initial_event_knowledge:], client)
-                   if initial_event_knowledge is not None else [])
+        'results': (event.json(game.events[initial_event_knowledge:], client)
+                    if initial_event_knowledge is not None else [])
     }
 
 

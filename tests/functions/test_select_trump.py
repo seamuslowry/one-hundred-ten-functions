@@ -29,4 +29,4 @@ class TestSelectTrump(TestCase):
 
         game_save.assert_called_once()
         self.assertEqual(trump, resp_dict['round']['trump'])
-        self.assertEqual(trump, resp_dict['events'][0]['suit'])
+        self.assertEqual(trump, resp_dict['results'][0]['suit'])
