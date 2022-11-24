@@ -49,7 +49,7 @@ def game(
         RoundStatus.COMPLETED_NO_BIDDERS: __get_completed_no_bidders_game,
         RoundStatus.TRUMP_SELECTION: __get_trump_selection_game,
         RoundStatus.DISCARD: __get_discard_game,
-        RoundStatus.TRICKS: __get_tricks_game,
+        RoundStatus.TRICKS: __get_tricks_game
     }[status]()
     return new_game
 
