@@ -17,9 +17,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     user = UserService.from_request(req)
     game = GameService.get(req.route_params['id'])
+    initial_event_knowledge = len(game.events)
 
     game.act(Unpass(user.identifier))
 
     game = GameService.save(game)
 
-    return func.HttpResponse(json.dumps(GameService.json(game, user.identifier)))
+    return func.HttpResponse(
+        json.dumps(GameService.json(game, user.identifier, initial_event_knowledge)))
