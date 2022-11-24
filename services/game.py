@@ -65,8 +65,9 @@ def json(game: Game, client: str, initial_event_knowledge: Optional[int] = None)
 
     return {
         **__json(game, client),
-        'results': (event.json(game.events[initial_event_knowledge:], client)
-                    if initial_event_knowledge is not None else [])
+        # only send up the results if requested
+        **({'results': event.json(game.events[initial_event_knowledge:], client)}
+           if initial_event_knowledge is not None else {})
     }
 
 
