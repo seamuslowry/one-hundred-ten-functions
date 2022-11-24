@@ -22,3 +22,4 @@ class TestGameInfo(TestCase):
         resp_dict = read_response_body(resp.get_body())
 
         self.assertIn('id', resp_dict)
+        self.assertNotIn('results', resp_dict)

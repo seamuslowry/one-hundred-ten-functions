@@ -7,6 +7,8 @@ from hundredandten.constants import (Accessibility, BidAmount, CardNumber,
                                      RoundStatus, SelectableSuit,
                                      UnselectableSuit)
 from hundredandten.deck import Card, Deck
+from hundredandten.events import (Event, GameEnd, GameStart, RoundEnd,
+                                  RoundStart, TrickEnd, TrickStart)
 from hundredandten.group import Group, Person, Player
 from hundredandten.hundred_and_ten_error import HundredAndTenError
 from hundredandten.round import Round

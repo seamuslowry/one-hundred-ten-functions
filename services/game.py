@@ -1,6 +1,8 @@
 '''Facilitate interaction with the game DB'''
+from typing import Optional
+
 from models import Accessibility, Game, GameStatus, Group
-from services import person
+from services import event, person
 from services import round as round_service
 from services.cosmos import game_client
 
@@ -40,7 +42,7 @@ def from_db(game: dict) -> Game:
     )
 
 
-def json(game: Game, client: str) -> dict:
+def __json(game: Game, client: str) -> dict:
     '''Convert the provided game into the structure it should provide the client'''
 
     return {
@@ -52,6 +54,20 @@ def json(game: Game, client: str) -> dict:
            if game.status == GameStatus.WAITING_FOR_PLAYERS
            # properties that are only relevant once the game has begun
            else __started_game_properties(game, client))
+    }
+
+
+def json(game: Game, client: str, initial_event_knowledge: Optional[int] = None) -> dict:
+    '''
+    Convert the provided game client information
+    and provide information on events since on initial event
+    '''
+
+    return {
+        **__json(game, client),
+        # only send up the results if requested
+        **({'results': event.json(game.events[initial_event_knowledge:], client)}
+           if initial_event_knowledge is not None else {})
     }
 
 

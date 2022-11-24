@@ -36,3 +36,4 @@ class TestPlay(TestCase):
 
         game_save.assert_called_once()
         self.assertNotIn(play_card, new_hand)
+        self.assertEqual(CardService.json(play_card), resp_dict['results'][0]['card'])

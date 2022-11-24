@@ -26,4 +26,6 @@ class TestBid(TestCase):
         resp_dict = read_response_body(resp.get_body())
 
         game_save.assert_called_once()
-        self.assertEqual(DEFAULT_USER.identifier, resp_dict['round']['bidder']['identifier'])
+        self.assertEqual(DEFAULT_USER.identifier,
+                         resp_dict['round']['bidder']['identifier'])
+        self.assertEqual(DEFAULT_USER.identifier, resp_dict['results'][0]['identifier'])

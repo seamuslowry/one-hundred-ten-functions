@@ -25,3 +25,4 @@ class TestUnpass(TestCase):
         game_save.assert_called_once()
         self.assertEqual(DEFAULT_USER.identifier, resp_dict['round']['active_player']['identifier'])
         self.assertFalse(resp_dict['round']['active_player']['prepassed'])
+        self.assertEqual([], resp_dict['results'])
