@@ -40,3 +40,14 @@ class TestUserService(TestCase):
             headers={'x-ms-client-principal-idp': ''})
 
         self.assertRaises(ValueError, UserService.from_request, req)
+
+    def test_search_user(self):
+        '''Searches for users'''
+        users = UserService.search('text')
+
+        self.assertIsNotNone(users)
+        user_client.query_items.assert_called_once()
+
+    def test_serializes_user(self):
+        '''Serializes a user'''
+        self.assertIsNotNone(UserService.json(User('', '')))
