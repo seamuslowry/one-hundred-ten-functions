@@ -37,7 +37,7 @@ def get(user_id: str) -> User:
 def search(search_text: str) -> list[User]:
     '''Retrieve the users with names like the provided'''
     return list(map(__from_db, user_client.query_items(
-        "select * from user where lower(user.name) like lower(@text) offset 0 limit @max",
+        "select * from user where contains(lower(user.name), lower(@text)) offset 0 limit @max",
         parameters=[
             {'name': '@text', 'value': search_text},
             {'name': '@max', 'value': MAX}

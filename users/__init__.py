@@ -14,7 +14,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Get users
     '''
-    body = req.get_json()
 
     return func.HttpResponse(json.dumps(
-        map(UserService.json, UserService.search(body.get('text', '')))))
+        list(map(UserService.json, UserService.search(req.params.get('searchText', ''))))))
