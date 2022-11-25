@@ -47,3 +47,7 @@ class TestUserService(TestCase):
 
         self.assertIsNotNone(users)
         user_client.query_items.assert_called_once()
+
+    def test_serializes_user(self):
+        '''Serializes a user'''
+        self.assertIsNotNone(UserService.json(User('', '')))
