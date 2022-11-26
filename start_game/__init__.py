@@ -22,4 +22,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     game = GameService.save(game)
 
-    return func.HttpResponse(json.dumps(GameService.json(game, user.identifier)))
+    return func.HttpResponse(json.dumps(GameService.json(game, user.identifier, 0)))

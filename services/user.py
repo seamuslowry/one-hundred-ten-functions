@@ -1,8 +1,8 @@
-'''Facilitate interaction with the game DB'''
+'''Facilitate interaction with the user DB'''
 
 import base64
-import json
 from enum import Enum
+from json import loads
 
 import azure.functions as func
 
@@ -16,6 +16,9 @@ class UserType(str, Enum):
     UNKNOWN = "unknown"
 
 
+MAX = 20
+
+
 def from_request(req: func.HttpRequest) -> User:
     '''Create a user object from a passed request'''
     return save(__from_request(req))
@@ -27,8 +30,29 @@ def save(user: User) -> User:
 
 
 def get(user_id: str) -> User:
-    '''Retrieve the game with the provided ID'''
+    '''Retrieve the user with the provided ID'''
     return __from_db(user_client.read_item(user_id, user_id))
+
+
+def search(search_text: str) -> list[User]:
+    '''Retrieve the users with names like the provided'''
+    return list(map(__from_db, user_client.query_items(
+        "select * from user where contains(lower(user.name), lower(@text)) offset 0 limit @max",
+        parameters=[
+            {'name': '@text', 'value': search_text},
+            {'name': '@max', 'value': MAX}
+        ],
+        enable_cross_partition_query=True
+    )))
+
+
+def json(user: User) -> dict:
+    '''Return users as they can be provided to the client'''
+    return {
+        'id': user.identifier,
+        'name': user.name,
+        **({'picture_url': user.picture_url} if isinstance(user, GoogleUser) else {})
+    }
 
 
 def __from_request(req: func.HttpRequest) -> User:
@@ -86,7 +110,7 @@ def __parse_name(req: func.HttpRequest):
 def __get_claims(req: func.HttpRequest):
     '''Get the claims array from the request'''
     token = __get_header(req, "x-ms-client-principal")
-    return json.loads(base64.b64decode(token).decode('utf-8'))['claims'] if token else []
+    return loads(base64.b64decode(token).decode('utf-8'))['claims'] if token else []
 
 
 def __get_claim(req: func.HttpRequest, claim: str):
