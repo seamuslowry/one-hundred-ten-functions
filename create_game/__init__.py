@@ -6,13 +6,13 @@ import logging
 
 import azure.functions as func
 
-from app.decorators import auth, catcher
+from app.decorators import catcher, parse_user
 from app.models import Accessibility, Game, GameRole, User
 from app.services import GameService
 
 
 @catcher
-@auth
+@parse_user
 def main(req: func.HttpRequest, user: User) -> func.HttpResponse:
     '''
     Create a new 110 game.

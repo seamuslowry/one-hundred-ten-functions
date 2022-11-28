@@ -5,14 +5,14 @@ import json
 
 import azure.functions as func
 
-from app.decorators import auth, catcher, game_id
+from app.decorators import catcher, parse_game, parse_user
 from app.models import Game, User
 from app.services import GameService
 
 
 @catcher
-@game_id
-@auth
+@parse_game
+@parse_user
 def main(req: func.HttpRequest, user: User, game: Game) -> func.HttpResponse:
     '''
     Invite to join a 110 game
