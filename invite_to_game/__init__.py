@@ -5,16 +5,17 @@ import json
 
 import azure.functions as func
 
-from app.decorators import catcher
+from app.decorators import auth, catcher
+from app.models import User
 from app.services import GameService, UserService
 
 
 @catcher
-def main(req: func.HttpRequest) -> func.HttpResponse:
+@auth
+def main(req: func.HttpRequest, user: User) -> func.HttpResponse:
     '''
     Invite to join a 110 game
     '''
-    user = UserService.from_request(req)
     game = GameService.get(req.route_params['id'])
 
     body = req.get_json()
