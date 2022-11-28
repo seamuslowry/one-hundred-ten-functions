@@ -3,7 +3,7 @@ from typing import Callable
 
 import azure.functions as func
 
-from app.decorators.hundred_and_ten_error import \
+from app.decorators.errors.hundred_and_ten_error import \
     handle_error as handle_game_error
 
 
