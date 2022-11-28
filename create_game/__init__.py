@@ -6,20 +6,18 @@ import logging
 
 import azure.functions as func
 
-from app.decorators import catcher
-from app.models import Accessibility, Game, GameRole
-from app.services import GameService, UserService
+from app.decorators import auth, catcher
+from app.models import Accessibility, Game, GameRole, User
+from app.services import GameService
 
 
 @catcher
-def main(req: func.HttpRequest) -> func.HttpResponse:
+@auth
+def main(req: func.HttpRequest, user: User) -> func.HttpResponse:
     '''
     Create a new 110 game.
     '''
     logging.info('Initiating create game request.')
-
-    user = UserService.from_request(req)
-
     logging.debug('Creating game for %s', user.identifier)
 
     body = req.get_json()
