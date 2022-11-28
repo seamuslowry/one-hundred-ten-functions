@@ -14,5 +14,5 @@ from hundredandten.hundred_and_ten_error import HundredAndTenError
 from hundredandten.round import Round
 from hundredandten.trick import Trick
 
-from models.game import Game
-from models.user import GoogleUser, User
+from app.models.game import Game
+from app.models.user import GoogleUser, User

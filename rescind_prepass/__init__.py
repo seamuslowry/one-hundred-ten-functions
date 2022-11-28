@@ -5,9 +5,9 @@ import json
 
 import azure.functions as func
 
-from decorators import catcher
-from models import Unpass
-from services import GameService, UserService
+from app.decorators import catcher
+from app.models import Unpass
+from app.services import GameService, UserService
 
 
 @catcher

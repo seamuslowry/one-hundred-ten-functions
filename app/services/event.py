@@ -1,9 +1,10 @@
 '''Facilitate interaction with events on the game'''
 from enum import Enum
 
-from models import (Bid, Discard, Event, GameEnd, GameStart, Play, RoundEnd,
-                    RoundStart, SelectTrump, TrickEnd, TrickStart)
-from services import card
+from app.models import (Bid, Discard, Event, GameEnd, GameStart, Play,
+                        RoundEnd, RoundStart, SelectTrump, TrickEnd,
+                        TrickStart)
+from app.services import card
 
 
 class EventType(str, Enum):

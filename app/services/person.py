@@ -2,8 +2,8 @@
 
 from typing import Optional, Union
 
-from models import GameRole, Person, Player, RoundRole
-from services import card, user
+from app.models import GameRole, Person, Player, RoundRole
+from app.services import card, user
 
 
 def to_db(person: Union[Person, Player]) -> dict:

@@ -1,10 +1,10 @@
 '''Facilitate interaction with the game DB'''
 from typing import Optional
 
-from models import Accessibility, Game, GameStatus, Group
-from services import event, person
-from services import round as round_service
-from services.cosmos import game_client
+from app.models import Accessibility, Game, GameStatus, Group
+from app.services import event, person
+from app.services import round as round_service
+from app.services.cosmos import game_client
 
 
 def save(game: Game) -> Game:

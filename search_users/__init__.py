@@ -5,8 +5,8 @@ import json
 
 import azure.functions as func
 
-from decorators import catcher
-from services import UserService
+from app.decorators import catcher
+from app.services import UserService
 
 
 @catcher
