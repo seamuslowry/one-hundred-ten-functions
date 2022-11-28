@@ -3,9 +3,9 @@ import base64
 import json
 from unittest import TestCase
 
-from models import GoogleUser, User
-from services import UserService
-from services.cosmos import user_client
+from app.models import GoogleUser, User
+from app.services import UserService
+from app.services.cosmos import user_client
 from tests.helpers import build_request
 
 

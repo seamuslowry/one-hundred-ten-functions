@@ -1,9 +1,9 @@
 '''Round Service unit tests'''
 from unittest import TestCase
 
-from models import (Bid, BidAmount, Deck, DetailedDiscard, Group, Player,
-                    Round, RoundRole, SelectableSuit, SelectTrump, Trick)
-from services import round as RoundService
+from app.models import (Bid, BidAmount, Deck, DetailedDiscard, Group, Player,
+                        Round, RoundRole, SelectableSuit, SelectTrump, Trick)
+from app.services import round as RoundService
 
 
 class TestRoundService(TestCase):

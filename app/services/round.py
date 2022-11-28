@@ -1,8 +1,8 @@
 '''Facilitate interaction with rounds in the DB'''
 
-from models import (Bid, BidAmount, Deck, DetailedDiscard, Group, Round,
-                    RoundStatus, SelectableSuit, SelectTrump)
-from services import card, person, trick
+from app.models import (Bid, BidAmount, Deck, DetailedDiscard, Group, Round,
+                        RoundStatus, SelectableSuit, SelectTrump)
+from app.services import card, person, trick
 
 
 def to_db(game_round: Round) -> dict:

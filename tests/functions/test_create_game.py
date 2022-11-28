@@ -10,9 +10,9 @@ from tests.helpers import (DEFAULT_USER, build_request, read_response_body,
 class TestCreateGame(TestCase):
     '''Create Game unit tests'''
 
-    @mock.patch('services.GameService.save', side_effect=return_input)
-    @mock.patch('services.UserService.save', mock.Mock(side_effect=return_input))
-    @mock.patch('services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
+    @mock.patch('app.services.GameService.save', side_effect=return_input)
+    @mock.patch('app.services.UserService.save', mock.Mock(side_effect=return_input))
+    @mock.patch('app.services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
     def test_creates_game(self, game_save):
         '''On hitting the create request a game is created and returned'''
         req = build_request(body=json.dumps({'name': 'test name'}).encode('utf-8'))

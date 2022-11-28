@@ -1,7 +1,7 @@
 '''Facilitate interaction with tricks in the DB'''
 
-from models import Play, SelectableSuit, Trick
-from services import card
+from app.models import Play, SelectableSuit, Trick
+from app.services import card
 
 
 def to_db(trick: Trick) -> dict:

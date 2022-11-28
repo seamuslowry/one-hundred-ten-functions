@@ -1,9 +1,9 @@
 '''Game Service unit tests'''
 from unittest import TestCase
 
-from models import Game, Group, Player, Round, RoundRole
-from services import GameService
-from services.cosmos import game_client
+from app.models import Game, Group, Player, Round, RoundRole
+from app.services import GameService
+from app.services.cosmos import game_client
 
 
 class TestGameService(TestCase):

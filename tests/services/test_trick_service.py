@@ -1,8 +1,8 @@
 '''Trick Service unit tests'''
 from unittest import TestCase
 
-from models import Card, CardNumber, Play, SelectableSuit, Trick
-from services import trick
+from app.models import Card, CardNumber, Play, SelectableSuit, Trick
+from app.services import trick
 
 
 class TestTrickService(TestCase):

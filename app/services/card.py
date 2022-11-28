@@ -1,6 +1,6 @@
 '''Facilitate interaction with cards in the DB'''
 
-from models import Card, CardNumber, SelectableSuit, UnselectableSuit
+from app.models import Card, CardNumber, SelectableSuit, UnselectableSuit
 
 
 def to_db(card: Card) -> dict:

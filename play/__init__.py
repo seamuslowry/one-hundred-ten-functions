@@ -5,9 +5,9 @@ import json
 
 import azure.functions as func
 
-from decorators import catcher
-from models import Play
-from services import CardService, GameService, UserService
+from app.decorators import catcher
+from app.models import Play
+from app.services import CardService, GameService, UserService
 
 
 @catcher

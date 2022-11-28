@@ -1,10 +1,10 @@
 '''Event service unit tests'''
 from unittest import TestCase
 
-from models import (Bid, BidAmount, Card, CardNumber, Discard, GameEnd,
-                    GameStart, Play, RoundEnd, RoundStart, SelectableSuit,
-                    SelectTrump, TrickEnd, TrickStart)
-from services import CardService, EventService
+from app.models import (Bid, BidAmount, Card, CardNumber, Discard, GameEnd,
+                        GameStart, Play, RoundEnd, RoundStart, SelectableSuit,
+                        SelectTrump, TrickEnd, TrickStart)
+from app.services import CardService, EventService
 
 card = Card(CardNumber.ACE, SelectableSuit.CLUBS)
 

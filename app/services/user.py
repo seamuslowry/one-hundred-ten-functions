@@ -6,8 +6,8 @@ from json import loads
 
 import azure.functions as func
 
-from models import GoogleUser, User
-from services.cosmos import user_client
+from app.models import GoogleUser, User
+from app.services.cosmos import user_client
 
 
 class UserType(str, Enum):

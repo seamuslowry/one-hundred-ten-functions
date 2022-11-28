@@ -2,9 +2,9 @@
 import json
 from unittest import TestCase, mock
 
-from models import RoundStatus
+from app.models import RoundStatus
+from app.services import CardService
 from play import main
-from services import CardService
 from tests.helpers import (USER_ONE, build_request, game, read_response_body,
                            return_input)
 
@@ -12,11 +12,11 @@ from tests.helpers import (USER_ONE, build_request, game, read_response_body,
 class TestPlay(TestCase):
     '''Card playing unit tests'''
 
-    @mock.patch('services.GameService.save', side_effect=return_input)
-    @mock.patch('services.GameService.get',
+    @mock.patch('app.services.GameService.save', side_effect=return_input)
+    @mock.patch('app.services.GameService.get',
                 return_value=game(RoundStatus.TRICKS))
-    @mock.patch('services.UserService.from_request', mock.Mock(return_value=USER_ONE))
-    @mock.patch('services.UserService.get', mock.Mock(return_value=USER_ONE))
+    @mock.patch('app.services.UserService.from_request', mock.Mock(return_value=USER_ONE))
+    @mock.patch('app.services.UserService.get', mock.Mock(return_value=USER_ONE))
     def test_bid(self, game_get, game_save):
         '''On hitting the plays endpoint, the logged in user plays the selected card'''
         original_hand = game_get.return_value.active_round.active_player.hand

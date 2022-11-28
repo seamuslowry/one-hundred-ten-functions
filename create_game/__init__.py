@@ -6,9 +6,9 @@ import logging
 
 import azure.functions as func
 
-from decorators import catcher
-from models import Accessibility, Game, GameRole
-from services import GameService, UserService
+from app.decorators import catcher
+from app.models import Accessibility, Game, GameRole
+from app.services import GameService, UserService
 
 
 @catcher
