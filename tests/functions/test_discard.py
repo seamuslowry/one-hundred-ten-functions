@@ -2,9 +2,9 @@
 import json
 from unittest import TestCase, mock
 
+from app.models import RoundStatus
+from app.services import CardService
 from discard import main
-from models import RoundStatus
-from services import CardService
 from tests.helpers import (DEFAULT_USER, build_request, game,
                            read_response_body, return_input)
 
@@ -12,11 +12,11 @@ from tests.helpers import (DEFAULT_USER, build_request, game,
 class TestDiscard(TestCase):
     '''Discarding unit tests'''
 
-    @mock.patch('services.GameService.save', side_effect=return_input)
-    @mock.patch('services.GameService.get',
+    @mock.patch('app.services.GameService.save', side_effect=return_input)
+    @mock.patch('app.services.GameService.get',
                 return_value=game(RoundStatus.DISCARD))
-    @mock.patch('services.UserService.from_request', mock.Mock(return_value=DEFAULT_USER))
-    @mock.patch('services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
+    @mock.patch('app.services.UserService.from_request', mock.Mock(return_value=DEFAULT_USER))
+    @mock.patch('app.services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
     def test_distard(self, game_get, game_save):
         '''On hitting the discard endpoint, the logged in user discards the provided cards'''
         original_hand = game_get.return_value.active_round.active_player.hand

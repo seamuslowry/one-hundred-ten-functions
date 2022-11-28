@@ -1,8 +1,8 @@
 '''Card Service unit tests'''
 from unittest import TestCase
 
-from models import Card, CardNumber, SelectableSuit, UnselectableSuit
-from services import card
+from app.models import Card, CardNumber, SelectableSuit, UnselectableSuit
+from app.services import card
 
 
 class TestCardService(TestCase):

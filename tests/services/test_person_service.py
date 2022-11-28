@@ -1,9 +1,9 @@
 '''Person Service unit tests'''
 from unittest import TestCase
 
-from models import (Card, CardNumber, GameRole, Person, Player, RoundRole,
-                    SelectableSuit)
-from services import person
+from app.models import (Card, CardNumber, GameRole, Person, Player, RoundRole,
+                        SelectableSuit)
+from app.services import person
 
 
 class TestPersonService(TestCase):

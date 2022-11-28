@@ -4,10 +4,10 @@ from typing import Optional, Union
 
 import azure.functions as func
 
-from models import (Bid, BidAmount, DetailedDiscard, GameRole, GameStatus,
-                    Group, Person, RoundStatus, SelectableSuit, SelectTrump,
-                    Trick, User)
-from models.game import Game
+from app.models import (Bid, BidAmount, DetailedDiscard, GameRole, GameStatus,
+                        Group, Person, RoundStatus, SelectableSuit,
+                        SelectTrump, Trick, User)
+from app.models.game import Game
 
 DEFAULT_ID = 'id'
 DEFAULT_NAME = 'name'
