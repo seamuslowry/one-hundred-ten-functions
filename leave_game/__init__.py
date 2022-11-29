@@ -7,6 +7,7 @@ import azure.functions as func
 
 from app.decorators import catcher
 from app.models import RoundStatus
+from app.parsers import parse_request
 from app.services import GameService, UserService
 
 
@@ -15,8 +16,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Leave a 110 game
     '''
-    user = UserService.from_request(req)
-    game = GameService.get(req.route_params['id'])
+    user, game, *_ = parse_request(req)
     if isinstance(game.status, RoundStatus):
         game.automate(user.identifier)
     else:
