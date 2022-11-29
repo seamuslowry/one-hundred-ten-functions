@@ -7,7 +7,7 @@ import azure.functions as func
 
 from app.decorators import catcher
 from app.models import Bid, BidAmount
-from app.parsers import parse_request
+from app.parsers import RequestParser
 from app.services import GameService
 
 
@@ -16,7 +16,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Bid in a 110 game
     '''
-    (user, game, initial_event_knowledge) = parse_request(req)
+    (user, game, initial_event_knowledge) = RequestParser.parse(req)
 
     body = req.get_json()
 

@@ -12,9 +12,8 @@ class TestBid(TestCase):
     '''Bidding unit tests'''
 
     @mock.patch('app.services.GameService.save', side_effect=return_input)
-    @mock.patch('app.services.GameService.get', mock.Mock(
-        return_value=game(RoundStatus.BIDDING)))
-    @mock.patch('app.services.UserService.from_request', mock.Mock(return_value=DEFAULT_USER))
+    @mock.patch('app.parsers.RequestParser.parse',
+                mock.Mock(return_value=(DEFAULT_USER, game(RoundStatus.BIDDING), 0)))
     @mock.patch('app.services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
     def test_bid(self, game_save):
         '''On hitting the bid endpoint, the logged in user bids'''
@@ -28,4 +27,4 @@ class TestBid(TestCase):
         game_save.assert_called_once()
         self.assertEqual(DEFAULT_USER.identifier,
                          resp_dict['round']['bidder']['identifier'])
-        self.assertEqual(DEFAULT_USER.identifier, resp_dict['results'][0]['identifier'])
+        self.assertEqual(DEFAULT_USER.identifier, resp_dict['results'][-1]['identifier'])
