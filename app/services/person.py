@@ -3,7 +3,7 @@
 from typing import Optional, Union
 
 from app.models import GameRole, Person, Player, RoundRole
-from app.services import card, user
+from app.services import card
 
 
 def to_db(person: Union[Person, Player]) -> dict:
@@ -37,11 +37,9 @@ def player_from_db(person: dict) -> Player:
 
 def json(person: Union[Person, Player], client: Optional[str] = None) -> dict:
     '''Convert the provided person or player into the structure it should provide the client'''
-    db_user = user.get(person.identifier)
 
     return {
         'identifier': person.identifier,
-        'name': db_user.name,
         'automate': person.automate,
         'prepassed': RoundRole.PRE_PASSED in person.roles,
         # hand should only be provided if the client is this individual

@@ -13,13 +13,11 @@ class TestDiscard(TestCase):
     '''Discarding unit tests'''
 
     @mock.patch('app.services.GameService.save', side_effect=return_input)
-    @mock.patch('app.services.GameService.get',
-                return_value=game(RoundStatus.DISCARD))
-    @mock.patch('app.services.UserService.from_request', mock.Mock(return_value=DEFAULT_USER))
-    @mock.patch('app.services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
-    def test_distard(self, game_get, game_save):
+    @mock.patch('discard.parse_request',
+                return_value=(DEFAULT_USER, game(RoundStatus.DISCARD)))
+    def test_discard(self, parse, game_save):
         '''On hitting the discard endpoint, the logged in user discards the provided cards'''
-        original_hand = game_get.return_value.active_round.active_player.hand
+        original_hand = parse.return_value[1].active_round.active_player.hand
 
         req = build_request(route_params={'id': 'id'}, body=json.dumps({'cards': [CardService.json(
             c) for c in original_hand]}).encode('utf-8'))
@@ -34,4 +32,4 @@ class TestDiscard(TestCase):
 
         game_save.assert_called_once()
         self.assertNotEqual(original_hand, new_hand)
-        self.assertEqual(DEFAULT_USER.identifier, resp_dict['results'][0]['identifier'])
+        self.assertEqual(DEFAULT_USER.identifier, resp_dict['results'][-1]['identifier'])

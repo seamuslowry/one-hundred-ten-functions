@@ -12,10 +12,10 @@ class TestInviteToGame(TestCase):
     '''Invite to Game unit tests'''
 
     @mock.patch('app.services.GameService.save', side_effect=return_input)
-    @mock.patch('app.services.UserService.save', mock.Mock(side_effect=return_input))
-    @mock.patch('app.services.GameService.get', mock.Mock(
-        return_value=Game(people=Group([Person(DEFAULT_ID, roles={GameRole.PLAYER})]))))
-    @mock.patch('app.services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
+    @mock.patch(
+        'invite_to_game.parse_request', mock.Mock(
+            return_value=(DEFAULT_USER,
+                          Game(people=Group([Person(DEFAULT_ID, roles={GameRole.PLAYER})])))))
     def test_invites_game(self, game_save):
         '''On hitting the invite endpoint the logged in player invites the listed users'''
         invitee = 'invitee'

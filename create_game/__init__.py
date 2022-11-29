@@ -8,7 +8,8 @@ import azure.functions as func
 
 from app.decorators import catcher
 from app.models import Accessibility, Game, GameRole
-from app.services import GameService, UserService
+from app.parsers import parse_request
+from app.services import GameService
 
 
 @catcher
@@ -18,7 +19,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     logging.info('Initiating create game request.')
 
-    user = UserService.from_request(req)
+    user, *_ = parse_request(req)
 
     logging.debug('Creating game for %s', user.identifier)
 

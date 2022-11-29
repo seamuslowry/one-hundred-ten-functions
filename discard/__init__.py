@@ -7,16 +7,16 @@ import azure.functions as func
 
 from app.decorators import catcher
 from app.models import Discard
-from app.services import CardService, GameService, UserService
+from app.parsers import parse_request
+from app.services import CardService, GameService
 
 
 @catcher
 def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
-    Dsicard in a 110 game
+    Discard in a 110 game
     '''
-    user = UserService.from_request(req)
-    game = GameService.get(req.route_params['id'])
+    user, game = parse_request(req)
     initial_event_knowledge = len(game.events)
 
     body = req.get_json()

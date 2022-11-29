@@ -11,10 +11,10 @@ class TestJoinGame(TestCase):
     '''Join Game unit tests'''
 
     @mock.patch('app.services.GameService.save', side_effect=return_input)
-    @mock.patch('app.services.UserService.save', mock.Mock(side_effect=return_input))
-    @mock.patch('app.services.GameService.get', mock.Mock(
-        return_value=Game(people=Group([Person(DEFAULT_ID + 'no')]))))
-    @mock.patch('app.services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
+    @mock.patch(
+        'join_game.parse_request', mock.Mock(
+            return_value=(DEFAULT_USER,
+                          Game(people=Group([Person(DEFAULT_ID + 'no')])))))
     def test_joins_game(self, game_save):
         '''On hitting the join endpoint the logged in player joins the game'''
         req = build_request(route_params={'id': 'id'})

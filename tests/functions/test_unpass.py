@@ -11,10 +11,8 @@ class TestUnpass(TestCase):
     '''Unpassing unit tests'''
 
     @mock.patch('app.services.GameService.save', side_effect=return_input)
-    @mock.patch('app.services.GameService.get', mock.Mock(
-        return_value=game(RoundStatus.BIDDING)))
-    @mock.patch('app.services.UserService.from_request', mock.Mock(return_value=DEFAULT_USER))
-    @mock.patch('app.services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
+    @mock.patch('rescind_prepass.parse_request',
+                mock.Mock(return_value=(DEFAULT_USER, game(RoundStatus.BIDDING))))
     def test_unpass(self, game_save):
         '''On hitting the unpass endpoint, the logged in user unpasses'''
         req = build_request(route_params={'id': 'id'})

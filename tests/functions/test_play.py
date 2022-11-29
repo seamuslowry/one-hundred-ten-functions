@@ -13,13 +13,11 @@ class TestPlay(TestCase):
     '''Card playing unit tests'''
 
     @mock.patch('app.services.GameService.save', side_effect=return_input)
-    @mock.patch('app.services.GameService.get',
-                return_value=game(RoundStatus.TRICKS))
-    @mock.patch('app.services.UserService.from_request', mock.Mock(return_value=USER_ONE))
-    @mock.patch('app.services.UserService.get', mock.Mock(return_value=USER_ONE))
-    def test_bid(self, game_get, game_save):
+    @mock.patch('play.parse_request',
+                return_value=(USER_ONE, game(RoundStatus.TRICKS)))
+    def test_play(self, game_get, game_save):
         '''On hitting the plays endpoint, the logged in user plays the selected card'''
-        original_hand = game_get.return_value.active_round.active_player.hand
+        original_hand = game_get.return_value[1].active_round.active_player.hand
         play_card = original_hand[0]
 
         req = build_request(
@@ -36,4 +34,4 @@ class TestPlay(TestCase):
 
         game_save.assert_called_once()
         self.assertNotIn(play_card, new_hand)
-        self.assertEqual(CardService.json(play_card), resp_dict['results'][0]['card'])
+        self.assertEqual(CardService.json(play_card), resp_dict['results'][-1]['card'])

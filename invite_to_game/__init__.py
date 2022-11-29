@@ -6,7 +6,8 @@ import json
 import azure.functions as func
 
 from app.decorators import catcher
-from app.services import GameService, UserService
+from app.parsers import parse_request
+from app.services import GameService
 
 
 @catcher
@@ -14,8 +15,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Invite to join a 110 game
     '''
-    user = UserService.from_request(req)
-    game = GameService.get(req.route_params['id'])
+    user, game = parse_request(req)
 
     body = req.get_json()
     invitees = body.get('invitees', [])

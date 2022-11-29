@@ -29,11 +29,6 @@ def save(user: User) -> User:
     return __from_db(user_client.upsert_item(__to_db(user)))
 
 
-def get(user_id: str) -> User:
-    '''Retrieve the user with the provided ID'''
-    return __from_db(user_client.read_item(user_id, user_id))
-
-
 def search(search_text: str) -> list[User]:
     '''Retrieve the users with names like the provided'''
     return list(map(__from_db, user_client.query_items(

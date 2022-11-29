@@ -11,12 +11,12 @@ class TestLeaveGame(TestCase):
     '''Leave Game unit tests'''
 
     @mock.patch('app.services.GameService.save', side_effect=return_input)
-    @mock.patch('app.services.UserService.save', mock.Mock(side_effect=return_input))
-    @mock.patch('app.services.GameService.get', mock.Mock(
-        return_value=Game(
-            people=Group([Person(DEFAULT_ID),
-                          Person(DEFAULT_ID + '2')]))))
-    @mock.patch('app.services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
+    @mock.patch(
+        'leave_game.parse_request', mock.Mock(
+            return_value=(DEFAULT_USER,
+                          Game(
+                              people=Group([Person(DEFAULT_ID),
+                                            Person(DEFAULT_ID + '2')])))))
     def test_leaves_game(self, game_save):
         '''On hitting the leave endpoint in an unstarted game, the player leaves the game'''
         req = build_request(route_params={'id': 'id'})
@@ -28,17 +28,16 @@ class TestLeaveGame(TestCase):
         self.assertNotIn(DEFAULT_ID, map(lambda pd: pd['identifier'], resp_dict['players']))
 
     @mock.patch('app.services.GameService.save', side_effect=return_input)
-    @mock.patch('app.services.UserService.save', mock.Mock(side_effect=return_input))
     @mock.patch(
-        'app.services.GameService.get', mock.Mock(
-            return_value=Game(
-                people=Group([]),
-                rounds=[
-                    Round(
-                        players=Group(
-                            [Player(identifier=DEFAULT_ID, roles={RoundRole.DEALER}),
-                             Player(identifier=DEFAULT_ID + '2')]))])))
-    @mock.patch('app.services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
+        'leave_game.parse_request', mock.Mock(
+            return_value=(DEFAULT_USER,
+                          Game(
+                              people=Group([]),
+                              rounds=[
+                                  Round(
+                                      players=Group(
+                                          [Player(identifier=DEFAULT_ID, roles={RoundRole.DEALER}),
+                                           Player(identifier=DEFAULT_ID + '2')]))]))))
     def test_automates_player(self, game_save):
         '''On hitting the leave endpoint in an started game, the player is automated'''
         req = build_request(route_params={'id': 'id'})
