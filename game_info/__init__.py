@@ -6,7 +6,8 @@ import json
 import azure.functions as func
 
 from app.decorators import catcher
-from app.services import GameService, UserService
+from app.parsers import parse_request
+from app.services import GameService
 
 
 @catcher
@@ -14,7 +15,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Retrieve 110 game.
     '''
-    user = UserService.from_request(req)
-    game = GameService.get(req.route_params['id'])
+    user, game, *_ = parse_request(req)
 
     return func.HttpResponse(json.dumps(GameService.json(game, user.identifier)))

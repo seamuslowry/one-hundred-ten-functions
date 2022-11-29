@@ -3,16 +3,17 @@ from unittest import TestCase, mock
 
 from app.models import Game, Group, Person
 from game_info import main
-from tests.helpers import (DEFAULT_ID, build_request, read_response_body,
-                           return_input)
+from tests.helpers import (DEFAULT_ID, DEFAULT_USER, build_request,
+                           read_response_body)
 
 
 class TestGameInfo(TestCase):
     '''Get Game unit tests'''
 
-    @mock.patch('app.services.UserService.save', mock.Mock(side_effect=return_input))
-    @mock.patch('app.services.GameService.get', mock.Mock(
-        return_value=Game(people=Group([Person(DEFAULT_ID + 'no')]))))
+    @mock.patch('game_info.parse_request',
+                mock.Mock(return_value=(DEFAULT_USER,
+                                        Game(people=Group([Person(DEFAULT_ID + 'no')])),
+                                        0)))
     def test_get_game(self):
         '''On hitting the info endpoint the game is retrieved'''
         req = build_request(route_params={'id': 'id'})
