@@ -16,7 +16,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Bid in a 110 game
     '''
-    (user, game, initial_event_knowledge) = parse_request(req)
+    user, game, initial_event_knowledge = parse_request(req)
 
     body = req.get_json()
 

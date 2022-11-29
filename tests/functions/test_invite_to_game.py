@@ -4,8 +4,8 @@ from unittest import TestCase, mock
 
 from app.models import Game, GameRole, Group, Person
 from invite_to_game import main
-from tests.helpers import (DEFAULT_ID, DEFAULT_USER, build_request,
-                           read_response_body, return_input)
+from tests.helpers import (DEFAULT_ID, build_request, read_response_body,
+                           return_input)
 
 
 class TestInviteToGame(TestCase):
@@ -15,7 +15,6 @@ class TestInviteToGame(TestCase):
     @mock.patch('app.services.UserService.save', mock.Mock(side_effect=return_input))
     @mock.patch('app.services.GameService.get', mock.Mock(
         return_value=Game(people=Group([Person(DEFAULT_ID, roles={GameRole.PLAYER})]))))
-    @mock.patch('app.services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
     def test_invites_game(self, game_save):
         '''On hitting the invite endpoint the logged in player invites the listed users'''
         invitee = 'invitee'

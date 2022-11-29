@@ -16,7 +16,6 @@ class TestDiscard(TestCase):
     @mock.patch('app.services.GameService.get',
                 return_value=game(RoundStatus.DISCARD))
     @mock.patch('app.services.UserService.from_request', mock.Mock(return_value=DEFAULT_USER))
-    @mock.patch('app.services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
     def test_distard(self, game_get, game_save):
         '''On hitting the discard endpoint, the logged in user discards the provided cards'''
         original_hand = game_get.return_value.active_round.active_player.hand

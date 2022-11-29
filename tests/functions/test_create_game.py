@@ -2,6 +2,7 @@
 import json
 from unittest import TestCase, mock
 
+from app.models import Game
 from create_game import main
 from tests.helpers import (DEFAULT_USER, build_request, read_response_body,
                            return_input)
@@ -11,8 +12,8 @@ class TestCreateGame(TestCase):
     '''Create Game unit tests'''
 
     @mock.patch('app.services.GameService.save', side_effect=return_input)
-    @mock.patch('app.services.UserService.save', mock.Mock(side_effect=return_input))
-    @mock.patch('app.services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
+    @mock.patch('create_game.parse_request',
+                mock.Mock(return_value=(DEFAULT_USER, Game(), 0)))
     def test_creates_game(self, game_save):
         '''On hitting the create request a game is created and returned'''
         req = build_request(body=json.dumps({'name': 'test name'}).encode('utf-8'))

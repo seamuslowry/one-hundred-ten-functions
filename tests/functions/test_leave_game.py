@@ -3,8 +3,8 @@ from unittest import TestCase, mock
 
 from app.models import Game, Group, Person, Player, Round, RoundRole
 from leave_game import main
-from tests.helpers import (DEFAULT_ID, DEFAULT_USER, build_request,
-                           read_response_body, return_input)
+from tests.helpers import (DEFAULT_ID, build_request, read_response_body,
+                           return_input)
 
 
 class TestLeaveGame(TestCase):
@@ -16,7 +16,6 @@ class TestLeaveGame(TestCase):
         return_value=Game(
             people=Group([Person(DEFAULT_ID),
                           Person(DEFAULT_ID + '2')]))))
-    @mock.patch('app.services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
     def test_leaves_game(self, game_save):
         '''On hitting the leave endpoint in an unstarted game, the player leaves the game'''
         req = build_request(route_params={'id': 'id'})
@@ -38,7 +37,6 @@ class TestLeaveGame(TestCase):
                         players=Group(
                             [Player(identifier=DEFAULT_ID, roles={RoundRole.DEALER}),
                              Player(identifier=DEFAULT_ID + '2')]))])))
-    @mock.patch('app.services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
     def test_automates_player(self, game_save):
         '''On hitting the leave endpoint in an started game, the player is automated'''
         req = build_request(route_params={'id': 'id'})

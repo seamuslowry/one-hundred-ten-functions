@@ -12,9 +12,8 @@ class TestBid(TestCase):
     '''Bidding unit tests'''
 
     @mock.patch('app.services.GameService.save', side_effect=return_input)
-    @mock.patch('app.services.UserService.get', mock.Mock(return_value=DEFAULT_USER))
     @mock.patch('bid.parse_request',
-                mock.MagicMock(return_value=(DEFAULT_USER, game(RoundStatus.BIDDING), 0)))
+                mock.Mock(return_value=(DEFAULT_USER, game(RoundStatus.BIDDING), 0)))
     def test_bid(self, game_save):
         '''On hitting the bid endpoint, the logged in user bids'''
         req = build_request(
