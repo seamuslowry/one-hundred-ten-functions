@@ -12,9 +12,8 @@ class TestSelectTrump(TestCase):
     '''Trump Selection unit tests'''
 
     @mock.patch('app.services.GameService.save', side_effect=return_input)
-    @mock.patch('app.services.GameService.get', mock.Mock(
-        return_value=game(RoundStatus.TRUMP_SELECTION)))
-    @mock.patch('app.services.UserService.from_request', mock.Mock(return_value=DEFAULT_USER))
+    @mock.patch('select_trump.parse_request',
+                mock.Mock(return_value=(DEFAULT_USER, game(RoundStatus.TRUMP_SELECTION), 0)))
     def test_bid(self, game_save):
         '''On hitting the trump selection endpoint, the logged in user selects trump'''
         trump = 'CLUBS'
@@ -28,4 +27,4 @@ class TestSelectTrump(TestCase):
 
         game_save.assert_called_once()
         self.assertEqual(trump, resp_dict['round']['trump'])
-        self.assertEqual(trump, resp_dict['results'][0]['suit'])
+        self.assertEqual(trump, resp_dict['results'][-1]['suit'])
