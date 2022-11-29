@@ -13,7 +13,7 @@ class TestCreateGame(TestCase):
 
     @mock.patch('app.services.GameService.save', side_effect=return_input)
     @mock.patch('create_game.parse_request',
-                mock.Mock(return_value=(DEFAULT_USER, Game(), 0)))
+                mock.Mock(return_value=(DEFAULT_USER, Game())))
     def test_creates_game(self, game_save):
         '''On hitting the create request a game is created and returned'''
         req = build_request(body=json.dumps({'name': 'test name'}).encode('utf-8'))

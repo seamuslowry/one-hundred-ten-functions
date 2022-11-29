@@ -14,7 +14,7 @@ class TestDiscard(TestCase):
 
     @mock.patch('app.services.GameService.save', side_effect=return_input)
     @mock.patch('discard.parse_request',
-                return_value=(DEFAULT_USER, game(RoundStatus.DISCARD), 0))
+                return_value=(DEFAULT_USER, game(RoundStatus.DISCARD)))
     def test_discard(self, parse, game_save):
         '''On hitting the discard endpoint, the logged in user discards the provided cards'''
         original_hand = parse.return_value[1].active_round.active_player.hand

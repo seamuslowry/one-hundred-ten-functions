@@ -15,7 +15,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Start a 110 game
     '''
-    user, game, *_ = parse_request(req)
+    user, game = parse_request(req)
 
     if user.identifier == game.organizer.identifier:
         game.start_game()

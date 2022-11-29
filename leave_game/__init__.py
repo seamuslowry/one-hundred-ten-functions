@@ -16,7 +16,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Leave a 110 game
     '''
-    user, game, *_ = parse_request(req)
+    user, game = parse_request(req)
     if isinstance(game.status, RoundStatus):
         game.automate(user.identifier)
     else:

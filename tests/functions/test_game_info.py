@@ -12,8 +12,7 @@ class TestGameInfo(TestCase):
 
     @mock.patch('game_info.parse_request',
                 mock.Mock(return_value=(DEFAULT_USER,
-                                        Game(people=Group([Person(DEFAULT_ID + 'no')])),
-                                        0)))
+                                        Game(people=Group([Person(DEFAULT_ID + 'no')])))))
     def test_get_game(self):
         '''On hitting the info endpoint the game is retrieved'''
         req = build_request(route_params={'id': 'id'})

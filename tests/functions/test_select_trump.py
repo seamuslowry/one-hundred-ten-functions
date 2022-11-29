@@ -13,7 +13,7 @@ class TestSelectTrump(TestCase):
 
     @mock.patch('app.services.GameService.save', side_effect=return_input)
     @mock.patch('select_trump.parse_request',
-                mock.Mock(return_value=(DEFAULT_USER, game(RoundStatus.TRUMP_SELECTION), 0)))
+                mock.Mock(return_value=(DEFAULT_USER, game(RoundStatus.TRUMP_SELECTION))))
     def test_bid(self, game_save):
         '''On hitting the trump selection endpoint, the logged in user selects trump'''
         trump = 'CLUBS'

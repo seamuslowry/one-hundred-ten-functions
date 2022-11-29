@@ -13,7 +13,7 @@ class TestBid(TestCase):
 
     @mock.patch('app.services.GameService.save', side_effect=return_input)
     @mock.patch('bid.parse_request',
-                mock.Mock(return_value=(DEFAULT_USER, game(RoundStatus.BIDDING), 0)))
+                mock.Mock(return_value=(DEFAULT_USER, game(RoundStatus.BIDDING))))
     def test_bid(self, game_save):
         '''On hitting the bid endpoint, the logged in user bids'''
         req = build_request(

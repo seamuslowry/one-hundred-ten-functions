@@ -15,7 +15,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Invite to join a 110 game
     '''
-    user, game, *_ = parse_request(req)
+    user, game = parse_request(req)
 
     body = req.get_json()
     invitees = body.get('invitees', [])

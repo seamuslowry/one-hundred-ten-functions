@@ -15,7 +15,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Join a 110 game
     '''
-    user, game, *_ = parse_request(req)
+    user, game = parse_request(req)
     game.join(user.identifier)
     game = GameService.save(game)
 

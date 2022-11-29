@@ -12,10 +12,9 @@ class TestUnpass(TestCase):
 
     @mock.patch('app.services.GameService.save', side_effect=return_input)
     @mock.patch('rescind_prepass.parse_request',
-                return_value=(DEFAULT_USER, game(RoundStatus.BIDDING), 0))
-    def test_unpass(self, game_get, game_save):
+                mock.Mock(return_value=(DEFAULT_USER, game(RoundStatus.BIDDING))))
+    def test_unpass(self, game_save):
         '''On hitting the unpass endpoint, the logged in user unpasses'''
-        initial_events_len = len(game_get.return_value[1].events)
         req = build_request(route_params={'id': 'id'})
 
         resp = main(req)
@@ -24,4 +23,4 @@ class TestUnpass(TestCase):
         game_save.assert_called_once()
         self.assertEqual(DEFAULT_USER.identifier, resp_dict['round']['active_player']['identifier'])
         self.assertFalse(resp_dict['round']['active_player']['prepassed'])
-        self.assertEqual(initial_events_len, len(resp_dict['results']))
+        self.assertEqual([], resp_dict['results'])

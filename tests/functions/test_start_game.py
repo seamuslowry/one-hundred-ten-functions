@@ -15,7 +15,7 @@ class TestStartGame(TestCase):
                 mock.Mock(return_value=(DEFAULT_USER, Game(
                     people=Group(
                         [Person(DEFAULT_ID, roles={GameRole.PLAYER}),
-                         Person(DEFAULT_ID + '2', roles={GameRole.PLAYER})])), 0)))
+                         Person(DEFAULT_ID + '2', roles={GameRole.PLAYER})])))))
     def test_starts_game_if_organizer(self, game_save):
         '''When the organizer hits the start endpoint the game begins'''
         req = build_request(route_params={'id': 'id'})
@@ -31,7 +31,7 @@ class TestStartGame(TestCase):
                 mock.Mock(return_value=(DEFAULT_USER, Game(
                     people=Group(
                         [Person(DEFAULT_ID + '1', roles={GameRole.PLAYER}),
-                         Person(DEFAULT_ID + '2', roles={GameRole.PLAYER})])), 0)))
+                         Person(DEFAULT_ID + '2', roles={GameRole.PLAYER})])))))
     def test_starts_game_if_not_organizer(self, game_save):
         '''When someone not organizer hits the start endpoint, nothing happens'''
         req = build_request(route_params={'id': 'id'})

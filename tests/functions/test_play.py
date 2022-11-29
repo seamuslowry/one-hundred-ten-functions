@@ -14,7 +14,7 @@ class TestPlay(TestCase):
 
     @mock.patch('app.services.GameService.save', side_effect=return_input)
     @mock.patch('play.parse_request',
-                return_value=(USER_ONE, game(RoundStatus.TRICKS), 0))
+                return_value=(USER_ONE, game(RoundStatus.TRICKS)))
     def test_play(self, game_get, game_save):
         '''On hitting the plays endpoint, the logged in user plays the selected card'''
         original_hand = game_get.return_value[1].active_round.active_player.hand

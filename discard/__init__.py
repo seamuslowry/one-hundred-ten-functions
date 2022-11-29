@@ -14,9 +14,10 @@ from app.services import CardService, GameService
 @catcher
 def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
-    Dsicard in a 110 game
+    Discard in a 110 game
     '''
-    user, game, initial_event_knowledge = parse_request(req)
+    user, game = parse_request(req)
+    initial_event_knowledge = len(game.events)
 
     body = req.get_json()
 
