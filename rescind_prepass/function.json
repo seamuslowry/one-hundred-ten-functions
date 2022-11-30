@@ -7,7 +7,7 @@
       "direction": "in",
       "name": "req",
       "methods": ["post"],
-      "route": "unpass/{id}"
+      "route": "unpass/{game_id}"
     },
     {
       "type": "http",
