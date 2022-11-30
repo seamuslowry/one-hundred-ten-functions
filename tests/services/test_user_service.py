@@ -1,7 +1,7 @@
 '''User Service unit tests'''
 import base64
 import json
-from unittest import TestCase
+from unittest import TestCase, mock
 
 from app.models import GoogleUser, User
 from app.services import UserService
@@ -41,12 +41,21 @@ class TestUserService(TestCase):
 
         self.assertRaises(ValueError, UserService.from_request, req)
 
-    def test_search_user(self):
+    @mock.patch('app.services.cosmos.user_client.query_items')
+    def test_search_user(self, query):
         '''Searches for users'''
         users = UserService.search('text')
 
         self.assertIsNotNone(users)
-        user_client.query_items.assert_called_once()
+        query.assert_called_once()
+
+    @mock.patch('app.services.cosmos.user_client.query_items')
+    def test_get_by_identifiers(self, query):
+        '''Searches for user by identifiers'''
+        users = UserService.by_identifiers(['text'])
+
+        self.assertIsNotNone(users)
+        query.assert_called_once()
 
     def test_serializes_user(self):
         '''Serializes a user'''
