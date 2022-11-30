@@ -15,7 +15,7 @@ class TestUnpass(TestCase):
                 mock.Mock(return_value=(DEFAULT_USER, game(RoundStatus.BIDDING))))
     def test_unpass(self, game_save):
         '''On hitting the unpass endpoint, the logged in user unpasses'''
-        req = build_request(route_params={'id': 'id'})
+        req = build_request(route_params={'game_id': 'id'})
 
         resp = main(req)
         resp_dict = read_response_body(resp.get_body())

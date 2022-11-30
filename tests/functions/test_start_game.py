@@ -18,7 +18,7 @@ class TestStartGame(TestCase):
                          Person(DEFAULT_ID + '2', roles={GameRole.PLAYER})])))))
     def test_starts_game_if_organizer(self, game_save):
         '''When the organizer hits the start endpoint the game begins'''
-        req = build_request(route_params={'id': 'id'})
+        req = build_request(route_params={'game_id': 'id'})
 
         resp = main(req)
         resp_dict = read_response_body(resp.get_body())
@@ -34,7 +34,7 @@ class TestStartGame(TestCase):
                          Person(DEFAULT_ID + '2', roles={GameRole.PLAYER})])))))
     def test_starts_game_if_not_organizer(self, game_save):
         '''When someone not organizer hits the start endpoint, nothing happens'''
-        req = build_request(route_params={'id': 'id'})
+        req = build_request(route_params={'game_id': 'id'})
 
         resp = main(req)
         resp_dict = read_response_body(resp.get_body())

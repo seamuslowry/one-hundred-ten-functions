@@ -15,7 +15,7 @@ class TestGameInfo(TestCase):
                                         Game(people=Group([Person(DEFAULT_ID + 'no')])))))
     def test_get_game(self):
         '''On hitting the info endpoint the game is retrieved'''
-        req = build_request(route_params={'id': 'id'})
+        req = build_request(route_params={'game_id': 'id'})
 
         resp = main(req)
         resp_dict = read_response_body(resp.get_body())

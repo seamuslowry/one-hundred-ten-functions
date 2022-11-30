@@ -19,7 +19,7 @@ class TestSelectTrump(TestCase):
         trump = 'CLUBS'
 
         req = build_request(
-            route_params={'id': 'id'},
+            route_params={'game_id': 'id'},
             body=json.dumps({'suit': trump}).encode('utf-8'))
 
         resp = main(req)

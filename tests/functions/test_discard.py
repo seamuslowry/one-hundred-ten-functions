@@ -19,8 +19,8 @@ class TestDiscard(TestCase):
         '''On hitting the discard endpoint, the logged in user discards the provided cards'''
         original_hand = parse.return_value[1].active_round.active_player.hand
 
-        req = build_request(route_params={'id': 'id'}, body=json.dumps({'cards': [CardService.json(
-            c) for c in original_hand]}).encode('utf-8'))
+        req = build_request(route_params={'game_id': 'id'}, body=json.dumps(
+            {'cards': [CardService.json(c) for c in original_hand]}).encode('utf-8'))
 
         resp = main(req)
         resp_dict = read_response_body(resp.get_body())

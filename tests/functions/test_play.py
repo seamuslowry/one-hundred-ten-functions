@@ -21,7 +21,7 @@ class TestPlay(TestCase):
         play_card = original_hand[0]
 
         req = build_request(
-            route_params={'id': 'id'},
+            route_params={'game_id': 'id'},
             body=json.dumps({'card': CardService.json(play_card)}).encode('utf-8'))
 
         resp = main(req)
