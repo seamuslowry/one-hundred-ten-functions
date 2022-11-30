@@ -41,6 +41,18 @@ def search(search_text: str) -> list[User]:
     )))
 
 
+def by_identifiers(identifiers: list[str]) -> list[User]:
+    '''Retrieve the users with identifiers in the list provided'''
+    return list(map(__from_db, user_client.query_items(
+        "select * from user where array_contains(@identifiers, user.id) offset 0 limit @max",
+        parameters=[
+            {'name': '@identifiers', 'value': identifiers},
+            {'name': '@max', 'value': MAX}
+        ],
+        enable_cross_partition_query=True
+    )))
+
+
 def json(user: User) -> dict:
     '''Return users as they can be provided to the client'''
     return {
