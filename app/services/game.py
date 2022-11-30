@@ -1,10 +1,18 @@
 '''Facilitate interaction with the game DB'''
+from enum import Enum
 from typing import Optional
 
 from app.models import Accessibility, Game, GameStatus, Group
 from app.services import event, person
 from app.services import round as round_service
 from app.services.cosmos import game_client
+
+
+class SearchType(Enum):
+    '''Possible types of searches'''
+    WAITING = 1
+    ACTIVE = 2
+    WON = 3
 
 
 def save(game: Game) -> Game:
@@ -69,6 +77,30 @@ def json(game: Game, client: str, initial_event_knowledge: Optional[int] = None)
         **({'results': event.json(game.events[initial_event_knowledge:], client)}
            if initial_event_knowledge is not None else {})
     }
+
+
+def search(search_type: SearchType, client: str, max_count: int = 20) -> list[Game]:
+    '''Retrieve the games requested'''
+    return {
+        SearchType.WAITING: __search_waiting
+    }[search_type](client, max_count)
+
+
+def __search_waiting(client: str, max_count: int = 20) -> list[Game]:
+    '''Retrieve the games waiting for players the user can access'''
+    return list(map(from_db, game_client.query_items(
+        ('select * from game '
+         # TODO status should be determined from enum
+         'where game.status = "WAITING_FOR_PLAYERS" '
+         # TODO roles should be determined from enum
+         'and array_contains(game.players, {"id": @client, "roles": ["PLAYER"]}, true) '
+         'offset 0 limit @max'),
+        parameters=[
+            {'name': '@client', 'value': client},
+            {'name': '@max', 'value': max_count}
+        ],
+        enable_cross_partition_query=True
+    )))
 
 
 def __waiting_game_properties(game: Game) -> dict:
