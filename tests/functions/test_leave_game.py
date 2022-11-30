@@ -19,7 +19,7 @@ class TestLeaveGame(TestCase):
                                             Person(DEFAULT_ID + '2')])))))
     def test_leaves_game(self, game_save):
         '''On hitting the leave endpoint in an unstarted game, the player leaves the game'''
-        req = build_request(route_params={'id': 'id'})
+        req = build_request(route_params={'game_id': 'id'})
 
         resp = main(req)
         resp_dict = read_response_body(resp.get_body())
@@ -40,7 +40,7 @@ class TestLeaveGame(TestCase):
                                            Player(identifier=DEFAULT_ID + '2')]))]))))
     def test_automates_player(self, game_save):
         '''On hitting the leave endpoint in an started game, the player is automated'''
-        req = build_request(route_params={'id': 'id'})
+        req = build_request(route_params={'game_id': 'id'})
 
         resp = main(req)
         resp_dict = read_response_body(resp.get_body())

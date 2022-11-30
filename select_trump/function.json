@@ -7,7 +7,7 @@
       "direction": "in",
       "name": "req",
       "methods": ["post"],
-      "route": "select/{id}"
+      "route": "select/{game_id}"
     },
     {
       "type": "http",

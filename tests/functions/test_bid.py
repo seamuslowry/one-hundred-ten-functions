@@ -17,7 +17,7 @@ class TestBid(TestCase):
     def test_bid(self, game_save):
         '''On hitting the bid endpoint, the logged in user bids'''
         req = build_request(
-            route_params={'id': 'id'},
+            route_params={'game_id': 'id'},
             body=json.dumps({'amount': 15}).encode('utf-8'))
 
         resp = main(req)

@@ -20,7 +20,7 @@ class TestInviteToGame(TestCase):
         '''On hitting the invite endpoint the logged in player invites the listed users'''
         invitee = 'invitee'
         req = build_request(
-            route_params={'id': 'id'},
+            route_params={'game_id': 'id'},
             body=json.dumps({'invitees': [invitee]}).encode('utf-8'))
 
         resp = main(req)

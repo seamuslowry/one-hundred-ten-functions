@@ -7,7 +7,7 @@
       "direction": "in",
       "name": "req",
       "methods": ["get"],
-      "route": "info/{id}"
+      "route": "info/{game_id}"
     },
     {
       "type": "http",

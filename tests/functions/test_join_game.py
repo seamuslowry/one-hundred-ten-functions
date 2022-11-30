@@ -17,7 +17,7 @@ class TestJoinGame(TestCase):
                           Game(people=Group([Person(DEFAULT_ID + 'no')])))))
     def test_joins_game(self, game_save):
         '''On hitting the join endpoint the logged in player joins the game'''
-        req = build_request(route_params={'id': 'id'})
+        req = build_request(route_params={'game_id': 'id'})
 
         resp = main(req)
         resp_dict = read_response_body(resp.get_body())
