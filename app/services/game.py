@@ -93,11 +93,9 @@ def __search_waiting(client: str, max_count: int = 20) -> list[Game]:
          # TODO status should be determined from enum
          'where game.status = "WAITING_FOR_PLAYERS" '
          # TODO roles should be determined from enum
-         # TODO roles array currently must _exactly_ match rather than contain the listed role
          'and exists(select value person from person in game.people '
          'where person.identifier = @client '
          'and array_contains(person.roles, "PLAYER")) '
-         # 'and array_contains(game.people, {"identifier": @client, "roles": ["PLAYER"]}, true) '
          'offset 0 limit @max'),
         parameters=[
             {'name': '@client', 'value': client},
