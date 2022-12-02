@@ -47,6 +47,15 @@ class TestUserService(TestCase):
 
         self.assertIsNotNone(users)
         user_client.query_items.assert_called_once()
+        user_client.query_items.reset_mock()
+
+    def test_get_by_identifiers(self):
+        '''Searches for user by identifiers'''
+        users = UserService.by_identifiers(['text'])
+
+        self.assertIsNotNone(users)
+        user_client.query_items.assert_called_once()
+        user_client.query_items.reset_mock()
 
     def test_serializes_user(self):
         '''Serializes a user'''
