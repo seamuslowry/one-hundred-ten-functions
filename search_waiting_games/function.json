@@ -7,7 +7,7 @@
       "direction": "in",
       "name": "req",
       "methods": ["get"],
-      "route": "games"
+      "route": "games/waiting"
     },
     {
       "type": "http",
