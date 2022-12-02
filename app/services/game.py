@@ -72,10 +72,13 @@ def json(game: Game, client: str, initial_event_knowledge: Optional[int] = None)
 
 
 def search_waiting(
-        text: str, max_count: int, client: str, role: Optional[GameRole] = None) -> list[Game]:
+        text: str,
+        max_count: int,
+        client: str,
+        roles: Optional[list[GameRole]] = None) -> list[Game]:
     '''Retrieve the games the provided client can access that are waiting for players'''
-    if role:
-        return __search_waiting_by_role(text, max_count, client, role)
+    if roles:
+        return __search_waiting_by_role(text, max_count, client, roles)
     return __search_waiting_without_client(text, max_count, client)
 
 
@@ -101,21 +104,27 @@ def __search_waiting_without_client(
 
 
 def __search_waiting_by_role(
-        text: str, max_count: int, client: str, role: GameRole) -> list[Game]:
-    '''Retrieve the games the provided client is on that are waiting for players'''
+        text: str, max_count: int, client: str, roles: list[GameRole]) -> list[Game]:
+    '''
+    Retrieve the games the provided client is on that are waiting for players
+    '''
     return list(map(from_db, game_client.query_items(
         ('select * from game '
          'where game.status = @status '
          'and contains(lower(game.name), lower(@text)) '
          'and exists(select value person from person in game.people '
          'where person.identifier = @client '
-         'and array_contains(person.roles, @role)) '
+         'and exists(select value role from role in person.roles '
+         'where array_contains(@roles, role))) '
          'offset 0 limit @max'),
         parameters=[
             {'name': '@status', 'value': GameStatus.WAITING_FOR_PLAYERS.name},
             {'name': '@text', 'value': text},
             {'name': '@client', 'value': client},
-            {'name': '@role', 'value': role.name},
+            {
+                'name': '@roles',
+                'value': list(map(lambda r: r.name, roles))
+            },
             {'name': '@max', 'value': max_count}
         ],
         enable_cross_partition_query=True

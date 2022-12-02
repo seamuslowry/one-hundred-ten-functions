@@ -68,6 +68,6 @@ class TestGameService(TestCase):
 
         game_client.query_items.return_value = [GameService.to_db(game)]
 
-        self.assertIsNotNone(GameService.search_waiting('', 20, '', GameRole.ORGANIZER))
+        self.assertIsNotNone(GameService.search_waiting('', 20, '', [GameRole.ORGANIZER]))
         game_client.query_items.assert_called_once()
         game_client.query_items.reset_mock(return_value=True)

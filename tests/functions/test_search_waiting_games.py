@@ -16,7 +16,7 @@ class TestSearchWaitingGames(TestCase):
     @mock.patch('app.services.GameService.search_waiting', return_value=[Game()])
     def test_get_game(self, search_games):
         '''On hitting the lobby games endpoint games are retrieved'''
-        req = build_request(body=json.dumps({'gameRole': 'ORGANIZER'}).encode('utf-8'))
+        req = build_request(body=json.dumps({'gameRoles': ['ORGANIZER']}).encode('utf-8'))
 
         resp = main(req)
         resp_list = read_response_body(resp.get_body())

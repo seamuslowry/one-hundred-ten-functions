@@ -19,8 +19,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     user, *_ = parse_request(req)
 
     body = req.get_json()
-    string_role = body.get('gameRole', None)
-    role = GameRole[string_role] if string_role else None
+    role_array = body.get('gameRoles', None)
+    roles = list(map(lambda r: GameRole[r], role_array)) if role_array else None
     max_count = body.get('max', 20)
     search_text = body.get('searchText', '')
 
@@ -29,4 +29,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             list(
                 map(
                     lambda g: GameService.json(g, user.identifier),
-                    GameService.search_waiting(search_text, max_count, user.identifier, role)))))
+                    GameService.search_waiting(search_text, max_count, user.identifier, roles)))))
