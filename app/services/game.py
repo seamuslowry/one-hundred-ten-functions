@@ -102,7 +102,7 @@ def __search_waiting_without_client(
 
 def __search_waiting_by_role(
         text: str, max_count: int, client: str, role: GameRole) -> list[Game]:
-    '''Retrieve the games the provided client can access that are waiting for players'''
+    '''Retrieve the games the provided client is on that are waiting for players'''
     return list(map(from_db, game_client.query_items(
         ('select * from game '
          'where game.status = @status '
