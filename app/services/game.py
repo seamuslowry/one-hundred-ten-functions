@@ -83,6 +83,34 @@ def search_waiting(
     return __search_waiting_without_client(text, max_count, client)
 
 
+def search_active(
+        text: str,
+        max_count: int,
+        client: str) -> list[Game]:
+    '''Retrieve the games the provided client can access that are waiting for players'''
+    return list(map(from_db, game_client.query_items(
+        ('select * from game '
+         'where not array_contains(@statuses, game.status) '
+         'and contains(lower(game.name), lower(@text)) '
+         'and exists(select value person from person in game.people '
+         'where person.identifier = @client '
+         'and array_contains(person.roles, @role)) '
+         'order by game.computed.activePlayer = @client, game.name '
+         'offset 0 limit @max'),
+        parameters=[
+            {
+                'name': '@statuses',
+                'value': [GameStatus.WAITING_FOR_PLAYERS.name, GameStatus.WON.name]
+            },
+            {'name': '@text', 'value': text},
+            {'name': '@client', 'value': client},
+            {'name': '@role', 'value': GameRole.PLAYER},
+            {'name': '@max', 'value': max_count}
+        ],
+        enable_cross_partition_query=True
+    )))
+
+
 def __search_waiting_without_client(
         text: str, max_count: int, client: str) -> list[Game]:
     '''Retrieve the accessible games the client is not on that are waiting for players'''
@@ -153,6 +181,6 @@ def __started_game_properties(game: Game, client: str) -> dict:
 def __computed_properties(game: Game) -> dict:
     '''Properties added to the DB for searching; will not be read back from the DB'''
     return {
-        'active_player': game.active_round.active_player.identifier if game.rounds else None,
+        'activePlayer': game.active_round.active_player.identifier if game.rounds else None,
         'winner': game.winner.identifier if game.winner else None
     }
