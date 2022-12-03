@@ -26,7 +26,5 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     return func.HttpResponse(
         json.dumps(
-            list(
-                map(
-                    lambda g: GameService.json(g, user.identifier),
-                    GameService.search_waiting(search_text, max_count, user.identifier, roles)))))
+            list(map(lambda g: GameService.json(g, user.identifier),
+                     GameService.search_waiting(search_text, max_count, user.identifier, roles)))))
