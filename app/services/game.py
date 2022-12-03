@@ -26,7 +26,8 @@ def to_db(game: Game) -> dict:
         'seed': game.seed,
         'accessibility': game.accessibility.name,
         'people': list(map(person.to_db, game.people)),
-        'rounds': list(map(round_service.to_db, game.rounds))
+        'rounds': list(map(round_service.to_db, game.rounds)),
+        'computed': __computed_properties(game)
     }
 
 
@@ -146,4 +147,12 @@ def __started_game_properties(game: Game, client: str) -> dict:
     return {
         'round': round_service.json(game.active_round, client),
         'scores': game.scores
+    }
+
+
+def __computed_properties(game: Game) -> dict:
+    '''Properties added to the DB for searching; will not be read back from the DB'''
+    return {
+        'active_player': game.active_round.active_player.identifier if game.rounds else None,
+        'winner': game.winner.identifier if game.winner else None
     }
