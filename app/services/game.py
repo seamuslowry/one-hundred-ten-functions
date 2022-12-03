@@ -90,7 +90,8 @@ def __search_waiting_without_client(
          'where game.status = @status '
          'and game.accessibility = @accessibility '
          'and contains(lower(game.name), lower(@text)) '
-         'and not array_contains(game.people, {"identifier": @client} , true)'
+         'and not array_contains(game.people, {"identifier": @client}, true) '
+         'order by game.name '
          'offset 0 limit @max'),
         parameters=[
             {'name': '@status', 'value': GameStatus.WAITING_FOR_PLAYERS.name},
@@ -116,6 +117,7 @@ def __search_waiting_by_role(
          'where person.identifier = @client '
          'and exists(select value role from role in person.roles '
          'where array_contains(@roles, role))) '
+         'order by game.name '
          'offset 0 limit @max'),
         parameters=[
             {'name': '@status', 'value': GameStatus.WAITING_FOR_PLAYERS.name},
