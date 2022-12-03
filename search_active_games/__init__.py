@@ -6,7 +6,6 @@ import json
 import azure.functions as func
 
 from app.decorators import catcher
-from app.models import GameRole
 from app.parsers import parse_request
 from app.services import GameService
 
@@ -21,10 +20,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     body = req.get_json()
     max_count = body.get('max', 20)
     search_text = body.get('searchText', '')
+    active = body.get('active', True)
 
     return func.HttpResponse(
         json.dumps(
             list(
                 map(
                     lambda g: GameService.json(g, user.identifier),
-                    GameService.search_active(search_text, max_count, user.identifier)))))
+                    GameService.search_playing(search_text, max_count, user.identifier, active)))))
