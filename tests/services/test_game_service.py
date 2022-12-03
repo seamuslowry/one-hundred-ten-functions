@@ -63,11 +63,31 @@ class TestGameService(TestCase):
         game_client.query_items.reset_mock(return_value=True)
 
     def test_search_waiting_private(self):
-        '''Public waiting for players games can be retrieved to the DB'''
+        '''Private waiting for players games can be retrieved to the DB'''
         game = Game(id='test', seed='test_game')
 
         game_client.query_items.return_value = [GameService.to_db(game)]
 
         self.assertIsNotNone(GameService.search_waiting('', 20, '', [GameRole.ORGANIZER]))
+        game_client.query_items.assert_called_once()
+        game_client.query_items.reset_mock(return_value=True)
+
+    def test_search_playing_active(self):
+        '''Playing games where the client is the active player can be retrieved to the DB'''
+        game = Game(id='test', seed='test_game')
+
+        game_client.query_items.return_value = [GameService.to_db(game)]
+
+        self.assertIsNotNone(GameService.search_playing('', 20, '', True))
+        game_client.query_items.assert_called_once()
+        game_client.query_items.reset_mock(return_value=True)
+
+    def test_search_playing(self):
+        '''Playing games where the client is a player can be retrieved to the DB'''
+        game = Game(id='test', seed='test_game')
+
+        game_client.query_items.return_value = [GameService.to_db(game)]
+
+        self.assertIsNotNone(GameService.search_playing('', 20, '', False))
         game_client.query_items.assert_called_once()
         game_client.query_items.reset_mock(return_value=True)
