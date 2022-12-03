@@ -1,7 +1,7 @@
 '''Facilitate interaction with the game DB'''
 from typing import Optional
 
-from app.models import Accessibility, Game, GameStatus, Group
+from app.models import Accessibility, Game, GameRole, GameStatus, Group
 from app.services import event, person
 from app.services import round as round_service
 from app.services.cosmos import game_client
@@ -26,7 +26,8 @@ def to_db(game: Game) -> dict:
         'seed': game.seed,
         'accessibility': game.accessibility.name,
         'people': list(map(person.to_db, game.people)),
-        'rounds': list(map(round_service.to_db, game.rounds))
+        'rounds': list(map(round_service.to_db, game.rounds)),
+        'computed': __computed_properties(game)
     }
 
 
@@ -71,6 +72,68 @@ def json(game: Game, client: str, initial_event_knowledge: Optional[int] = None)
     }
 
 
+def search_waiting(
+        text: str,
+        max_count: int,
+        client: str,
+        roles: Optional[list[GameRole]] = None) -> list[Game]:
+    '''Retrieve the games the provided client can access that are waiting for players'''
+    if roles:
+        return __search_waiting_by_role(text, max_count, client, roles)
+    return __search_waiting_without_client(text, max_count, client)
+
+
+def __search_waiting_without_client(
+        text: str, max_count: int, client: str) -> list[Game]:
+    '''Retrieve the accessible games the client is not on that are waiting for players'''
+    return list(map(from_db, game_client.query_items(
+        ('select * from game '
+         'where game.status = @status '
+         'and game.accessibility = @accessibility '
+         'and contains(lower(game.name), lower(@text)) '
+         'and not array_contains(game.people, {"identifier": @client}, true) '
+         'order by game.name '
+         'offset 0 limit @max'),
+        parameters=[
+            {'name': '@status', 'value': GameStatus.WAITING_FOR_PLAYERS.name},
+            {'name': '@accessibility', 'value': Accessibility.PUBLIC.name},
+            {'name': '@text', 'value': text},
+            {'name': '@client', 'value': client},
+            {'name': '@max', 'value': max_count}
+        ],
+        enable_cross_partition_query=True
+    )))
+
+
+def __search_waiting_by_role(
+        text: str, max_count: int, client: str, roles: list[GameRole]) -> list[Game]:
+    '''
+    Retrieve the games the provided client is on that are waiting for players
+    '''
+    return list(map(from_db, game_client.query_items(
+        ('select * from game '
+         'where game.status = @status '
+         'and contains(lower(game.name), lower(@text)) '
+         'and exists(select value person from person in game.people '
+         'where person.identifier = @client '
+         'and exists(select value role from role in person.roles '
+         'where array_contains(@roles, role))) '
+         'order by game.name '
+         'offset 0 limit @max'),
+        parameters=[
+            {'name': '@status', 'value': GameStatus.WAITING_FOR_PLAYERS.name},
+            {'name': '@text', 'value': text},
+            {'name': '@client', 'value': client},
+            {
+                'name': '@roles',
+                'value': list(map(lambda r: r.name, roles))
+            },
+            {'name': '@max', 'value': max_count}
+        ],
+        enable_cross_partition_query=True
+    )))
+
+
 def __waiting_game_properties(game: Game) -> dict:
     return {
         'accessibility': game.accessibility.name,
@@ -84,4 +147,12 @@ def __started_game_properties(game: Game, client: str) -> dict:
     return {
         'round': round_service.json(game.active_round, client),
         'scores': game.scores
+    }
+
+
+def __computed_properties(game: Game) -> dict:
+    '''Properties added to the DB for searching; will not be read back from the DB'''
+    return {
+        'active_player': game.active_round.active_player.identifier if game.rounds else None,
+        'winner': game.winner.identifier if game.winner else None
     }

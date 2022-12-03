@@ -1,7 +1,7 @@
 '''Game Service unit tests'''
 from unittest import TestCase
 
-from app.models import Game, Group, Player, Round, RoundRole
+from app.models import Game, GameRole, Group, Player, Round, RoundRole
 from app.services import GameService
 from app.services.cosmos import game_client
 
@@ -51,3 +51,23 @@ class TestGameService(TestCase):
 
         self.assertIsNotNone(GameService.get(game.id))
         game_client.read_item.assert_called_once()
+
+    def test_search_waiting_public(self):
+        '''Public waiting for players games can be retrieved to the DB'''
+        game = Game(id='test', seed='test_game')
+
+        game_client.query_items.return_value = [GameService.to_db(game)]
+
+        self.assertIsNotNone(GameService.search_waiting('', 20, ''))
+        game_client.query_items.assert_called_once()
+        game_client.query_items.reset_mock(return_value=True)
+
+    def test_search_waiting_private(self):
+        '''Public waiting for players games can be retrieved to the DB'''
+        game = Game(id='test', seed='test_game')
+
+        game_client.query_items.return_value = [GameService.to_db(game)]
+
+        self.assertIsNotNone(GameService.search_waiting('', 20, '', [GameRole.ORGANIZER]))
+        game_client.query_items.assert_called_once()
+        game_client.query_items.reset_mock(return_value=True)
