@@ -7,7 +7,7 @@ import azure.functions as func
 
 from app.decorators import catcher
 from app.parsers import parse_request
-from app.services import EventService, GameService
+from app.services import EventService
 
 
 @catcher
