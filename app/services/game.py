@@ -27,7 +27,7 @@ def to_db(game: Game) -> dict:
         'accessibility': game.accessibility.name,
         'people': list(map(person.to_db, game.people)),
         'rounds': list(map(round_service.to_db, game.rounds)),
-        'computed': __computed_properties(game)
+        **__computed_properties(game)
     }
 
 
@@ -81,6 +81,73 @@ def search_waiting(
     if roles:
         return __search_waiting_by_role(text, max_count, client, roles)
     return __search_waiting_without_client(text, max_count, client)
+
+
+def search_playing(
+        text: str,
+        max_count: int,
+        client: str,
+        active: bool) -> list[Game]:
+    '''
+    Retrieve games that are playing rounds the client is a player on
+    If active is True, will only return games where it is the client's turn to play
+    '''
+    if active:
+        return __search_playing_by_active(text, max_count, client)
+    return __search_playing_by_text(text, max_count, client)
+
+
+def __search_playing_by_active(
+        text: str,
+        max_count: int,
+        client: str) -> list[Game]:
+    '''Retrieve games where it is the client's turn to play'''
+    return list(map(from_db, game_client.query_items(
+        ('select * from game '
+         'where not array_contains(@statuses, game.status) '
+         'and contains(lower(game.name), lower(@text)) '
+         'and game.activePlayer = @client '
+         'order by game.name '
+         'offset 0 limit @max'),
+        parameters=[
+            {
+                'name': '@statuses',
+                'value': [GameStatus.WAITING_FOR_PLAYERS.name, GameStatus.WON.name]
+            },
+            {'name': '@text', 'value': text},
+            {'name': '@client', 'value': client},
+            {'name': '@max', 'value': max_count}
+        ],
+        enable_cross_partition_query=True
+    )))
+
+
+def __search_playing_by_text(
+        text: str,
+        max_count: int,
+        client: str) -> list[Game]:
+    '''Retrieve games playing rounds where the client is a player'''
+    return list(map(from_db, game_client.query_items(
+        ('select * from game '
+         'where not array_contains(@statuses, game.status) '
+         'and contains(lower(game.name), lower(@text)) '
+         'and exists(select value person from person in game.people '
+         'where person.identifier = @client '
+         'and array_contains(person.roles, @role)) '
+         'order by game.name '
+         'offset 0 limit @max'),
+        parameters=[
+            {
+                'name': '@statuses',
+                'value': [GameStatus.WAITING_FOR_PLAYERS.name, GameStatus.WON.name]
+            },
+            {'name': '@text', 'value': text},
+            {'name': '@client', 'value': client},
+            {'name': '@role', 'value': GameRole.PLAYER.name},
+            {'name': '@max', 'value': max_count}
+        ],
+        enable_cross_partition_query=True
+    )))
 
 
 def __search_waiting_without_client(
@@ -153,6 +220,6 @@ def __started_game_properties(game: Game, client: str) -> dict:
 def __computed_properties(game: Game) -> dict:
     '''Properties added to the DB for searching; will not be read back from the DB'''
     return {
-        'active_player': game.active_round.active_player.identifier if game.rounds else None,
+        'activePlayer': game.active_round.active_player.identifier if game.rounds else None,
         'winner': game.winner.identifier if game.winner else None
     }
