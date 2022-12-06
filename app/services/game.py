@@ -219,7 +219,10 @@ def __started_game_properties(game: Game, client: str) -> dict:
 
 def __computed_properties(game: Game) -> dict:
     '''Properties added to the DB for searching; will not be read back from the DB'''
+    winner = game.winner
+    active_player = game.active_round.active_player if game.rounds and not winner else None
+
     return {
-        'activePlayer': game.active_round.active_player.identifier if game.rounds else None,
-        'winner': game.winner.identifier if game.winner else None
+        'activePlayer': active_player.identifier if active_player else None,
+        'winner': winner.identifier if winner else None
     }
