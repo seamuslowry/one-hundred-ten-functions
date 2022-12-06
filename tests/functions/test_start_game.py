@@ -25,6 +25,7 @@ class TestStartGame(TestCase):
 
         game_save.assert_called_once()
         self.assertIn('round', resp_dict)
+        self.assertEqual(4, len(resp_dict['round']['players']))
 
     @mock.patch('app.services.GameService.save', side_effect=return_input)
     @mock.patch('start_game.parse_request',
@@ -37,7 +38,5 @@ class TestStartGame(TestCase):
         req = build_request(route_params={'game_id': 'id'})
 
         resp = main(req)
-        resp_dict = read_response_body(resp.get_body())
-
-        game_save.assert_called_once()
-        self.assertNotIn('round', resp_dict)
+        self.assertEqual(400, resp.status_code)
+        game_save.assert_not_called()
