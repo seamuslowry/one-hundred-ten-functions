@@ -25,4 +25,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     return func.HttpResponse(
         json.dumps(
             list(map(lambda g: GameService.json(g, user.identifier),
-                     GameService.search_playing(search_text, max_count, user.identifier, active)))))
+                     GameService.search_won(search_text, max_count, user.identifier, active)))))
