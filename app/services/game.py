@@ -97,6 +97,68 @@ def search_playing(
     return __search_playing_by_text(text, max_count, client)
 
 
+def search_won(
+        text: str,
+        max_count: int,
+        client: str,
+        winner: bool) -> list[Game]:
+    '''
+    Retrieve games that are complete the client was a player on
+    If winner is True, will only return games where the client's won the game
+    '''
+    if winner:
+        return __search_won_by_winner(text, max_count, client)
+    return __search_won_by_text(text, max_count, client)
+
+
+def __search_won_by_winner(
+        text: str,
+        max_count: int,
+        client: str) -> list[Game]:
+    '''Retrieve games where the client's won the game'''
+    return list(map(from_db, game_client.query_items(
+        ('select * from game '
+         'and contains(lower(game.name), lower(@text)) '
+         'and game.winner = @client '
+         'order by game.name '
+         'offset 0 limit @max'),
+        parameters=[
+            {'name': '@text', 'value': text},
+            {'name': '@client', 'value': client},
+            {'name': '@max', 'value': max_count}
+        ],
+        enable_cross_partition_query=True
+    )))
+
+
+def __search_won_by_text(
+        text: str,
+        max_count: int,
+        client: str) -> list[Game]:
+    '''Retrieve completed games where the client was a player'''
+    return list(map(from_db, game_client.query_items(
+        ('select * from game '
+         'where game.status=@status '
+         'and contains(lower(game.name), lower(@text)) '
+         'and exists(select value person from person in game.people '
+         'where person.identifier = @client '
+         'and array_contains(person.roles, @role)) '
+         'order by game.name '
+         'offset 0 limit @max'),
+        parameters=[
+            {
+                'name': '@status',
+                'value': GameStatus.WON
+            },
+            {'name': '@text', 'value': text},
+            {'name': '@client', 'value': client},
+            {'name': '@role', 'value': GameRole.PLAYER.name},
+            {'name': '@max', 'value': max_count}
+        ],
+        enable_cross_partition_query=True
+    )))
+
+
 def __search_playing_by_active(
         text: str,
         max_count: int,
