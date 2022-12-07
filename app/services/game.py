@@ -118,7 +118,7 @@ def __search_won_by_winner(
     '''Retrieve games where the client's won the game'''
     return list(map(from_db, game_client.query_items(
         ('select * from game '
-         'and contains(lower(game.name), lower(@text)) '
+         'where contains(lower(game.name), lower(@text)) '
          'and game.winner = @client '
          'order by game.name '
          'offset 0 limit @max'),
