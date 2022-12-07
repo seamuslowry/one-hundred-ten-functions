@@ -21,5 +21,5 @@ class TestSearchWonGames(TestCase):
         resp = main(req)
         resp_list = read_response_body(resp.get_body())
 
-        self.assertEqual(list(map(lambda g: GameService.json(
-            g, ''), search_games.return_value)), resp_list)
+        self.assertEqual(
+            list(map(lambda g: GameService.json(g, ''), search_games.return_value)), resp_list)
