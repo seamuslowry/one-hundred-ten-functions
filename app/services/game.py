@@ -148,7 +148,7 @@ def __search_won_by_text(
         parameters=[
             {
                 'name': '@status',
-                'value': GameStatus.WON
+                'value': GameStatus.WON.name
             },
             {'name': '@text', 'value': text},
             {'name': '@client', 'value': client},
