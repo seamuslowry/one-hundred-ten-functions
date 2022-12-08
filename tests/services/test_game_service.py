@@ -91,3 +91,23 @@ class TestGameService(TestCase):
         self.assertIsNotNone(GameService.search_playing('', 20, '', False))
         game_client.query_items.assert_called_once()
         game_client.query_items.reset_mock(return_value=True)
+
+    def test_search_winner(self):
+        '''Completed games where the client is the winner can be retrieved to the DB'''
+        game = Game(id='test', seed='test_game')
+
+        game_client.query_items.return_value = [GameService.to_db(game)]
+
+        self.assertIsNotNone(GameService.search_won('', 20, '', True))
+        game_client.query_items.assert_called_once()
+        game_client.query_items.reset_mock(return_value=True)
+
+    def test_search_completed(self):
+        '''Completede games where the client is a player can be retrieved to the DB'''
+        game = Game(id='test', seed='test_game')
+
+        game_client.query_items.return_value = [GameService.to_db(game)]
+
+        self.assertIsNotNone(GameService.search_won('', 20, '', False))
+        game_client.query_items.assert_called_once()
+        game_client.query_items.reset_mock(return_value=True)
