@@ -5,11 +5,21 @@ from app.models import Accessibility, Game, GameRole, GameStatus, Group
 from app.services import event, person
 from app.services import round as round_service
 from app.services.cosmos import game_client
+from app.services.mongo import m_game_client
 
 
 def save(game: Game) -> Game:
     '''Save the provided game to the DB'''
-    return from_db(game_client.upsert_item(to_db(game)))
+    result = m_game_client.update_one({"id": game.id},
+                                      {"$set": to_db(game)},
+                                      upsert=True)
+
+    updated = m_game_client.find_one({"id": game.id})
+
+    if not updated:
+        raise ValueError("test")
+
+    return from_db(updated)
 
 
 def get(game_id: str) -> Game:
