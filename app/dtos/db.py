@@ -73,3 +73,11 @@ class Game(TypedDict):
     rounds: list
     active_player: Optional[str]
     winner: Optional[str]
+
+
+class User(TypedDict):
+    '''A class to model the DB format of a Hundred and Ten user'''
+    id: str
+    name: str
+    type: str
+    picture_url: Optional[str]

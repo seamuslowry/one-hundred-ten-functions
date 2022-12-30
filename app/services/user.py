@@ -6,8 +6,10 @@ from json import loads
 
 import azure.functions as func
 
+from app.mappers import db
 from app.models import GoogleUser, User
 from app.services.cosmos import user_client
+from app.services.mongo import m_user_client
 
 
 class UserType(str, Enum):
@@ -26,7 +28,8 @@ def from_request(req: func.HttpRequest) -> User:
 
 def save(user: User) -> User:
     '''Save the provided user to the DB'''
-    return __from_db(user_client.upsert_item(__to_db(user)))
+    m_user_client.update_one({'id': user.identifier}, db.convert(user))
+    return user
 
 
 def search(search_text: str) -> list[User]:
@@ -70,25 +73,10 @@ def __from_request(req: func.HttpRequest) -> User:
     return User(__parse_identifier(req), __parse_name(req))
 
 
-def __to_db(user: User) -> dict:
-    return {
-        'id': user.identifier,
-        'name': user.name,
-        'type': __user_type(user).value,
-        **({'picture_url': user.picture_url} if isinstance(user, GoogleUser) else {})
-    }
-
-
 def __from_db(user: dict) -> User:
     if user['type'] == UserType.GOOGLE:
         return GoogleUser(user['id'], user['name'], user['picture_url'])
     return User(user['id'], user['name'])
-
-
-def __user_type(user: User) -> UserType:
-    if isinstance(user, GoogleUser):
-        return UserType.GOOGLE
-    return UserType.UNKNOWN
 
 
 def __google_user_from_request(req: func.HttpRequest) -> GoogleUser:

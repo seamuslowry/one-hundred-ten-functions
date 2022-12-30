@@ -1,5 +1,7 @@
 '''A module to convert DB DTOs to models and vice versa'''
+from enum import Enum
 from functools import singledispatch
+from typing import Optional
 
 from app import models
 from app.dtos import db
@@ -221,3 +223,43 @@ def _(game: db.Game) -> models.Game:
         accessibility=models.Accessibility[game['accessibility']],
         people=models.Group(map(convert, game['people'])),
         rounds=list(map(convert, game['rounds'])))
+
+
+class UserType(str, Enum):
+    '''Enum value for user type'''
+    GOOGLE = "google"
+    UNKNOWN = "unknown"
+
+
+@convert.register
+def _(user: models.User) -> db.User:
+    return db.User(
+        id=user.identifier,
+        name=user.name,
+        type=__user_type(user).name,
+        picture_url=__user_picture(user))
+
+
+def __user_type(user: models.User) -> UserType:
+    if isinstance(user, models.GoogleUser):
+        return UserType.GOOGLE
+    return UserType.UNKNOWN
+
+
+def __user_picture(user: models.User) -> Optional[str]:
+    if isinstance(user, models.GoogleUser):
+        return user.picture_url
+    return None
+
+
+@convert.register
+def _(user: db.User) -> models.User:
+    if user['type'] == UserType.GOOGLE:
+        return models.GoogleUser(
+            user['id'], user['name'], user['picture_url'] or ''
+        )
+
+    return models.User(
+        identifier=user['id'],
+        name=user['name']
+    )
