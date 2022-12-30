@@ -1,6 +1,7 @@
 '''Facilitate interaction with the game DB'''
 from typing import Optional
 
+from app.mappers import db
 from app.models import Accessibility, Game, GameRole, GameStatus, Group
 from app.services import event, person
 from app.services import round as round_service
@@ -10,21 +11,21 @@ from app.services.mongo import m_game_client
 
 def save(game: Game) -> Game:
     '''Save the provided game to the DB'''
-    result = m_game_client.update_one({"id": game.id},
-                                      {"$set": to_db(game)},
-                                      upsert=True)
-
-    updated = m_game_client.find_one({"id": game.id})
-
-    if not updated:
-        raise ValueError("test")
-
-    return from_db(updated)
+    m_game_client.update_one({"id": game.id},
+                             {"$set": to_db(game)},
+                             upsert=True)
+    return game
 
 
 def get(game_id: str) -> Game:
     '''Retrieve the game with the provided ID'''
-    return from_db(game_client.read_item(game_id, game_id))
+
+    result = m_game_client.find_one({"id": game_id})
+
+    if not result:
+        raise ValueError(f"no game found with id {game_id}")
+
+    return db.convert(result)
 
 
 def to_db(game: Game) -> dict:
