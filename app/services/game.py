@@ -12,7 +12,7 @@ from app.services.mongo import m_game_client
 def save(game: Game) -> Game:
     '''Save the provided game to the DB'''
     m_game_client.update_one({"id": game.id},
-                             {"$set": to_db(game)},
+                             {"$set": db.convert(game)},
                              upsert=True)
     return game
 
