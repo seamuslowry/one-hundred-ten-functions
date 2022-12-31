@@ -57,6 +57,7 @@ class TestUserService(TestCase):
         user_client.query_items.assert_called_once()
         user_client.query_items.reset_mock()
 
-    def test_serializes_user(self):
-        '''Serializes a user'''
-        self.assertIsNotNone(UserService.json(User('', '')))
+    # TODO remove
+    # def test_serializes_user(self):
+    #     '''Serializes a user'''
+    #     self.assertIsNotNone(UserService.json(User('', '')))

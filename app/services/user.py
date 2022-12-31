@@ -5,7 +5,7 @@ from enum import Enum
 import azure.functions as func
 
 from app.mappers import client, db
-from app.models import GoogleUser, User
+from app.models import User
 from app.services.mongo import m_user_client
 
 
@@ -44,12 +44,3 @@ def by_identifiers(identifiers: list[str]) -> list[User]:
     return list(
         map(db.deserialize.user, m_user_client.find(
             {'identifier': {'$in': identifiers}}).limit(MAX)))
-
-
-def json(user: User) -> dict:
-    '''Return users as they can be provided to the client'''
-    return {
-        'id': user.identifier,
-        'name': user.name,
-        **({'picture_url': user.picture_url} if isinstance(user, GoogleUser) else {})
-    }
