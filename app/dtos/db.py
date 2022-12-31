@@ -11,7 +11,7 @@ class Card(TypedDict):
 
 class Person(TypedDict):
     '''A class to model the DB format of a person'''
-    id: str
+    identifier: str
     roles: list[str]
     automate: bool
 
@@ -77,7 +77,7 @@ class Game(TypedDict):
 
 class User(TypedDict):
     '''A class to model the DB format of a Hundred and Ten user'''
-    id: str
+    identifier: str
     name: str
     type: str
     picture_url: Optional[str]

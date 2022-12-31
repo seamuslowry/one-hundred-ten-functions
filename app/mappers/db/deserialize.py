@@ -9,11 +9,11 @@ def user(db_user: db.User) -> models.User:
     '''Convert a User model to its DB DTO'''
     if db_user['type'] == UserType.GOOGLE:
         return models.GoogleUser(
-            db_user['id'], db_user['name'], db_user['picture_url'] or ''
+            db_user['identifier'], db_user['name'], db_user['picture_url'] or ''
         )
 
     return models.User(
-        identifier=db_user['id'],
+        identifier=db_user['identifier'],
         name=db_user['name']
     )
 
@@ -32,15 +32,15 @@ def game(db_game: db.Game) -> models.Game:
 
 def __person(person: db.Person) -> models.Person:
     return models.Person(
-        identifier=person['id'],
+        identifier=person['identifier'],
         automate=person['automate'],
-        roles=set(map(lambda r: models.RoundRole[r], person['roles']))
+        roles=set(map(lambda r: models.GameRole[r], person['roles']))
     )
 
 
 def __player(player: db.Player) -> models.Player:
     return models.Player(
-        identifier=player['id'],
+        identifier=player['identifier'],
         automate=player['automate'],
         roles=set(map(lambda r: models.RoundRole[r], player['roles'])),
         hand=list(map(__card, player['hand']))

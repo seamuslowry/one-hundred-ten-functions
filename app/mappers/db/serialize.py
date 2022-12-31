@@ -27,7 +27,7 @@ def game(m_game: models.Game) -> db.Game:
 def user(m_user: models.User) -> db.User:
     '''Convert a User model to its DB DTO'''
     return db.User(
-        id=m_user.identifier,
+        identifier=m_user.identifier,
         name=m_user.name,
         type=__user_type(m_user),
         picture_url=__user_picture(m_user))
@@ -42,7 +42,7 @@ def __card(card: models.Card) -> db.Card:
 
 def __person(person: models.Person) -> db.Person:
     return db.Person(
-        id=person.identifier,
+        identifier=person.identifier,
         roles=list(map(lambda r: r.name, person.roles)),
         automate=person.automate
     )
@@ -50,7 +50,7 @@ def __person(person: models.Person) -> db.Person:
 
 def __player(player: models.Player) -> db.Player:
     return db.Player(
-        id=player.identifier,
+        identifier=player.identifier,
         roles=list(map(lambda r: r.name, player.roles)),
         automate=player.automate,
         hand=list(map(__card, player.hand))

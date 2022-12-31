@@ -8,7 +8,6 @@ import azure.functions as func
 
 from app.mappers.db import deserialize, serialize
 from app.models import GoogleUser, User
-from app.services.cosmos import user_client
 from app.services.mongo import m_user_client
 
 
@@ -28,7 +27,10 @@ def from_request(req: func.HttpRequest) -> User:
 
 def save(user: User) -> User:
     '''Save the provided user to the DB'''
-    m_user_client.update_one({'id': user.identifier}, {'$set': serialize.user(user)}, upsert=True)
+    m_user_client.update_one(
+        {'identifier': user.identifier},
+        {'$set': serialize.user(user)},
+        upsert=True)
     return user
 
 
@@ -36,19 +38,14 @@ def search(search_text: str) -> list[User]:
     '''Retrieve the users with names like the provided'''
     return list(
         map(deserialize.user, m_user_client.find(
-            {'name': {'$regex': search_text, '$options': 'i'}})))
+            {'name': {'$regex': search_text, '$options': 'i'}}).limit(MAX)))
 
 
 def by_identifiers(identifiers: list[str]) -> list[User]:
     '''Retrieve the users with identifiers in the list provided'''
-    return list(map(__from_db, user_client.query_items(
-        "select * from user where array_contains(@identifiers, user.id) offset 0 limit @max",
-        parameters=[
-            {'name': '@identifiers', 'value': identifiers},
-            {'name': '@max', 'value': MAX}
-        ],
-        enable_cross_partition_query=True
-    )))
+    return list(
+        map(deserialize.user, m_user_client.find(
+            {'identifier': {'$in': identifiers}}).limit(MAX)))
 
 
 def json(user: User) -> dict:
@@ -66,12 +63,6 @@ def __from_request(req: func.HttpRequest) -> User:
         return __google_user_from_request(req)
 
     return User(__parse_identifier(req), __parse_name(req))
-
-
-def __from_db(user: dict) -> User:
-    if user['type'] == UserType.GOOGLE:
-        return GoogleUser(user['id'], user['name'], user['picture_url'])
-    return User(user['id'], user['name'])
 
 
 def __google_user_from_request(req: func.HttpRequest) -> GoogleUser:
