@@ -2,7 +2,7 @@
 
 from app import models
 from app.dtos import db
-from app.mappers.db.constants import UserType
+from app.mappers.constants import UserType
 
 
 def user(db_user: db.User) -> models.User:

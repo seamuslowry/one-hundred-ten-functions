@@ -3,7 +3,7 @@ from typing import Optional
 
 from app import models
 from app.dtos import db
-from app.mappers.db.constants import UserType
+from app.mappers.constants import UserType
 
 
 def game(m_game: models.Game) -> db.Game:
