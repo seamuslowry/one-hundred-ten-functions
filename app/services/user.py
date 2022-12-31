@@ -27,4 +27,4 @@ def by_identifiers(identifiers: list[str]) -> list[User]:
     '''Retrieve the users with identifiers in the list provided'''
     return list(
         map(deserialize.user, user_client.find(
-            {'identifier': {'$in': identifiers}}).limit(MAX)))
+            {'identifier': {'$in': identifiers}})))
