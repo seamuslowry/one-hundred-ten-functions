@@ -1,7 +1,7 @@
 '''Facilitate interaction with the game DB'''
 from typing import Optional
 
-from app.mappers import db
+from app.mappers.db import deserialize, serialize
 from app.models import Accessibility, Game, GameRole, GameStatus, Group
 from app.services import event, person
 from app.services import round as round_service
@@ -12,7 +12,7 @@ from app.services.mongo import m_game_client
 def save(game: Game) -> Game:
     '''Save the provided game to the DB'''
     m_game_client.update_one({"id": game.id},
-                             {"$set": db.convert(game)},
+                             {"$set": serialize.game(game)},
                              upsert=True)
     return game
 
@@ -25,7 +25,7 @@ def get(game_id: str) -> Game:
     if not result:
         raise ValueError(f"no game found with id {game_id}")
 
-    return db.convert(result)
+    return deserialize.game(result)
 
 
 def to_db(game: Game) -> dict:

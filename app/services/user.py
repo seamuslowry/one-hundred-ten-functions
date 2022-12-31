@@ -6,7 +6,7 @@ from json import loads
 
 import azure.functions as func
 
-from app.mappers import db
+from app.mappers.db import deserialize, serialize
 from app.models import GoogleUser, User
 from app.services.cosmos import user_client
 from app.services.mongo import m_user_client
@@ -28,14 +28,15 @@ def from_request(req: func.HttpRequest) -> User:
 
 def save(user: User) -> User:
     '''Save the provided user to the DB'''
-    m_user_client.update_one({'id': user.identifier}, {'$set': db.convert(user)}, upsert=True)
+    m_user_client.update_one({'id': user.identifier}, {'$set': serialize.user(user)}, upsert=True)
     return user
 
 
 def search(search_text: str) -> list[User]:
     '''Retrieve the users with names like the provided'''
-    # TODO make it actually search on the text once the conversion is working
-    return list(map(db.convert, m_user_client.find()))
+    return list(
+        map(deserialize.user, m_user_client.find(
+            {'name': {'$regex': search_text, '$options': 'i'}})))
 
 
 def by_identifiers(identifiers: list[str]) -> list[User]:

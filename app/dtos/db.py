@@ -69,8 +69,8 @@ class Game(TypedDict):
     name: str
     seed: str
     accessibility: str
-    people: list[Player]
-    rounds: list
+    people: list[Person]
+    rounds: list[Round]
     active_player: Optional[str]
     winner: Optional[str]
 
