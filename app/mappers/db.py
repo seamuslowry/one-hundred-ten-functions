@@ -1,7 +1,6 @@
 '''A module to convert DB DTOs to models and vice versa'''
 from enum import Enum
 from functools import singledispatch
-from typing import Optional
 
 from app import models
 from app.dtos import db
@@ -232,24 +231,21 @@ class UserType(str, Enum):
 
 
 @convert.register
+def _(user: models.GoogleUser) -> db.User:
+    return db.User(
+        id=user.identifier,
+        name=user.name,
+        type=UserType.GOOGLE.name,
+        picture_url=user.picture_url)
+
+
+@convert.register
 def _(user: models.User) -> db.User:
     return db.User(
         id=user.identifier,
         name=user.name,
-        type=__user_type(user).name,
-        picture_url=__user_picture(user))
-
-
-def __user_type(user: models.User) -> UserType:
-    if isinstance(user, models.GoogleUser):
-        return UserType.GOOGLE
-    return UserType.UNKNOWN
-
-
-def __user_picture(user: models.User) -> Optional[str]:
-    if isinstance(user, models.GoogleUser):
-        return user.picture_url
-    return None
+        type=UserType.UNKNOWN.name,
+        picture_url=None)
 
 
 @convert.register

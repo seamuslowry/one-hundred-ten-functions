@@ -28,20 +28,14 @@ def from_request(req: func.HttpRequest) -> User:
 
 def save(user: User) -> User:
     '''Save the provided user to the DB'''
-    m_user_client.update_one({'id': user.identifier}, db.convert(user))
+    m_user_client.update_one({'id': user.identifier}, {'$set': db.convert(user)}, upsert=True)
     return user
 
 
 def search(search_text: str) -> list[User]:
     '''Retrieve the users with names like the provided'''
-    return list(map(__from_db, user_client.query_items(
-        "select * from user where contains(lower(user.name), lower(@text)) offset 0 limit @max",
-        parameters=[
-            {'name': '@text', 'value': search_text},
-            {'name': '@max', 'value': MAX}
-        ],
-        enable_cross_partition_query=True
-    )))
+    # TODO make it actually search on the text once the conversion is working
+    return list(map(db.convert, m_user_client.find()))
 
 
 def by_identifiers(identifiers: list[str]) -> list[User]:
