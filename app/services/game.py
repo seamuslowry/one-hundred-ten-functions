@@ -3,7 +3,7 @@ from typing import Optional
 
 from app.mappers.db import deserialize, serialize
 from app.models import Accessibility, Game, GameRole, GameStatus, Group
-from app.services import event, person
+from app.services import person
 from app.services import round as round_service
 from app.services.cosmos import game_client
 from app.services.mongo import m_game_client
@@ -39,35 +39,6 @@ def from_db(game: dict) -> Game:
         people=Group(list(map(person.person_from_db, game['people']))),
         rounds=list(map(round_service.from_db, game['rounds']))
     )
-
-
-def __json(game: Game, client: str) -> dict:
-    '''Convert the provided game into the structure it should provide the client'''
-
-    return {
-        'id': game.id,
-        'name': game.name,
-        'status': game.status.name,
-        # properties that are only relevant while waiting for the game to begin
-        **(__waiting_game_properties(game)
-           if game.status == GameStatus.WAITING_FOR_PLAYERS
-           # properties that are only relevant once the game has begun
-           else __started_game_properties(game, client))
-    }
-
-
-def json(game: Game, client: str, initial_event_knowledge: Optional[int] = None) -> dict:
-    '''
-    Convert the provided game client information
-    and provide information on events since on initial event
-    '''
-
-    return {
-        **__json(game, client),
-        # only send up the results if requested
-        **({'results': event.json(game.events[initial_event_knowledge:], client)}
-           if initial_event_knowledge is not None else {})
-    }
 
 
 def search_waiting(
@@ -259,30 +230,3 @@ def __search_waiting_by_role(
         ],
         enable_cross_partition_query=True
     )))
-
-
-def __waiting_game_properties(game: Game) -> dict:
-    return {
-        'accessibility': game.accessibility.name,
-        'organizer': person.json(game.organizer),
-        'players': list(map(person.json, [p for p in game.players if p != game.organizer])),
-        'invitees': list(map(person.json, [p for p in game.invitees if p not in game.players]))
-    }
-
-
-def __started_game_properties(game: Game, client: str) -> dict:
-    return {
-        'round': round_service.json(game.active_round, client),
-        'scores': game.scores
-    }
-
-
-def __computed_properties(game: Game) -> dict:
-    '''Properties added to the DB for searching; will not be read back from the DB'''
-    winner = game.winner
-    active_player = game.active_round.active_player if game.rounds and not winner else None
-
-    return {
-        'activePlayer': active_player.identifier if active_player else None,
-        'winner': winner.identifier if winner else None
-    }

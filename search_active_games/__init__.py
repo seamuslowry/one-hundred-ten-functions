@@ -6,6 +6,7 @@ import json
 import azure.functions as func
 
 from app.decorators import catcher
+from app.mappers.client import serialize
 from app.parsers import parse_request
 from app.services import GameService
 
@@ -24,5 +25,5 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     return func.HttpResponse(
         json.dumps(
-            list(map(lambda g: GameService.json(g, user.identifier),
+            list(map(lambda g: serialize.game(g, user.identifier),
                      GameService.search_playing(search_text, max_count, user.identifier, active)))))
