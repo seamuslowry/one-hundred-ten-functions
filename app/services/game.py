@@ -23,23 +23,10 @@ def get(game_id: str) -> Game:
     result = m_game_client.find_one({"id": game_id})
 
     if not result:
+        # TODO better error than value
         raise ValueError(f"no game found with id {game_id}")
 
     return deserialize.game(result)
-
-
-def to_db(game: Game) -> dict:
-    '''Convert the provided game into the dict structure used by the DB'''
-    return {
-        'id': game.id,
-        'status': game.status.name,
-        'name': game.name,
-        'seed': game.seed,
-        'accessibility': game.accessibility.name,
-        'people': list(map(person.to_db, game.people)),
-        'rounds': list(map(round_service.to_db, game.rounds)),
-        **__computed_properties(game)
-    }
 
 
 def from_db(game: dict) -> Game:
