@@ -10,12 +10,6 @@ class User(TypedDict):
     picture_url: Optional[str]
 
 
-class Card(TypedDict):
-    '''A class to model the client format of a Hundred and Ten card'''
-    suit: str
-    number: str
-
-
 class Person(TypedDict):
     '''A class to model the client format of a Hundred and Ten person'''
     identifier: str
@@ -26,6 +20,12 @@ class Person(TypedDict):
 class OtherPlayer(Person):
     '''A class to model the client format of a Hundred and Ten player'''
     hand_size: int
+
+
+class Card(TypedDict):
+    '''A class to model the client format of a Hundred and Ten card'''
+    suit: str
+    number: str
 
 
 class Self(Person):

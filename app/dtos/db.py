@@ -5,17 +5,17 @@ from typing import Optional
 from typing_extensions import NotRequired, TypedDict
 
 
-class Card(TypedDict):
-    '''A class to model the DB format of a card'''
-    suit: str
-    number: str
-
-
 class Person(TypedDict):
     '''A class to model the DB format of a person'''
     identifier: str
     roles: list[str]
     automate: bool
+
+
+class Card(TypedDict):
+    '''A class to model the DB format of a card'''
+    suit: str
+    number: str
 
 
 class Player(Person):
