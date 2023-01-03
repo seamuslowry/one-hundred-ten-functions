@@ -6,7 +6,9 @@ from json import loads
 import azure.functions as func
 
 from app import models
+from app.dtos import client
 from app.mappers.constants import UserType
+from app.mappers.shared.deserialize import card as __deserialize_card
 
 
 def user(req: func.HttpRequest) -> models.User:
@@ -15,6 +17,11 @@ def user(req: func.HttpRequest) -> models.User:
         return __google_user_from_request(req)
 
     return models.User(__parse_identifier(req), __parse_name(req))
+
+
+def card(c_card: client.Card) -> models.Card:
+    '''Create a card object from a passed client card'''
+    return __deserialize_card(c_card)
 
 
 def __google_user_from_request(req: func.HttpRequest) -> models.GoogleUser:

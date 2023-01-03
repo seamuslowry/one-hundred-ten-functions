@@ -3,6 +3,7 @@
 from app import models
 from app.dtos import db
 from app.mappers.constants import UserType
+from app.mappers.shared.deserialize import card as __card
 
 
 def user(db_user: db.User) -> models.User:
@@ -73,27 +74,6 @@ def __play(play: db.Play) -> models.Play:
     return models.Play(
         identifier=play['identifier'],
         card=__card(play['card'])
-    )
-
-
-def __card(card: db.Card) -> models.Card:
-    suit = None
-
-    try:
-        suit = models.SelectableSuit[card['suit']]
-    except KeyError:
-        pass
-
-    try:
-        suit = models.UnselectableSuit[card['suit']]
-    except KeyError:
-        pass
-
-    assert suit
-
-    return models.Card(
-        suit=suit,
-        number=models.CardNumber[card['number']]
     )
 
 

@@ -111,28 +111,28 @@ def __card(card: models.Card) -> client.Card:
 
 def __event(event: models.Event, client_identifier: str) -> client.Event:
     '''Convert the provided event into the structure it should provide the client'''
+    ret = client.Event(type='unknown')
     if isinstance(event, models.GameStart):
-        return __game_start_json()
+        ret = __game_start_json()
     if isinstance(event, models.RoundStart):
-        return __round_start_json(event, client_identifier)
+        ret = __round_start_json(event, client_identifier)
     if isinstance(event, models.Bid):
-        return __bid_json(event)
+        ret = __bid_json(event)
     if isinstance(event, models.SelectTrump):
-        return __select_trump_json(event)
+        ret = __select_trump_json(event)
     if isinstance(event, models.Discard):
-        return __discard_json(event, client_identifier)
+        ret = __discard_json(event, client_identifier)
     if isinstance(event, models.TrickStart):
-        return __trick_start_json()
+        ret = __trick_start_json()
     if isinstance(event, models.Play):
-        return __play_json(event)
+        ret = __play_json(event)
     if isinstance(event, models.TrickEnd):
-        return __trick_end_json(event)
+        ret = __trick_end_json(event)
     if isinstance(event, models.RoundEnd):
-        return __round_end_json(event)
+        ret = __round_end_json(event)
     if isinstance(event, models.GameEnd):
-        return __game_end_json(event)
-    # TODO better error than value
-    raise ValueError(f"cannot serialize event {event}")
+        ret = __game_end_json(event)
+    return ret
 
 
 def __game_start_json() -> client.GameStart:

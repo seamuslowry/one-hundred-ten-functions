@@ -3,7 +3,8 @@ from unittest import TestCase
 
 from app.models import Game, GameRole, Group, Player, Round, RoundRole
 from app.services import GameService
-from app.services.cosmos import game_client
+
+# from app.services.cosmos import game_client
 
 
 class TestGameService(TestCase):

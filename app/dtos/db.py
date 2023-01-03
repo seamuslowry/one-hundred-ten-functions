@@ -1,6 +1,8 @@
 '''Format of a game of Hundred and Ten in the DB'''
 
-from typing import Optional, TypedDict
+from typing import Optional
+
+from typing_extensions import NotRequired, TypedDict
 
 
 class Card(TypedDict):
@@ -81,3 +83,12 @@ class User(TypedDict):
     name: str
     type: str
     picture_url: Optional[str]
+
+
+class SearchGame(TypedDict):
+    '''A class to model how the client will search for Hundred and Ten games'''
+    name: str
+    client: str
+    statuses: NotRequired[list[str]]
+    active_player: NotRequired[str]
+    winner: NotRequired[str]

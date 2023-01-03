@@ -1,4 +1,3 @@
 [MASTER]
 min-public-methods=1
 good-names=id
-max-returns=10

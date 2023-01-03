@@ -6,8 +6,8 @@ import json
 import azure.functions as func
 
 from app.decorators import catcher
+from app.dtos.db import SearchGame
 from app.mappers.client import serialize
-from app.models import GameRole
 from app.parsers import parse_request
 from app.services import GameService
 
@@ -20,12 +20,15 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     user, *_ = parse_request(req)
 
     body = req.get_json()
-    role_array = body.get('gameRoles', None)
-    roles = list(map(lambda r: GameRole[r], role_array)) if role_array else None
     max_count = body.get('max', 20)
-    search_text = body.get('searchText', '')
 
     return func.HttpResponse(
         json.dumps(
             list(map(lambda g: serialize.game(g, user.identifier),
-                     GameService.search_waiting(search_text, max_count, user.identifier, roles)))))
+                     GameService.search(SearchGame(
+                         name=body.get('searchText', ''),
+                         client=user.identifier,
+                         statuses=body.get('statuses', None),
+                         active_player=body.get('activePlayer', None),
+                         winner=body.get('winner', None)
+                     ), max_count)))))
