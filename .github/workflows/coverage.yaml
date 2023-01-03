@@ -2,11 +2,12 @@ name: 100% Coverage
 on:
   - push
 
+env:
+  MongoDb: mongodb://root:rootpassword@localhost:27017
+  DatabaseName: test
+
 jobs:
   test:
-    env:
-      MongoDb: mongodb://root:rootpassword@localhost:27017
-      DatabaseName: test
     uses: seamuslowry/workflows/.github/workflows/test_python.yml@feature/compose_for_tests
     with:
       compose-file: docker-compose.yml
