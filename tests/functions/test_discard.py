@@ -3,7 +3,6 @@ import json
 from unittest import TestCase, mock
 
 from app.models import RoundStatus
-from app.services import CardService
 from discard import main
 from tests.helpers import (DEFAULT_USER, build_request, game,
                            read_response_body, return_input)
