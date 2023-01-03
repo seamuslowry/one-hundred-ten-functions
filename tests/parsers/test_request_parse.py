@@ -20,4 +20,4 @@ class TestRequestParse(TestCase):
     #     '''Function returns with a requested game'''
     #     (user, parsed_game) = parse_request(build_request(route_params={'game_id': 'id'}))
     #     self.assertEqual(DEFAULT_USER, user)
-        # self.assertEqual(get_game.return_value, parsed_game)
+    #     self.assertEqual(get_game.return_value, parsed_game)
