@@ -6,8 +6,8 @@ from pymongo.collection import Collection
 
 from app.dtos import db
 
-connection_string = os.environ.get('MongoDb', '')
-database_name = os.environ.get('DatabaseName', '')
+connection_string = os.environ.get('MongoDb', 'mongodb://root:rootpassword@localhost:27017')
+database_name = os.environ.get('DatabaseName', 'test')
 
 mongo_client = MongoClient(connection_string)
 
