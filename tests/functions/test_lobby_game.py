@@ -4,6 +4,7 @@ from unittest import TestCase
 import create_game
 import invite_to_game
 import join_game
+import leave_game
 from app.dtos.client import WaitingGame
 from app.models import GameStatus
 from tests.helpers import build_request, read_response_body
@@ -131,7 +132,7 @@ class TestLobbyGame(TestCase):
 
         resp = create_game.main(
             build_request(
-                body={'name': 'public join test', 'accessibility': 'PRIVATE'}))
+                body={'name': 'private uninvited join test', 'accessibility': 'PRIVATE'}))
         created_game: WaitingGame = read_response_body(resp.get_body())
 
         resp = join_game.main(
@@ -146,7 +147,7 @@ class TestLobbyGame(TestCase):
 
         resp = create_game.main(
             build_request(
-                body={'name': 'public join test', 'accessibility': 'PRIVATE'}))
+                body={'name': 'private invite join test', 'accessibility': 'PRIVATE'}))
         created_game: WaitingGame = read_response_body(resp.get_body())
 
         resp = invite_to_game.main(
@@ -167,3 +168,26 @@ class TestLobbyGame(TestCase):
         self.assertEqual(player, joined_game['players'][0]['identifier'])
         self.assertEqual(0, len(joined_game['invitees']))
         self.assertEqual(GameStatus.WAITING_FOR_PLAYERS.name, joined_game['status'])
+
+    def test_leave_game(self):
+        '''Players can leave a game before it has started'''
+        resp = create_game.main(
+            build_request(
+                body={'name': 'leave test'}))
+        created_game: WaitingGame = read_response_body(resp.get_body())
+
+        resp = leave_game.main(
+            build_request(
+                route_params={'game_id': created_game['id']},
+                headers={'x-ms-client-principal-id': created_game['organizer']['identifier']}))
+
+        left_game: WaitingGame = read_response_body(resp.get_body())
+
+        self.assertEqual(created_game['id'], left_game['id'])
+        # organizer will always be populated, but will be dummy data when no real organizer exists
+        self.assertNotEqual(
+            created_game['organizer']['identifier'],
+            left_game['organizer']['identifier'])
+        self.assertEqual(0, len(left_game['players']))
+        self.assertEqual(0, len(left_game['invitees']))
+        self.assertEqual(GameStatus.WAITING_FOR_PLAYERS.name, left_game['status'])
