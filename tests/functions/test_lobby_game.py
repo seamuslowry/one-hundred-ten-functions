@@ -5,8 +5,9 @@ import create_game
 import invite_to_game
 import join_game
 import leave_game
-from app.dtos.client import WaitingGame
-from app.models import GameStatus
+import start_game
+from app.dtos.client import StartedGame, WaitingGame
+from app.models import GameStatus, RoundStatus
 from tests.helpers import build_request, read_response_body
 
 
@@ -191,3 +192,41 @@ class TestLobbyGame(TestCase):
         self.assertEqual(0, len(left_game['players']))
         self.assertEqual(0, len(left_game['invitees']))
         self.assertEqual(GameStatus.WAITING_FOR_PLAYERS.name, left_game['status'])
+
+    def test_player_start_game(self):
+        '''Players cannot start the game'''
+        player = 'player'
+
+        resp = create_game.main(
+            build_request(
+                body={'name': 'player start test'}))
+        created_game: WaitingGame = read_response_body(resp.get_body())
+
+        resp = join_game.main(
+            build_request(
+                route_params={'game_id': created_game['id']},
+                headers={'x-ms-client-principal-id': player}))
+
+        resp = start_game.main(
+            build_request(
+                route_params={'game_id': created_game['id']},
+                headers={'x-ms-client-principal-id': player}))
+        self.assertEqual(400, resp.status_code)
+
+    def test_start_game(self):
+        '''The organizer can start the game'''
+        resp = create_game.main(
+            build_request(
+                body={'name': 'start test'}))
+        created_game: WaitingGame = read_response_body(resp.get_body())
+
+        resp = start_game.main(
+            build_request(
+                route_params={'game_id': created_game['id']},
+                headers={'x-ms-client-principal-id': created_game['organizer']['identifier']}))
+
+        started_game: StartedGame = read_response_body(resp.get_body())
+
+        self.assertEqual(created_game['id'], started_game['id'])
+        self.assertEqual(4, len(started_game['round']['players']))
+        self.assertEqual(RoundStatus.BIDDING.name, started_game['status'])
