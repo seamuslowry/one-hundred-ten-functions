@@ -1,62 +1,41 @@
 '''User Service unit tests'''
-import base64
-import json
+from time import time
 from unittest import TestCase
 
 from app.models import GoogleUser, User
 from app.services import UserService
-from tests.helpers import build_request
 
 
 class TestUserService(TestCase):
     '''Unit tests to ensure user operations work as expected'''
-    # TODO fix
-    # def test_unknown_user(self):
-    #     '''Init a user from an unknown source'''
-    #     user = UserService.from_request(build_request())
 
-    #     self.assertTrue(isinstance(user, User))
-    #     self.assertFalse(isinstance(user, GoogleUser))
+    def test_save_unknown_user(self):
+        '''User can be saved to the DB'''
+        user = User(identifier=str(time()), name='save_unknown')
 
-    # def test_google_user(self):
-    #     '''Init a user from Google'''
-    #     user_client.upsert_item.return_value = {
-    #         'type': 'google', 'id': '', 'name': '', 'picture_url': ''}
+        self.assertIsNotNone(UserService.save(user))
 
-    #     user = UserService.from_request(
-    #         build_request(
-    #             headers={'x-ms-client-principal-idp': 'google',
-    #                      'x-ms-client-principal': base64.b64encode(json.dumps({'claims': []})
-    #                                                                .encode()).decode()}))
-    #     self.assertTrue(isinstance(user, User))
-    #     self.assertTrue(isinstance(user, GoogleUser))
+    def test_save_google_user(self):
+        '''Google user can be saved to the DB'''
+        user = GoogleUser(identifier=str(time()), name='save_google', picture_url='')
 
-    #     user_client.upsert_item.reset_mock(return_value=True)
+        self.assertIsNotNone(UserService.save(user))
 
-    # def test_invalid_user(self):
-    #     '''Do not allow initializing an invalid user'''
-    #     req = build_request(
-    #         headers={'x-ms-client-principal-idp': ''})
+    def test_search_user(self):
+        '''Users can be searched in the DB'''
+        text = f'search_user{time()}'
+        users = [UserService.save(
+            User(identifier=str(time()), name=f'{text} {i}')) for i in range(5)]
 
-    #     self.assertRaises(ValueError, UserService.from_request, req)
+        found_users = UserService.search(text)
 
-    # def test_search_user(self):
-    #     '''Searches for users'''
-    #     users = UserService.search('text')
+        self.assertEqual(users, found_users)
 
-    #     self.assertIsNotNone(users)
-    #     user_client.query_items.assert_called_once()
-    #     user_client.query_items.reset_mock()
+    def test_get_users_by_identifiers(self):
+        '''Users can be retrieved by identifier in the DB'''
+        users = [UserService.save(
+            User(identifier=str(time()), name='search')) for i in range(5)]
 
-    # def test_get_by_identifiers(self):
-    #     '''Searches for user by identifiers'''
-    #     users = UserService.by_identifiers(['text'])
+        found_users = UserService.by_identifiers(list(map(lambda u: u.identifier, users)))
 
-    #     self.assertIsNotNone(users)
-    #     user_client.query_items.assert_called_once()
-    #     user_client.query_items.reset_mock()
-
-    # TODO remove
-    # def test_serializes_user(self):
-    #     '''Serializes a user'''
-    #     self.assertIsNotNone(UserService.json(User('', '')))
+        self.assertEqual(users, found_users)

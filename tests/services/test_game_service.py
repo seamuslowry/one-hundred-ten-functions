@@ -19,10 +19,17 @@ class TestGameService(TestCase):
     def test_get_game(self):
         '''Game can be retrieved to the DB'''
         original_game = Game(id=str(time()))
-        game = GameService.save(original_game)
+        GameService.save(original_game)
+        game = GameService.get(original_game.id)
 
         self.assertIsNotNone(game)
         self.assertEqual(game.id, original_game.id)
+
+    def test_get_non_existent_game(self):
+        '''Unknown game cannot be retrieved to the DB'''
+        original_game = Game(id=str(time()))
+
+        self.assertRaises(ValueError, GameService.get, original_game.id)
 
     def test_search_game(self):
         '''Games can be searched in the DB'''
