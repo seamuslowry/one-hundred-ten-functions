@@ -44,6 +44,30 @@ def events(m_events: list[models.Event], client_identifier: str) -> list[client.
     return list(map(lambda e: __event(e, client_identifier), m_events))
 
 
+def suggestion(m_suggestion: models.Action, client_identifier: str) -> client.Suggestion:
+    '''Return a suggested action as it can be provided to the client'''
+    if client_identifier != m_suggestion.identifier:
+        raise ValueError('You can only ask for a suggestion on your turn')
+
+    if isinstance(m_suggestion, models.Bid):
+        return client.BidSuggestion(
+            amount=m_suggestion.amount
+        )
+    if isinstance(m_suggestion, models.SelectTrump):
+        return client.SelectTrumpSuggestion(
+            suit=m_suggestion.suit.name
+        )
+    if isinstance(m_suggestion, models.Discard):
+        return client.DiscardSuggestion(
+            cards=list(map(__card, m_suggestion.cards))
+        )
+    if isinstance(m_suggestion, models.Play):
+        return client.PlaySuggestion(
+            card=__card(m_suggestion.card)
+        )
+    return client.Suggestion()
+
+
 def __play(play: models.Play) -> client.Play:
     return client.Play(
         identifier=play.identifier,

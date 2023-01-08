@@ -138,3 +138,27 @@ class StartedGame(Game):
     round: Round
     scores: dict[str, int]
     results: Optional[list[Event]]
+
+
+class Suggestion(TypedDict):
+    '''A class to act as a superclass for suggestioned actions to the client'''
+
+
+class BidSuggestion(Suggestion):
+    '''A class to model a suggested bid action to the client'''
+    amount: int
+
+
+class SelectTrumpSuggestion(Suggestion):
+    '''A class to model a suggested trump selection action to the client'''
+    suit: str
+
+
+class DiscardSuggestion(Suggestion):
+    '''A class to model a suggested discard action to the client'''
+    cards: list[Card]
+
+
+class PlaySuggestion(Suggestion):
+    '''A class to model a suggested play action to the client'''
+    card: Card
