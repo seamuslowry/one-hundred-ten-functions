@@ -222,8 +222,9 @@ class TestLobbyGame(TestCase):
 
         resp = start_game.main(
             build_request(
-                route_params={'game_id': created_game['id']},
-                headers={'x-ms-client-principal-id': created_game['organizer']['identifier']}))
+                headers={'x-ms-client-principal-id': created_game['organizer']['identifier']},
+                route_params={'game_id': created_game['id']}
+            ))
 
         started_game: StartedGame = read_response_body(resp.get_body())
 
