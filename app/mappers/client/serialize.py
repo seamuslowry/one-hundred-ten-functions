@@ -105,7 +105,7 @@ def __person(person: models.Person) -> client.Person:
     return client.Person(
         identifier=person.identifier,
         automate=person.automate,
-        prepassed=models.RoundRole in person.roles
+        prepassed=models.RoundRole.PRE_PASSED in person.roles
     )
 
 
@@ -114,7 +114,7 @@ def __player(player: models.Player, client_identifier: str) -> client.Player:
         return client.Self(
             identifier=player.identifier,
             automate=player.automate,
-            prepassed=models.RoundRole in player.roles,
+            prepassed=models.RoundRole.PRE_PASSED in player.roles,
             hand=list(map(__card, player.hand))
         )
 

@@ -5,6 +5,7 @@ import bid
 import create_game
 import discard
 import play
+import rescind_prepass
 import select_trump
 import start_game
 import suggestion
@@ -88,3 +89,38 @@ class TestPlayingGame(TestCase):
 
         self.assertEqual(RoundStatus.TRICKS.name, game['status'])
         self.assertEqual(2, len(game['round']['tricks']))
+
+    def test_prepass_and_rescind_prepass(self):
+        '''A non-active player can prepass and rescind that prepass'''
+        game: StartedGame = self.get_initial_game()
+
+        non_active_player = next(
+            p for p in game['round']['players']
+            if game['round']['active_player'] and p['identifier'] !=
+            game['round']['active_player']['identifier'])
+
+        # prepass
+        resp = bid.main(
+            build_request(
+                route_params={'game_id': game['id']},
+                headers={'x-ms-client-principal-id': non_active_player['identifier']},
+                body={
+                    'amount': BidAmount.PASS
+                })
+        )
+        game: StartedGame = read_response_body(resp.get_body())
+        non_active_player = next(p for p in game['round']
+                                 ['players'] if p['identifier'] == non_active_player['identifier'])
+        self.assertTrue(non_active_player['prepassed'])
+
+        # rescind prepass
+        resp = rescind_prepass.main(
+            build_request(
+                route_params={'game_id': game['id']},
+                headers={'x-ms-client-principal-id': non_active_player['identifier']},
+            )
+        )
+        game: StartedGame = read_response_body(resp.get_body())
+        non_active_player = next(p for p in game['round']
+                                 ['players'] if p['identifier'] == non_active_player['identifier'])
+        self.assertFalse(non_active_player['prepassed'])
