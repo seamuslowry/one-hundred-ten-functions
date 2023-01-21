@@ -4,6 +4,7 @@ from unittest import TestCase
 import bid
 import create_game
 import discard
+import leave_game
 import play
 import rescind_prepass
 import select_trump
@@ -124,3 +125,22 @@ class TestPlayingGame(TestCase):
         non_active_player = next(p for p in game['round']
                                  ['players'] if p['identifier'] == non_active_player['identifier'])
         self.assertFalse(non_active_player['prepassed'])
+
+    def test_leave_playing_game(self):
+        '''A player can leave an active game by automating themselves'''
+        game: StartedGame = self.get_initial_game()
+        active_player = game['round']['active_player']
+        assert active_player
+        self.assertFalse(active_player['automate'])
+
+        # leave
+        resp = leave_game.main(
+            build_request(
+                route_params={'game_id': game['id']}
+            )
+        )
+        game: StartedGame = read_response_body(resp.get_body())
+        active_player = next(p for p in game['round']['players']
+                             if p['identifier'] == active_player['identifier'])
+
+        self.assertTrue(active_player['automate'])
