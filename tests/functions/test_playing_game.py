@@ -2,37 +2,23 @@
 from unittest import TestCase
 
 import bid
-import create_game
 import discard
 import leave_game
 import play
 import rescind_prepass
 import select_trump
-import start_game
 import suggestion
-from app.dtos.client import PlaySuggestion, StartedGame, WaitingGame
+from app.dtos.client import PlaySuggestion, StartedGame
 from app.models import BidAmount, RoundStatus, SelectableSuit
-from tests.helpers import build_request, read_response_body
+from tests.helpers import build_request, read_response_body, started_game
 
 
 class TestPlayingGame(TestCase):
     '''Unit tests to ensure games that are in progress behave as expected'''
 
-    def get_initial_game(self) -> StartedGame:
-        '''Get a started game waiting for the first move'''
-        resp = create_game.main(
-            build_request(
-                body={'name': 'play round test'}))
-        created_game: WaitingGame = read_response_body(resp.get_body())
-        resp = start_game.main(
-            build_request(
-                route_params={'game_id': created_game['id']},
-                headers={'x-ms-client-principal-id': created_game['organizer']['identifier']}))
-        return read_response_body(resp.get_body())
-
     def test_perform_round_actions(self):
         '''A round of the game can be played'''
-        created_game: StartedGame = self.get_initial_game()
+        created_game: StartedGame = started_game()
         self.assertEqual(RoundStatus.BIDDING.name, created_game['status'])
 
         # bid
@@ -93,7 +79,7 @@ class TestPlayingGame(TestCase):
 
     def test_prepass_and_rescind_prepass(self):
         '''A non-active player can prepass and rescind that prepass'''
-        game: StartedGame = self.get_initial_game()
+        game: StartedGame = started_game()
 
         non_active_player = next(
             p for p in game['round']['players']
@@ -128,7 +114,7 @@ class TestPlayingGame(TestCase):
 
     def test_leave_playing_game(self):
         '''A player can leave an active game by automating themselves'''
-        game: StartedGame = self.get_initial_game()
+        game: StartedGame = started_game()
         active_player = game['round']['active_player']
         assert active_player
         self.assertFalse(active_player['automate'])

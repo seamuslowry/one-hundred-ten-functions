@@ -140,6 +140,13 @@ class StartedGame(Game):
     results: Optional[list[Event]]
 
 
+class CompletedGame(Game):
+    '''A class to model the client format of a completed Hundred and Ten game'''
+    winner: Person
+    scores: dict[str, int]
+    results: Optional[list[Event]]
+
+
 class Suggestion(TypedDict):
     '''A class to act as a superclass for suggestioned actions to the client'''
 

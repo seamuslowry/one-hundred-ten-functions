@@ -31,12 +31,25 @@ def game(m_game: models.Game,
             invitees=list(map(__person, (p for p in m_game.invitees if p not in m_game.players)))
         )
 
+    client_events = events(m_game.events[initial_event_knowledge:],
+                           client_identifier) if initial_event_knowledge is not None else None
+
+    if m_game.status == models.GameStatus.WON:
+        assert m_game.winner  # won games will have winners
+        return client.CompletedGame(
+            id=m_game.id,
+            name=m_game.name,
+            status=m_game.status.name,
+            scores=m_game.scores,
+            results=client_events,
+            winner=__person(m_game.winner)
+        )
+
     return client.StartedGame(
         id=m_game.id, name=m_game.name, status=m_game.status.name,
         round=__round(m_game.active_round, client_identifier),
         scores=m_game.scores,
-        results=events(m_game.events[initial_event_knowledge:],
-                       client_identifier) if initial_event_knowledge is not None else None)
+        results=client_events)
 
 
 def events(m_events: list[models.Event], client_identifier: str) -> list[client.Event]:
