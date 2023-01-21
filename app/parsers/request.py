@@ -15,6 +15,6 @@ def parse(req: func.HttpRequest) -> Tuple[User, Game]:
     Parse the request for the models
     '''
     game_id = req.route_params.get('game_id', None)
-    game = GameService.get(game_id or '')
+    game = GameService.get(game_id) if game_id else Game()
 
     return (UserService.save(deserialize.user(req)), game)
