@@ -2,26 +2,8 @@ name: 100% Coverage
 on:
   - push
 
-env:
-  COMPOSE_FILE: docker-compose.yml
-
 jobs:
-  setup-test-env:
-    runs-on: ubuntu-latest
-    name: Stand up Test Environment
-    steps:
-      - uses: actions/checkout@v3
-      - run: docker-compose -f "${{ env.COMPOSE_FILE }}" up -d --build
-
   test:
-    needs: setup-test-env
-    uses: seamuslowry/workflows/.github/workflows/test_python.yml@main
-
-  teardown-test-env:
-    if: ${{ always() }}
-    needs: [setup-test-env, test]
-    runs-on: ubuntu-latest
-    name: Tear down Test Environment
-    steps:
-      - uses: actions/checkout@v3
-      - run: docker-compose -f "${{ env.COMPOSE_FILE }}" down --volumes
+    uses: seamuslowry/workflows/.github/workflows/test_python.yml@feature/compose_for_tests
+    with:
+      compose-file: docker-compose.yml
