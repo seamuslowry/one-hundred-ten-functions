@@ -13,11 +13,11 @@ from app.models import BidAmount, RoundStatus, SelectableSuit
 from tests.helpers import build_request, read_response_body
 
 
-class TestLobbyGame(TestCase):
+class TestPlayingGame(TestCase):
     '''Unit tests to ensure games that are in progress behave as expected'''
 
-    def test_perform_round_actions(self):
-        '''A round of the game can be played'''
+    def get_initial_game(self) -> StartedGame:
+        '''Get a started game waiting for the first move'''
         resp = create_game.main(
             build_request(
                 body={'name': 'play round test'}))
@@ -26,8 +26,12 @@ class TestLobbyGame(TestCase):
             build_request(
                 route_params={'game_id': created_game['id']},
                 headers={'x-ms-client-principal-id': created_game['organizer']['identifier']}))
-        game: StartedGame = read_response_body(resp.get_body())
-        self.assertEqual(RoundStatus.BIDDING.name, game['status'])
+        return read_response_body(resp.get_body())
+
+    def test_perform_round_actions(self):
+        '''A round of the game can be played'''
+        created_game: StartedGame = self.get_initial_game()
+        self.assertEqual(RoundStatus.BIDDING.name, created_game['status'])
 
         # bid
         resp = bid.main(
