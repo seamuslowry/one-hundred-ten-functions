@@ -15,7 +15,7 @@ jobs:
 
   test:
     needs: setup-test-env
-    uses: seamuslowry/workflows/.github/workflows/test_python.yml
+    uses: seamuslowry/workflows/.github/workflows/test_python.yml@main
 
   teardown-test-env:
     if: ${{ always() }}
