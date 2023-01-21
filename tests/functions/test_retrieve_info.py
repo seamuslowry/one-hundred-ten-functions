@@ -3,10 +3,12 @@ from unittest import TestCase
 
 import events
 import game_info
+import players
 import search_games
-from app.dtos.client import CompletedGame, Event
+from app.dtos.client import CompletedGame, Event, StartedGame, User
 from app.mappers.constants import EventType
-from tests.helpers import build_request, completed_game, read_response_body
+from tests.helpers import (build_request, completed_game, read_response_body,
+                           started_game)
 
 
 class TestRetrieveInfo(TestCase):
@@ -42,7 +44,7 @@ class TestRetrieveInfo(TestCase):
         '''Can retrieve event information about a game'''
         original_game: CompletedGame = completed_game()
 
-        # get that game's info
+        # get that game's events
         resp = events.main(
             build_request(
                 route_params={'game_id': original_game['id']})
@@ -50,3 +52,19 @@ class TestRetrieveInfo(TestCase):
         retrieved_events: list[Event] = read_response_body(resp.get_body())
         self.assertGreater(len(retrieved_events), 0)
         self.assertEqual(retrieved_events[-1]['type'], EventType.GAME_END.name)
+
+    def test_game_players(self):
+        '''Can retrieve user information for players on a game'''
+        original_game: StartedGame = started_game()
+        active_player = original_game['round']['active_player']
+        assert active_player
+        # get that game's players
+        resp = players.main(
+            build_request(
+                route_params={'game_id': original_game['id']})
+        )
+        retrieved_users: list[User] = read_response_body(resp.get_body())
+        user = next(
+            u for u in retrieved_users
+            if u['identifier'] == active_player['identifier'])
+        self.assertIsNotNone(user['name'])
