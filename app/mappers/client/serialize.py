@@ -42,7 +42,9 @@ def game(m_game: models.Game,
             status=m_game.status.name,
             scores=m_game.scores,
             results=client_events,
-            winner=__person(m_game.winner)
+            winner=__person(m_game.winner),
+            organizer=__person(m_game.organizer),
+            players=list(map(__person, m_game.players))
         )
 
     return client.StartedGame(

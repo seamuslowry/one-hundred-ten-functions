@@ -8,7 +8,7 @@ import play
 import rescind_prepass
 import select_trump
 import suggestion
-from app.dtos.client import PlaySuggestion, StartedGame
+from app.dtos.client import CompletedGame, PlaySuggestion, StartedGame
 from app.models import BidAmount, RoundStatus, SelectableSuit
 from tests.helpers import build_request, read_response_body, started_game
 
@@ -114,19 +114,19 @@ class TestPlayingGame(TestCase):
 
     def test_leave_playing_game(self):
         '''A player can leave an active game by automating themselves'''
-        game: StartedGame = started_game()
-        active_player = game['round']['active_player']
+        original_game: StartedGame = started_game()
+        active_player = original_game['round']['active_player']
         assert active_player
         self.assertFalse(active_player['automate'])
 
         # leave
         resp = leave_game.main(
             build_request(
-                route_params={'game_id': game['id']}
+                route_params={'game_id': original_game['id']}
             )
         )
-        game: StartedGame = read_response_body(resp.get_body())
-        active_player = next(p for p in game['round']['players']
+        game: CompletedGame = read_response_body(resp.get_body())
+        active_player = next(p for p in game['players']
                              if p['identifier'] == active_player['identifier'])
 
         self.assertTrue(active_player['automate'])

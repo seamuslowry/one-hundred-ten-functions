@@ -143,6 +143,8 @@ class StartedGame(Game):
 class CompletedGame(Game):
     '''A class to model the client format of a completed Hundred and Ten game'''
     winner: Person
+    organizer: Person
+    players: list[Person]
     scores: dict[str, int]
     results: Optional[list[Event]]
 
