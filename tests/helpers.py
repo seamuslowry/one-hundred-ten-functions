@@ -28,11 +28,12 @@ def read_response_body(body: bytes):
     return json.loads(body.decode('utf-8'))
 
 
-def lobby_game() -> WaitingGame:
+def lobby_game(organizer: str = DEFAULT_ID) -> WaitingGame:
     '''Get a started game waiting for the players'''
     resp = create_game.main(
         build_request(
-            body={'name': 'play round test'}))
+            headers={'x-ms-client-principal-id': organizer},
+            body={'name': 'test game'}))
     return read_response_body(resp.get_body())
 
 

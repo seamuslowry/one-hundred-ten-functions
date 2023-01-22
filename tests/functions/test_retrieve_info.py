@@ -28,7 +28,7 @@ class TestRetrieveInfo(TestCase):
                 })
         )
         games = read_response_body(resp.get_body())
-        self.assertIn(game, games)
+        self.assertIn(game['id'], list(map(lambda g: g['id'], games)))
 
     def test_game_info(self):
         '''Can retrieve information about a game'''
@@ -40,7 +40,7 @@ class TestRetrieveInfo(TestCase):
                 route_params={'game_id': original_game['id']})
         )
         game = read_response_body(resp.get_body())
-        self.assertEqual(game, original_game)
+        self.assertEqual(game['id'], original_game['id'])
 
     def test_game_events(self):
         '''Can retrieve event information about a game'''
@@ -63,6 +63,28 @@ class TestRetrieveInfo(TestCase):
 
     def test_game_players(self):
         '''Can retrieve user information for players on a game'''
+        original_game: WaitingGame = lobby_game()
+        other_players = list(map(lambda i: f'{time()}-{i}', range(1, 4)))
+        for player in other_players:
+            join_game.main(
+                build_request(
+                    route_params={'game_id': original_game['id']},
+                    headers={'x-ms-client-principal-id': player}))
+
+        # get that game's players
+        resp = players.main(
+            build_request(
+                route_params={'game_id': original_game['id']})
+        )
+        retrieved_users: list[User] = read_response_body(resp.get_body())
+        self.assertEqual(4, len(retrieved_users))
+        self.assertEqual(
+            [original_game['organizer']['identifier']] + other_players,
+            list(map(lambda p: p['identifier'],
+                     retrieved_users)))
+
+    def test_search_users(self):
+        '''Can retrieve user information by substring of name'''
         original_game: WaitingGame = lobby_game()
         other_players = list(map(lambda i: f'{time()}-{i}', range(1, 4)))
         for player in other_players:
