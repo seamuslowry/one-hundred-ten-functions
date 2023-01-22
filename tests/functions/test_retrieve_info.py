@@ -1,14 +1,16 @@
 '''Retrieve Info unit tests'''
+from time import time
 from unittest import TestCase
 
 import events
 import game_info
+import join_game
 import players
 import search_games
-from app.dtos.client import CompletedGame, Event, StartedGame, User
+from app.dtos.client import CompletedGame, Event, User, WaitingGame
 from app.mappers.constants import EventType
-from tests.helpers import (build_request, completed_game, read_response_body,
-                           started_game)
+from tests.helpers import (build_request, completed_game, lobby_game,
+                           read_response_body)
 
 
 class TestRetrieveInfo(TestCase):
@@ -61,16 +63,22 @@ class TestRetrieveInfo(TestCase):
 
     def test_game_players(self):
         '''Can retrieve user information for players on a game'''
-        original_game: StartedGame = started_game()
-        active_player = original_game['round']['active_player']
-        assert active_player
+        original_game: WaitingGame = lobby_game()
+        other_players = list(map(lambda i: f'{time()}-{i}', range(1, 4)))
+        for player in other_players:
+            join_game.main(
+                build_request(
+                    route_params={'game_id': original_game['id']},
+                    headers={'x-ms-client-principal-id': player}))
+
         # get that game's players
         resp = players.main(
             build_request(
                 route_params={'game_id': original_game['id']})
         )
         retrieved_users: list[User] = read_response_body(resp.get_body())
-        user = next(
-            u for u in retrieved_users
-            if u['identifier'] == active_player['identifier'])
-        self.assertIsNotNone(user['name'])
+        self.assertEqual(4, len(retrieved_users))
+        self.assertEqual(
+            [original_game['organizer']['identifier']] + other_players,
+            list(map(lambda p: p['identifier'],
+                     retrieved_users)))
