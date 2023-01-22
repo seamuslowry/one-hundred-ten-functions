@@ -8,7 +8,7 @@ import leave_game
 import start_game
 from app.dtos.client import StartedGame, WaitingGame
 from app.models import GameStatus, RoundStatus
-from tests.helpers import build_request, read_response_body
+from tests.helpers import build_request, lobby_game, read_response_body
 
 
 class TestLobbyGame(TestCase):
@@ -32,10 +32,7 @@ class TestLobbyGame(TestCase):
         '''Organizer can be invite players to a game'''
         invitee = 'invitee'
 
-        resp = create_game.main(
-            build_request(
-                body={'name': 'organizer invite test'}))
-        created_game: WaitingGame = read_response_body(resp.get_body())
+        created_game: WaitingGame = lobby_game()
 
         resp = invite_to_game.main(
             build_request(
@@ -55,13 +52,10 @@ class TestLobbyGame(TestCase):
         invitee = 'invitee'
         second_invitee = 'second'
 
-        resp = create_game.main(
-            build_request(
-                body={'name': 'invitee invite test'}))
-        created_game: WaitingGame = read_response_body(resp.get_body())
+        created_game: WaitingGame = lobby_game()
 
         # invite the original
-        resp = invite_to_game.main(
+        invite_to_game.main(
             build_request(
                 route_params={'game_id': created_game['id']},
                 headers={'x-ms-client-principal-id': created_game['organizer']['identifier']},
@@ -80,13 +74,10 @@ class TestLobbyGame(TestCase):
         invitee = 'invitee'
         player = 'player'
 
-        resp = create_game.main(
-            build_request(
-                body={'name': 'player invite test'}))
-        created_game: WaitingGame = read_response_body(resp.get_body())
+        created_game: WaitingGame = lobby_game()
 
         # join as player
-        resp = join_game.main(
+        join_game.main(
             build_request(
                 route_params={'game_id': created_game['id']},
                 headers={'x-ms-client-principal-id': player}))
@@ -110,10 +101,7 @@ class TestLobbyGame(TestCase):
         '''Any player can join a public game'''
         player = 'player'
 
-        resp = create_game.main(
-            build_request(
-                body={'name': 'public join test'}))
-        created_game: WaitingGame = read_response_body(resp.get_body())
+        created_game: WaitingGame = lobby_game()
 
         resp = join_game.main(
             build_request(
@@ -172,10 +160,7 @@ class TestLobbyGame(TestCase):
 
     def test_leave_game(self):
         '''Players can leave a game before it has started'''
-        resp = create_game.main(
-            build_request(
-                body={'name': 'leave test'}))
-        created_game: WaitingGame = read_response_body(resp.get_body())
+        created_game: WaitingGame = lobby_game()
 
         resp = leave_game.main(
             build_request(
@@ -197,10 +182,7 @@ class TestLobbyGame(TestCase):
         '''Players cannot start the game'''
         player = 'player'
 
-        resp = create_game.main(
-            build_request(
-                body={'name': 'player start test'}))
-        created_game: WaitingGame = read_response_body(resp.get_body())
+        created_game: WaitingGame = lobby_game()
 
         resp = join_game.main(
             build_request(
@@ -215,10 +197,7 @@ class TestLobbyGame(TestCase):
 
     def test_start_game(self):
         '''The organizer can start the game'''
-        resp = create_game.main(
-            build_request(
-                body={'name': 'start test'}))
-        created_game: WaitingGame = read_response_body(resp.get_body())
+        created_game: WaitingGame = lobby_game()
 
         resp = start_game.main(
             build_request(

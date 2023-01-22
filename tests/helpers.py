@@ -28,12 +28,17 @@ def read_response_body(body: bytes):
     return json.loads(body.decode('utf-8'))
 
 
-def started_game() -> StartedGame:
-    '''Get a started game waiting for the first move'''
+def lobby_game() -> WaitingGame:
+    '''Get a started game waiting for the players'''
     resp = create_game.main(
         build_request(
             body={'name': 'play round test'}))
-    created_game: WaitingGame = read_response_body(resp.get_body())
+    return read_response_body(resp.get_body())
+
+
+def started_game() -> StartedGame:
+    '''Get a started game waiting for the first move'''
+    created_game: WaitingGame = lobby_game()
     resp = start_game.main(
         build_request(
             route_params={'game_id': created_game['id']},
