@@ -18,10 +18,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     Leave a 110 game
     '''
     user, game = parse_request(req)
+    initial_event_knowledge = len(game.events)
     if isinstance(game.status, RoundStatus):
         game.automate(user.identifier)
     else:
         game.leave(user.identifier)
     game = GameService.save(game)
 
-    return func.HttpResponse(json.dumps(serialize.game(game, user.identifier)))
+    return func.HttpResponse(
+        json.dumps(serialize.game(game, user.identifier, initial_event_knowledge)))

@@ -50,7 +50,13 @@ class TestRetrieveInfo(TestCase):
                 route_params={'game_id': original_game['id']})
         )
         retrieved_events: list[Event] = read_response_body(resp.get_body())
-        self.assertGreater(len(retrieved_events), 0)
+        self.assertIsNotNone(original_game['results'])
+        assert original_game['results']
+        self.assertNotEqual(original_game['results'], [])
+        self.assertGreaterEqual(len(retrieved_events), len(original_game['results']))
+        self.assertEqual(
+            retrieved_events[len(retrieved_events)-len(original_game['results']):],
+            original_game['results'])
         self.assertEqual(retrieved_events[-1]['type'], EventType.GAME_END.name)
 
     def test_game_players(self):
