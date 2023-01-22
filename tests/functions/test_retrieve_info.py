@@ -7,6 +7,7 @@ import game_info
 import join_game
 import players
 import search_games
+import search_users
 from app.dtos.client import CompletedGame, Event, User, WaitingGame
 from app.mappers.constants import EventType
 from tests.helpers import (build_request, completed_game, lobby_game,
@@ -85,22 +86,24 @@ class TestRetrieveInfo(TestCase):
 
     def test_search_users(self):
         '''Can retrieve user information by substring of name'''
-        original_game: WaitingGame = lobby_game()
-        other_players = list(map(lambda i: f'{time()}-{i}', range(1, 4)))
-        for player in other_players:
-            join_game.main(
-                build_request(
-                    route_params={'game_id': original_game['id']},
-                    headers={'x-ms-client-principal-id': player}))
+        # create new unique users
+        timestamp = time()
+        user_one = (f'{timestamp}one', f'{timestamp}aaa')
+        user_two = (f'{timestamp}two', f'{timestamp}AAA')
+        user_three = (f'{timestamp}three', f'{timestamp}bbb')
+        lobby_game(user_one[0], user_one[1])
+        lobby_game(user_two[0], user_two[1])
+        lobby_game(user_three[0], user_three[1])
 
-        # get that game's players
-        resp = players.main(
+        # get users
+        resp = search_users.main(
             build_request(
-                route_params={'game_id': original_game['id']})
+                params={
+                    'searchText': 'aaa'
+                })
         )
         retrieved_users: list[User] = read_response_body(resp.get_body())
-        self.assertEqual(4, len(retrieved_users))
-        self.assertEqual(
-            [original_game['organizer']['identifier']] + other_players,
-            list(map(lambda p: p['identifier'],
-                     retrieved_users)))
+        retrieved_user_ids = list(map(lambda u: u['identifier'], retrieved_users))
+        self.assertIn(user_one[0], retrieved_user_ids)
+        self.assertIn(user_two[0], retrieved_user_ids)
+        self.assertNotIn(user_three[0], retrieved_user_ids)

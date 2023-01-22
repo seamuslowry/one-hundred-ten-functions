@@ -10,6 +10,7 @@ import start_game
 from app.dtos.client import CompletedGame, StartedGame, WaitingGame
 
 DEFAULT_ID = 'id'
+DEFAULT_NAME = 'name'
 
 
 def build_request(method='GET', body=None, route_params=None,
@@ -19,7 +20,7 @@ def build_request(method='GET', body=None, route_params=None,
         method=method, body=json.dumps(body).encode('utf-8') if body else b'',
         route_params=route_params, url='',
         headers={'x-ms-client-principal-idp': 'unknown', 'x-ms-client-principal-id': DEFAULT_ID,
-                 'x-ms-client-principal-name': 'name', **(headers or {})},
+                 'x-ms-client-principal-name': DEFAULT_NAME, **(headers or {})},
         params=params)
 
 
@@ -28,11 +29,12 @@ def read_response_body(body: bytes):
     return json.loads(body.decode('utf-8'))
 
 
-def lobby_game(organizer: str = DEFAULT_ID) -> WaitingGame:
+def lobby_game(organizer: str = DEFAULT_ID, organizer_name: str = DEFAULT_NAME) -> WaitingGame:
     '''Get a started game waiting for the players'''
     resp = create_game.main(
         build_request(
-            headers={'x-ms-client-principal-id': organizer},
+            headers={'x-ms-client-principal-id': organizer,
+                     'x-ms-client-principal-name': organizer_name},
             body={'name': 'test game'}))
     return read_response_body(resp.get_body())
 
