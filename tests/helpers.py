@@ -7,7 +7,8 @@ import azure.functions as func
 import create_game
 import leave_game
 import start_game
-from app.dtos.client import CompletedGame, StartedGame, WaitingGame
+import suggestion
+from app.dtos.client import CompletedGame, StartedGame, Suggestion, WaitingGame
 
 DEFAULT_ID = 'id'
 DEFAULT_NAME = 'name'
@@ -60,4 +61,18 @@ def completed_game() -> CompletedGame:
         build_request(
             route_params={'game_id': game['id']},
             headers={'x-ms-client-principal-id': active_player['identifier']}))
+    return read_response_body(resp.get_body())
+
+
+def request_suggestion(game_id: str, user: str = DEFAULT_ID) -> func.HttpResponse:
+    '''get the suggestion for the game'''
+    return suggestion.main(
+        build_request(
+            route_params={'game_id': game_id},
+            headers={'x-ms-client-principal-id': user}))
+
+
+def get_suggestion(game_id: str) -> Suggestion:
+    '''get the suggestion for the game'''
+    resp = request_suggestion(game_id)
     return read_response_body(resp.get_body())

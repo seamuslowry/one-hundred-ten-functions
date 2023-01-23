@@ -7,10 +7,10 @@ import leave_game
 import play
 import rescind_prepass
 import select_trump
-import suggestion
-from app.dtos.client import CompletedGame, PlaySuggestion, StartedGame
+from app.dtos.client import CompletedGame, StartedGame
 from app.models import BidAmount, RoundStatus, SelectableSuit
-from tests.helpers import build_request, read_response_body, started_game
+from tests.helpers import (build_request, get_suggestion, read_response_body,
+                           started_game)
 
 
 class TestPlayingGame(TestCase):
@@ -20,6 +20,10 @@ class TestPlayingGame(TestCase):
         '''A round of the game can be played'''
         created_game: StartedGame = started_game()
         self.assertEqual(RoundStatus.BIDDING.name, created_game['status'])
+
+        # assert that current suggestion is a bid
+        suggested_bid = get_suggestion(created_game['id'])
+        assert 'amount' in suggested_bid
 
         # bid
         resp = bid.main(
@@ -33,6 +37,10 @@ class TestPlayingGame(TestCase):
 
         self.assertEqual(RoundStatus.TRUMP_SELECTION.name, game['status'])
 
+        # assert that current suggestion is a trump selection
+        suggested_trump = get_suggestion(created_game['id'])
+        assert 'suit' in suggested_trump
+
         # select trump
         resp = select_trump.main(
             build_request(
@@ -44,6 +52,10 @@ class TestPlayingGame(TestCase):
         game: StartedGame = read_response_body(resp.get_body())
 
         self.assertEqual(RoundStatus.DISCARD.name, game['status'])
+
+        # assert that current suggestion is a discard
+        suggested_discard = get_suggestion(created_game['id'])
+        assert 'cards' in suggested_discard
 
         # discard
         resp = discard.main(
@@ -58,18 +70,15 @@ class TestPlayingGame(TestCase):
         self.assertEqual(RoundStatus.TRICKS.name, game['status'])
 
         # ask for a suggestion so we know what card we can play
-        resp = suggestion.main(
-            build_request(
-                route_params={'game_id': created_game['id']})
-        )
-        suggested_play: PlaySuggestion = read_response_body(resp.get_body())
+        suggested_play = get_suggestion(created_game['id'])
+        assert 'card' in suggested_play
 
         # play
         resp = play.main(
             build_request(
                 route_params={'game_id': created_game['id']},
                 body={
-                    'card': suggested_play['card']
+                    'card': suggested_play['card']  # type: ignore
                 })
         )
         game: StartedGame = read_response_body(resp.get_body())

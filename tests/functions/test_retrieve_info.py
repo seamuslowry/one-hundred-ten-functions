@@ -14,7 +14,8 @@ import search_users
 from app.dtos.client import CompletedGame, Event, User, WaitingGame
 from app.mappers.constants import EventType, UserType
 from tests.helpers import (build_request, completed_game, lobby_game,
-                           read_response_body)
+                           read_response_body, request_suggestion,
+                           started_game)
 
 
 class TestRetrieveInfo(TestCase):
@@ -143,3 +144,14 @@ class TestRetrieveInfo(TestCase):
         self.assertIn(name, retrieved_users[0]['identifier'])
         self.assertEqual(retrieved_users[0]['name'], name)
         self.assertEqual(retrieved_users[0]['picture_url'], picture_url)
+
+    def test_get_suggestion_on_other_turn(self):
+        '''The game will not provide a suggestion on another player's turn'''
+        game = started_game()
+        active_player = game['round']['active_player']
+        assert active_player
+        non_active_player = next(
+            p for p in game['round']['players'] if p['identifier'] != active_player['identifier'])
+        resp = request_suggestion(game['id'], non_active_player['identifier'])
+
+        self.assertEqual(400, resp.status_code)

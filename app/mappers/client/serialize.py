@@ -80,7 +80,7 @@ def suggestion(m_suggestion: models.Action, client_identifier: str) -> client.Su
         return client.PlaySuggestion(
             card=__card(m_suggestion.card)
         )
-    return client.Suggestion()
+    raise ValueError('No suggestion available at this time')
 
 
 def __play(play: models.Play) -> client.Play:
