@@ -3,12 +3,16 @@ from typing import Callable
 
 import azure.functions as func
 
-from app.decorators.hundred_and_ten_error import \
-    handle_error as handle_game_error
+from app.models import HundredAndTenError
 
 
 def handle_error(function: Callable[[func.HttpRequest],
                                     func.HttpResponse]) -> Callable[[func.HttpRequest],
                                                                     func.HttpResponse]:
     '''Aggregate error handlers into one decorator'''
-    return handle_game_error(function)
+    def inner_function(req: func.HttpRequest):
+        try:
+            return function(req)
+        except (HundredAndTenError, ValueError) as exception:
+            return func.HttpResponse(status_code=400, body=str(exception))
+    return inner_function
