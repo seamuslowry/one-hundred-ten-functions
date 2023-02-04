@@ -7,3 +7,16 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: rootpassword
     ports:
       - 27017:27017
+
+  functions:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      MongoDb: mongodb://root:rootpassword@db:27017
+    depends_on:
+      - db
+    ports:
+      - 7071:80
+    expose:
+      - 7071
