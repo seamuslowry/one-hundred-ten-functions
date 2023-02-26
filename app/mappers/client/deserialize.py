@@ -10,6 +10,10 @@ from app.dtos import client
 from app.mappers.constants import UserType
 from app.mappers.shared.deserialize import card as __deserialize_card
 
+# update to use a client directed flow
+# won't care about google/non-google user anymore
+# x-ms-client-principal-id will have a stable id for the user
+
 
 def user(req: func.HttpRequest) -> models.User:
     '''Create a user object from a passed request'''
