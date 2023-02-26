@@ -13,6 +13,7 @@ from app.mappers.shared.deserialize import card as __deserialize_card
 # update to use a client directed flow
 # won't care about google/non-google user anymore
 # x-ms-client-principal-id will have a stable id for the user
+# will need to add an endpoint for the user to pass their own identifying info
 
 
 def user(req: func.HttpRequest) -> models.User:
