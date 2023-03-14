@@ -10,8 +10,8 @@ import search_games
 import search_users
 from app.dtos.client import CompletedGame, Event, User, WaitingGame
 from app.mappers.constants import EventType
-from tests.helpers import (build_request, completed_game, lobby_game,
-                           read_response_body, request_suggestion,
+from tests.helpers import (build_request, completed_game, create_user,
+                           lobby_game, read_response_body, request_suggestion,
                            started_game)
 
 
@@ -66,12 +66,15 @@ class TestRetrieveInfo(TestCase):
     def test_game_players(self):
         '''Can retrieve user information for players on a game'''
         original_game: WaitingGame = lobby_game()
-        other_players = list(map(lambda i: f'{time()}-{i}', range(1, 4)))
+        other_player_ids = list(map(lambda i: f'{time()}-{i}', range(1, 4)))
+
+        other_players: list[User] = list(map(create_user, other_player_ids))
+
         for player in other_players:
             join_game.main(
                 build_request(
                     route_params={'game_id': original_game['id']},
-                    headers={'x-ms-client-principal-id': player}))
+                    headers={'x-ms-client-principal-id': player['identifier']}))
 
         # get that game's players
         resp = players.main(
@@ -79,9 +82,10 @@ class TestRetrieveInfo(TestCase):
                 route_params={'game_id': original_game['id']})
         )
         retrieved_users: list[User] = read_response_body(resp.get_body())
+
         self.assertEqual(4, len(retrieved_users))
         self.assertEqual(
-            [original_game['organizer']['identifier']] + other_players,
+            [original_game['organizer']['identifier']] + other_player_ids,
             list(map(lambda p: p['identifier'],
                      retrieved_users)))
 
@@ -92,9 +96,9 @@ class TestRetrieveInfo(TestCase):
         user_one = (f'{timestamp}one', f'{timestamp}aaa')
         user_two = (f'{timestamp}two', f'{timestamp}AAA')
         user_three = (f'{timestamp}three', f'{timestamp}bbb')
-        lobby_game(user_one[0], user_one[1])
-        lobby_game(user_two[0], user_two[1])
-        lobby_game(user_three[0], user_three[1])
+        create_user(user_one[0], user_one[1])
+        create_user(user_two[0], user_two[1])
+        create_user(user_three[0], user_three[1])
 
         # get users
         resp = search_users.main(

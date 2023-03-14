@@ -6,9 +6,11 @@ import azure.functions as func
 
 import create_game
 import leave_game
+import self as self_http
 import start_game
 import suggestion
-from app.dtos.client import CompletedGame, StartedGame, Suggestion, WaitingGame
+from app.dtos.client import (CompletedGame, StartedGame, Suggestion, User,
+                             WaitingGame)
 
 DEFAULT_ID = 'id'
 DEFAULT_NAME = 'name'
@@ -38,6 +40,15 @@ def lobby_game(organizer: str = DEFAULT_ID, organizer_name: str = DEFAULT_NAME) 
                      'x-ms-client-principal-name': organizer_name},
             body={'name': 'test game'}))
     return read_response_body(resp.get_body())
+
+
+def create_user(identifier: str, name: str = '') -> User:
+    '''Get a started game waiting for the players'''
+    return read_response_body(self_http.main(
+        build_request(
+            method='POST',
+            body={'name': name, 'picture_url': 'picture_url'},
+            headers={'x-ms-client-principal-id': identifier})).get_body())
 
 
 def started_game() -> StartedGame:

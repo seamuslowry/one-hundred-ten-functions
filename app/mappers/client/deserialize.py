@@ -12,6 +12,15 @@ def user_id(req: func.HttpRequest) -> str:
     return __parse_identifier(req)
 
 
+def user(req: func.HttpRequest, c_user: client.User) -> models.User:
+    '''Convert a User model from a passed client request and user'''
+    return models.User(
+        identifier=__parse_identifier(req),
+        name=c_user['name'],
+        picture_url=c_user['picture_url']
+    )
+
+
 def card(c_card: client.Card) -> models.Card:
     '''Create a card object from a passed client card'''
     return __deserialize_card(c_card)
