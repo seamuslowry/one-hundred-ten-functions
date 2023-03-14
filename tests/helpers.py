@@ -9,6 +9,7 @@ import leave_game
 import self as self_http
 import start_game
 import suggestion
+from app import models
 from app.dtos.client import (CompletedGame, StartedGame, Suggestion, User,
                              WaitingGame)
 
@@ -43,12 +44,28 @@ def lobby_game(organizer: str = DEFAULT_ID, organizer_name: str = DEFAULT_NAME) 
 
 
 def create_user(identifier: str, name: str = '') -> User:
-    '''Get a started game waiting for the players'''
+    '''Attempt to create a user for the first time'''
+    return __user('POST', models.User(
+        identifier=identifier,
+        name=name
+    ))
+
+
+def update_user(identifier: str, name: str = '') -> User:
+    '''Update an existing user if possible'''
+    return __user('PUT', models.User(
+        identifier=identifier,
+        name=name
+    ))
+
+
+def __user(method: str, user: models.User) -> User:
+    '''Update an existing user if possible'''
     return read_response_body(self_http.main(
         build_request(
-            method='POST',
-            body={'name': name, 'picture_url': 'picture_url'},
-            headers={'x-ms-client-principal-id': identifier})).get_body())
+            method=method,
+            body={'name': user.name, 'picture_url': user.picture_url},
+            headers={'x-ms-client-principal-id': user.identifier})).get_body())
 
 
 def started_game() -> StartedGame:
