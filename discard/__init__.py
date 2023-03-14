@@ -17,14 +17,14 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Discard in a 110 game
     '''
-    user, game = parse_request(req)
+    identifier, game = parse_request(req)
     initial_event_knowledge = len(game.events)
 
     body = req.get_json()
 
-    game.act(Discard(user.identifier, [deserialize.card(c) for c in body.get('cards')]))
+    game.act(Discard(identifier, [deserialize.card(c) for c in body.get('cards')]))
 
     game = GameService.save(game)
 
     return func.HttpResponse(
-        json.dumps(serialize.game(game, user.identifier, initial_event_knowledge)))
+        json.dumps(serialize.game(game, identifier, initial_event_knowledge)))

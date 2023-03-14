@@ -6,15 +6,15 @@ from typing import Tuple
 import azure.functions as func
 
 from app.mappers.client import deserialize
-from app.models import Game, User
-from app.services import GameService, UserService
+from app.models import Game
+from app.services import GameService
 
 
-def parse(req: func.HttpRequest) -> Tuple[User, Game]:
+def parse(req: func.HttpRequest) -> Tuple[str, Game]:
     '''
     Parse the request for the models
     '''
     game_id = req.route_params.get('game_id', None)
     game = GameService.get(game_id) if game_id else Game()
 
-    return (UserService.save(deserialize.user(req)), game)
+    return (deserialize.user_id(req), game)

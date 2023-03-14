@@ -2,20 +2,15 @@
 
 from app import models
 from app.dtos import db
-from app.mappers.constants import UserType
 from app.mappers.shared.deserialize import card as __card
 
 
 def user(db_user: db.User) -> models.User:
     '''Convert a User model to its DB DTO'''
-    if db_user['type'] == UserType.GOOGLE:
-        return models.GoogleUser(
-            db_user['identifier'], db_user['name'], db_user['picture_url'] or ''
-        )
-
     return models.User(
         identifier=db_user['identifier'],
-        name=db_user['name']
+        name=db_user['name'],
+        picture_url=db_user['picture_url']
     )
 
 

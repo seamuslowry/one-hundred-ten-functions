@@ -12,7 +12,7 @@ def user(m_user: models.User) -> client.User:
     return client.User(
         identifier=m_user.identifier,
         name=m_user.name,
-        picture_url=m_user.picture_url if isinstance(m_user, models.GoogleUser) else None
+        picture_url=m_user.picture_url
     )
 
 

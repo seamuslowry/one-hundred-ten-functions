@@ -15,6 +15,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Retrieve 110 game.
     '''
-    user, game = parse_request(req)
+    identifier, game = parse_request(req)
 
-    return func.HttpResponse(json.dumps(serialize.game(game, user.identifier)))
+    return func.HttpResponse(json.dumps(serialize.game(game, identifier)))

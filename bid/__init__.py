@@ -17,17 +17,17 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Bid in a 110 game
     '''
-    user, game = parse_request(req)
+    identifier, game = parse_request(req)
     initial_event_knowledge = len(game.events)
 
     body = req.get_json()
 
-    game.act(Bid(user.identifier, BidAmount(body['amount'])))
+    game.act(Bid(identifier, BidAmount(body['amount'])))
 
     game = GameService.save(game)
 
     return func.HttpResponse(json.dumps(
         serialize.game(
             game,
-            user.identifier,
+            identifier,
             initial_event_knowledge)))

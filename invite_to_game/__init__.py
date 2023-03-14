@@ -16,13 +16,13 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Invite to join a 110 game
     '''
-    user, game = parse_request(req)
+    identifier, game = parse_request(req)
 
     body = req.get_json()
     invitees = body.get('invitees', [])
 
     for invitee in invitees:
-        game.invite(user.identifier, invitee)
+        game.invite(identifier, invitee)
     game = GameService.save(game)
 
-    return func.HttpResponse(json.dumps(serialize.game(game, user.identifier)))
+    return func.HttpResponse(json.dumps(serialize.game(game, identifier)))
