@@ -68,6 +68,7 @@ class TestRetrieveInfo(TestCase):
         original_game: WaitingGame = lobby_game()
         other_player_ids = list(map(lambda i: f'{time()}-{i}', range(1, 4)))
 
+        organizer: User = create_user(original_game['organizer']['identifier'])
         other_players: list[User] = list(map(create_user, other_player_ids))
 
         for player in other_players:
@@ -85,7 +86,7 @@ class TestRetrieveInfo(TestCase):
 
         self.assertEqual(4, len(retrieved_users))
         self.assertEqual(
-            [original_game['organizer']['identifier']] + other_player_ids,
+            [organizer['identifier']] + other_player_ids,
             list(map(lambda p: p['identifier'],
                      retrieved_users)))
 
