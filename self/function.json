@@ -6,7 +6,7 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["put"],
+      "methods": ["post", "put"],
       "route": "self"
     },
     {
