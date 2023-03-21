@@ -43,20 +43,13 @@ def lobby_game(organizer: str = DEFAULT_ID, organizer_name: str = DEFAULT_NAME) 
     return read_response_body(resp.get_body())
 
 
-def create_user(identifier: str, name: str = '') -> User:
-    '''Attempt to create a user for the first time'''
-    return __user('POST', models.User(
-        identifier=identifier,
-        name=name
-    ))
-
-
-def update_user(identifier: str, name: str = '') -> User:
+def put_user(identifier: str, name: str = '') -> User:
     '''Update an existing user if possible'''
-    return __user('PUT', models.User(
-        identifier=identifier,
-        name=name
-    ))
+    return read_response_body(self_http.main(
+        build_request(
+            method='PUT',
+            body={'name': name, 'picture_url': 'picture'},
+            headers={'x-ms-client-principal-id': identifier})).get_body())
 
 
 def __user(method: str, user: models.User) -> User:

@@ -10,8 +10,8 @@ import search_games
 import search_users
 from app.dtos.client import CompletedGame, Event, User, WaitingGame
 from app.mappers.constants import EventType
-from tests.helpers import (build_request, completed_game, create_user,
-                           lobby_game, read_response_body, request_suggestion,
+from tests.helpers import (build_request, completed_game, lobby_game, put_user,
+                           read_response_body, request_suggestion,
                            started_game)
 
 
@@ -68,8 +68,8 @@ class TestRetrieveInfo(TestCase):
         original_game: WaitingGame = lobby_game()
         other_player_ids = list(map(lambda i: f'{time()}-{i}', range(1, 4)))
 
-        organizer: User = create_user(original_game['organizer']['identifier'])
-        other_players: list[User] = list(map(create_user, other_player_ids))
+        organizer: User = put_user(original_game['organizer']['identifier'])
+        other_players: list[User] = list(map(put_user, other_player_ids))
 
         for player in other_players:
             join_game.main(
@@ -97,9 +97,9 @@ class TestRetrieveInfo(TestCase):
         user_one = (f'{timestamp}one', f'{timestamp}aaa')
         user_two = (f'{timestamp}two', f'{timestamp}AAA')
         user_three = (f'{timestamp}three', f'{timestamp}bbb')
-        create_user(user_one[0], user_one[1])
-        create_user(user_two[0], user_two[1])
-        create_user(user_three[0], user_three[1])
+        put_user(user_one[0], user_one[1])
+        put_user(user_two[0], user_two[1])
+        put_user(user_three[0], user_three[1])
 
         # get users
         resp = search_users.main(
