@@ -17,17 +17,17 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Get games
     '''
-    user, *_ = parse_request(req)
+    identifier, *_ = parse_request(req)
 
     body = req.get_json()
     max_count = body.get('max', 20)
 
     return func.HttpResponse(
         json.dumps(
-            list(map(lambda g: serialize.game(g, user.identifier),
+            list(map(lambda g: serialize.game(g, identifier),
                      GameService.search(SearchGame(
                          name=body.get('searchText', ''),
-                         client=user.identifier,
+                         client=identifier,
                          statuses=body.get('statuses', None),
                          active_player=body.get('activePlayer', None),
                          winner=body.get('winner', None)

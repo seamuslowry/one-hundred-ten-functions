@@ -19,14 +19,14 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Start a 110 game
     '''
-    user, game = parse_request(req)
+    identifier, game = parse_request(req)
 
-    if user.identifier != game.organizer.identifier:
+    if identifier != game.organizer.identifier:
         raise HundredAndTenError("Only the organizer can start the game")
 
     for num in range(len(game.players), MIN_PLAYERS):
         cpu_identifier = str(num + 1)
-        game.invite(user.identifier, cpu_identifier)
+        game.invite(identifier, cpu_identifier)
         game.join(cpu_identifier)
         game.automate(cpu_identifier)
 
@@ -34,4 +34,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     game = GameService.save(game)
 
-    return func.HttpResponse(json.dumps(serialize.game(game, user.identifier, 0)))
+    return func.HttpResponse(json.dumps(serialize.game(game, identifier, 0)))

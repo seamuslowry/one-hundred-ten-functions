@@ -79,7 +79,6 @@ class User(TypedDict):
     '''A class to model the DB format of a Hundred and Ten user'''
     identifier: str
     name: str
-    type: str
     picture_url: Optional[str]
 
 

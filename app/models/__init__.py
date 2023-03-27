@@ -15,4 +15,4 @@ from hundredandten.round import Round
 from hundredandten.trick import Trick
 
 from app.models.game import Game
-from app.models.user import GoogleUser, User
+from app.models.user import User

@@ -1,10 +1,7 @@
 '''Retrieve Info unit tests'''
-import base64
-import json
 from time import time
 from unittest import TestCase
 
-import create_game
 import events
 import game_info
 import join_game
@@ -12,9 +9,9 @@ import players
 import search_games
 import search_users
 from app.dtos.client import CompletedGame, Event, User, WaitingGame
-from app.mappers.constants import EventType, UserType
-from tests.helpers import (build_request, completed_game, lobby_game,
-                           read_response_body, request_suggestion,
+from app.mappers.constants import EventType
+from tests.helpers import (build_request, completed_game, create_user,
+                           lobby_game, read_response_body, request_suggestion,
                            started_game)
 
 
@@ -69,12 +66,16 @@ class TestRetrieveInfo(TestCase):
     def test_game_players(self):
         '''Can retrieve user information for players on a game'''
         original_game: WaitingGame = lobby_game()
-        other_players = list(map(lambda i: f'{time()}-{i}', range(1, 4)))
+        other_player_ids = list(map(lambda i: f'{time()}-{i}', range(1, 4)))
+
+        organizer: User = create_user(original_game['organizer']['identifier'])
+        other_players: list[User] = list(map(create_user, other_player_ids))
+
         for player in other_players:
             join_game.main(
                 build_request(
                     route_params={'game_id': original_game['id']},
-                    headers={'x-ms-client-principal-id': player}))
+                    headers={'x-ms-client-principal-id': player['identifier']}))
 
         # get that game's players
         resp = players.main(
@@ -82,9 +83,10 @@ class TestRetrieveInfo(TestCase):
                 route_params={'game_id': original_game['id']})
         )
         retrieved_users: list[User] = read_response_body(resp.get_body())
+
         self.assertEqual(4, len(retrieved_users))
         self.assertEqual(
-            [original_game['organizer']['identifier']] + other_players,
+            [organizer['identifier']] + other_player_ids,
             list(map(lambda p: p['identifier'],
                      retrieved_users)))
 
@@ -95,9 +97,9 @@ class TestRetrieveInfo(TestCase):
         user_one = (f'{timestamp}one', f'{timestamp}aaa')
         user_two = (f'{timestamp}two', f'{timestamp}AAA')
         user_three = (f'{timestamp}three', f'{timestamp}bbb')
-        lobby_game(user_one[0], user_one[1])
-        lobby_game(user_two[0], user_two[1])
-        lobby_game(user_three[0], user_three[1])
+        create_user(user_one[0], user_one[1])
+        create_user(user_two[0], user_two[1])
+        create_user(user_three[0], user_three[1])
 
         # get users
         resp = search_users.main(
@@ -111,39 +113,6 @@ class TestRetrieveInfo(TestCase):
         self.assertIn(user_one[0], retrieved_user_ids)
         self.assertIn(user_two[0], retrieved_user_ids)
         self.assertNotIn(user_three[0], retrieved_user_ids)
-
-    def test_get_google_user(self):
-        '''Can retrieve google user information'''
-        # create new unique users
-        name = f'{time()}google'
-        picture_url = f'{time()}pic'
-        resp = create_game.main(
-            build_request(
-                headers={'x-ms-client-principal-idp': UserType.GOOGLE,
-                         'x-ms-client-principal-id': name,
-                         'x-ms-client-principal-name': name,
-                         'x-ms-client-principal': base64.b64encode(
-                             json.dumps(
-                                 {
-                                     'claims': [
-                                         {'typ': 'name', 'val': name},
-                                         {'typ': 'picture', 'val': picture_url}
-                                     ]
-                                 }).encode('utf-8')).decode('utf-8')},
-                body={'name': 'google user game'}))
-
-        # get users
-        resp = search_users.main(
-            build_request(
-                params={
-                    'searchText': name
-                })
-        )
-        retrieved_users: list[User] = read_response_body(resp.get_body())
-        self.assertEqual(1, len(retrieved_users))
-        self.assertIn(name, retrieved_users[0]['identifier'])
-        self.assertEqual(retrieved_users[0]['name'], name)
-        self.assertEqual(retrieved_users[0]['picture_url'], picture_url)
 
     def test_get_suggestion_on_other_turn(self):
         '''The game will not provide a suggestion on another player's turn'''

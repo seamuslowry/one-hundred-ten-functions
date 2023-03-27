@@ -15,7 +15,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Retrieve events on a 110 game.
     '''
-    user, game = parse_request(req)
+    identifier, game = parse_request(req)
 
     return func.HttpResponse(
-        json.dumps(serialize.events(game.events, user.identifier)))
+        json.dumps(serialize.events(game.events, identifier)))

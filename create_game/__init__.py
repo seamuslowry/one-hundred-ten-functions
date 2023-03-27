@@ -20,20 +20,20 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     logging.info('Initiating create game request.')
 
-    user, *_ = parse_request(req)
+    identifier, *_ = parse_request(req)
 
-    logging.debug('Creating game for %s', user.identifier)
+    logging.debug('Creating game for %s', identifier)
 
     body = req.get_json()
 
     game = Game()
-    game.join(user.identifier)
-    game.people.add_role(user.identifier, GameRole.ORGANIZER)
-    game.name = body.get('name', f'{user.name}\'s Game')
+    game.join(identifier)
+    game.people.add_role(identifier, GameRole.ORGANIZER)
+    game.name = body.get('name', f'{identifier} Game')
     game.accessibility = Accessibility[body.get('accessibility', Accessibility.PUBLIC.name)]
 
     game = GameService.save(game)
 
     logging.debug('Game %s created successfully', game.seed)
 
-    return func.HttpResponse(json.dumps(serialize.game(game, user.identifier)))
+    return func.HttpResponse(json.dumps(serialize.game(game, identifier)))

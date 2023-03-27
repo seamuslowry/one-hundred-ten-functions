@@ -2,12 +2,6 @@
 from enum import Enum
 
 
-class UserType(str, Enum):
-    '''Enum value for user type'''
-    GOOGLE = "google"
-    UNKNOWN = "unknown"
-
-
 class EventType(str, Enum):
     '''Enum value for event types to client'''
     GAME_START = 1

@@ -1,9 +1,7 @@
 '''A module to convert models to DB DTOs'''
-from typing import Optional
 
 from app import models
 from app.dtos import db
-from app.mappers.constants import UserType
 
 
 def game(m_game: models.Game) -> db.Game:
@@ -29,8 +27,7 @@ def user(m_user: models.User) -> db.User:
     return db.User(
         identifier=m_user.identifier,
         name=m_user.name,
-        type=__user_type(m_user),
-        picture_url=__user_picture(m_user))
+        picture_url=m_user.picture_url)
 
 
 def __card(card: models.Card) -> db.Card:
@@ -102,15 +99,3 @@ def __round(m_round: models.Round) -> db.Round:
         discards=list(map(__discard, m_round.discards)),
         tricks=list(map(__trick, m_round.tricks))
     )
-
-
-def __user_type(m_user: models.User) -> UserType:
-    if isinstance(m_user, models.GoogleUser):
-        return UserType.GOOGLE
-    return UserType.UNKNOWN
-
-
-def __user_picture(m_user: models.User) -> Optional[str]:
-    if isinstance(m_user, models.GoogleUser):
-        return m_user.picture_url
-    return None
