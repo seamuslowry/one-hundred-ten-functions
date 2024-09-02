@@ -7,18 +7,17 @@
   "debug.internalConsoleOptions": "neverOpen",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.organizeImports": true
+    "source.organizeImports": "explicit"
   },
   "python.analysis.typeCheckingMode": "basic",
-  "python.linting.enabled": true,
-  "python.linting.pylintEnabled": true,
-  "python.formatting.provider": "autopep8",
-  "python.formatting.autopep8Args": [
+  "autopep8.args": [
     "--max-line-length",
     "100",
     "--experimental"
   ],
-  "python.testing.pytestArgs": ["tests"],
+  "python.testing.pytestArgs": [
+    "tests"
+  ],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true
 }
