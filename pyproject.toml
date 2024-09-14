@@ -4,6 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hundredandtenserverless"
+version = "0.0.0"
 readme = "README.md"
 requires-python = ">=3.9"
 authors = [
@@ -36,3 +37,25 @@ omit = [
 
 [tool.pyright]
 useLibraryCodeForTypes = true
+
+[tool.setuptools]
+py-modules = [
+    "bid",
+    "app",
+    "play",
+    "self",
+    "events",
+    "discard",
+    "players",
+    "join_game",
+    "game_info",
+    "suggestion",
+    "start_game",
+    "leave_game",
+    "create_game",
+    "search_users",
+    "select_trump",
+    "search_games",
+    "invite_to_game",
+    "rescind_prepass",
+]
