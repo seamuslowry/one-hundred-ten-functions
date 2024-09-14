@@ -59,3 +59,6 @@ py-modules = [
     "invite_to_game",
     "rescind_prepass",
 ]
+
+[tool.isort]
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
