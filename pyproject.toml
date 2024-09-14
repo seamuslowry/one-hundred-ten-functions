@@ -3,6 +3,7 @@ requires = ["setuptools >= 74.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
+name = "hundredandtenserverless"
 readme = "README.md"
 requires-python = ">=3.9"
 authors = [
