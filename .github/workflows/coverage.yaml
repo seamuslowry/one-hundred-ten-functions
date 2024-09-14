@@ -4,6 +4,6 @@ on:
 
 jobs:
   test:
-    uses: seamuslowry/workflows/.github/workflows/test_python.yml@feat/python_setup
+    uses: seamuslowry/workflows/.github/workflows/test_python.yml@main
     with:
       compose-file: docker-compose.test.yml
