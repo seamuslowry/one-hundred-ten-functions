@@ -10,6 +10,9 @@ updates:
       timezone: "America/New_York"
     commit-message:
       prefix: '#patch'
+    groups:
+      dev-dependencies:
+        dependency-type: "development"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
