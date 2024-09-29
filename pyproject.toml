@@ -22,7 +22,7 @@ dependencies = [
 
 [project.optional-dependencies]
 lint = [
-    "pylint==3.3.0",
+    "pylint==3.3.1",
     "pyright==1.1.381",
 ]
 test = [
