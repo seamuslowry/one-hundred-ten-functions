@@ -27,7 +27,7 @@ lint = [
 ]
 test = [
     "coverage==7.6.8",
-    "pytest==8.3.3",
+    "pytest==8.3.4",
 ]
 
 [tool.coverage.run]
