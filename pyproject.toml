@@ -23,7 +23,7 @@ dependencies = [
 [project.optional-dependencies]
 lint = [
     "pylint==3.3.2",
-    "pyright==1.1.389",
+    "pyright==1.1.390",
 ]
 test = [
     "coverage==7.6.9",
