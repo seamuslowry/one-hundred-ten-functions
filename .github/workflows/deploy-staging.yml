@@ -34,10 +34,6 @@ jobs:
           pushd './${{ env.APP_PACKAGE_PATH }}'
           python -m pip install --upgrade pip
           pip install . --target=".python_packages/lib/site-packages"
-          echo "outputting"
-          pip freeze --path ".python_packages/lib/site-packages" --exclude hundredandtenserverless
-          pip freeze --path ".python_packages/lib/site-packages" --exclude hundredandtenserverless > requirements.txt
-          cat requirements.txt
       - name: "Run Azure Functions Action"
         uses: Azure/functions-action@v1
         id: fa
