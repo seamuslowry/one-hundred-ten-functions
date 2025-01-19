@@ -35,9 +35,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install . --target=".python_packages/lib/site-packages"
           echo "outputting"
-          pip list --path ".python_packages/lib/site-packages"
-          pip freeze
-          pip freeze > requirements.txt
+          pip freeze --path ".python_packages/lib/site-packages" --exclude hundredandtenserverless
+          pip freeze --path ".python_packages/lib/site-packages" --exclude hundredandtenserverless > requirements.txt
           cat requirements.txt
       - name: "Run Azure Functions Action"
         uses: Azure/functions-action@v1
