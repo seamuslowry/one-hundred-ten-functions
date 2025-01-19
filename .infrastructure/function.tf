@@ -132,7 +132,7 @@ resource "azurerm_linux_function_app" "app" {
     application_insights_key = azurerm_application_insights.insights.instrumentation_key
     ftps_state = "AllAllowed"
     application_stack {
-      python_version = "3.9"
+      python_version = "3.11"
     }
   }
 
@@ -205,7 +205,7 @@ resource "azurerm_linux_function_app_slot" "staging" {
     application_insights_key = azurerm_application_insights.insights.instrumentation_key
     ftps_state = "AllAllowed"
     application_stack {
-      python_version = "3.9"
+      python_version = "3.11"
     }
   }
 }
