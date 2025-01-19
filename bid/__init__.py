@@ -1,5 +1,5 @@
 '''
-Endpoint to place a bid in a 110 game
+Endpoint to place a bid in a 110 game (3.11 test)
 '''
 import json
 
