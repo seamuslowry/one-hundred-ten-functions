@@ -136,3 +136,6 @@ __azurite_db*__.json
 
 # Reference Information with Private Data
 references/
+
+# OpenTofu
+.terraform
