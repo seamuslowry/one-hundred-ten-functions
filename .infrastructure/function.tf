@@ -227,4 +227,45 @@ data "external" "publish_profile" {
   ]
 }
 
-// TODO: smart detection stuff too?
+data "azurerm_role_definition" "monitoring_contributor" {
+  name     = "Monitoring Contributor"
+}
+
+data "azurerm_role_definition" "monitoring_reader" {
+  name     = "Monitoring Reader"
+}
+
+resource "azurerm_monitor_action_group" "action_group" {
+  name                = "Application Insights Smart Detection"
+  resource_group_name = azurerm_resource_group.group.name
+  short_name          = "SmartDetect"
+
+  arm_role_receiver {
+    name                    = "Monitoring Contributor"
+    # need just the UUID at the end of this ID
+    role_id                 = regex("^.*/([^/]+)$", data.azurerm_role_definition.monitoring_contributor.id)[0]
+    use_common_alert_schema = true
+  }
+  arm_role_receiver {
+    name                    = "Monitoring Reader"
+    # need just the UUID at the end of this ID
+    role_id                 = regex("^.*/([^/]+)$", data.azurerm_role_definition.monitoring_reader.id)[0]
+    use_common_alert_schema = true
+  }
+}
+
+resource "azurerm_monitor_smart_detector_alert_rule" "detection_rule" {
+  name                   = "Failure Anomalies - hundredandten"
+  description            = "Failure Anomalies notifies you of an unusual rise in the rate of failed HTTP requests or dependency calls."
+  resource_group_name    = azurerm_resource_group.group.name
+  scope_resource_ids     = [azurerm_application_insights.insights.id]
+  severity               = "Sev3"
+  frequency              = "PT1M"
+  detector_type          = "FailureAnomaliesDetector"
+
+  action_group {
+    ids = [azurerm_monitor_action_group.action_group.id]
+  }
+
+  enabled = true
+}
