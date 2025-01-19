@@ -35,7 +35,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install . --target=".python_packages/lib/site-packages"
       - name: "Run Azure Functions Action"
-        uses: Azure/functions-action@v1
+        uses: Azure/functions-action@v1.4.3
         id: fa
         with:
           slot-name: staging
