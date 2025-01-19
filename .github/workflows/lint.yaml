@@ -4,6 +4,4 @@ on:
 
 jobs:
   lint:
-    uses: seamuslowry/workflows/.github/workflows/lint_python.yml@main
-    with:
-      python-version: "3.10"
+    uses: seamuslowry/workflows/.github/workflows/lint_python.yml@fix/functions_deploy
