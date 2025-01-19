@@ -1,14 +1,14 @@
 name: Deploy to Staging
 on:
   push:
-    branches:
-      - main
+    # branches:
+    #   - main
 
 jobs:
-  tag-new-version:
-    uses: seamuslowry/workflows/.github/workflows/tag.yml@main
-    secrets:
-      gh_token: ${{ secrets.GITHUB_TOKEN }}
+  # tag-new-version:
+  #   uses: seamuslowry/workflows/.github/workflows/tag.yml@main
+  #   secrets:
+  #     gh_token: ${{ secrets.GITHUB_TOKEN }}
 
   deploy:
     name: Deploy Function App
