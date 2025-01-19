@@ -16,7 +16,7 @@ jobs:
     env:
       APP_NAME: hundredandten
       APP_PACKAGE_PATH: .
-      PYTHON_VERSION: '3,10'
+      PYTHON_VERSION: '3.10'
     steps:
       - name: "Checkout GitHub Action"
         uses: actions/checkout@v4
