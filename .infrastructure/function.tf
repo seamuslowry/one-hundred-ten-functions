@@ -222,7 +222,7 @@ data "external" "publish_profile" {
       --name ${azurerm_linux_function_app.app.name} \
       --resource-group ${azurerm_resource_group.group.name} \
       --slot ${azurerm_linux_function_app_slot.staging.name} \
-      --xml | jq -R 'split("\n") | map(select(length > 0)) | {profile: join("\n")}'
+      --xml | jq -R '{profile: .}'
     EOT
   ]
 }
