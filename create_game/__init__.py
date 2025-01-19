@@ -12,8 +12,10 @@ from app.models import Accessibility, Game, GameRole
 from app.parsers import parse_request
 from app.services import GameService
 
+bp = func.Blueprint()
 
-@catcher
+
+@bp.route(route="create", methods=["POST"])
 def main(req: func.HttpRequest) -> func.HttpResponse:
     '''
     Create a new 110 game.
