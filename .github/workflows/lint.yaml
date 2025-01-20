@@ -19,10 +19,9 @@ jobs:
         with:
           python-version: '3.11'
       - run: |
-          cd api
           pip install --upgrade pip
           pip install '.[lint]'
           readarray -t py_files < <(git ls-files '*.py')
           pylint "${py_files[@]}"
-      - run: pyright
+          pyright
 
