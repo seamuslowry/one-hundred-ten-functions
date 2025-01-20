@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools >= 74.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hundredandtenserverless"
+version = "0.0.0"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    { name = "Seamus Lowry" },
+]
+classifiers = [
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "azure-functions==1.21.3",
+    "hundredandten==1.11.0",
+    "pymongo==4.10.1",
+]
+
+[project.optional-dependencies]
+lint = [
+    "pylint==3.3.3",
+    "pyright==1.1.392.post0",
+]
+test = [
+    "coverage==7.6.10",
+    "pytest==8.3.4",
+]
+
+[tool.coverage.run]
+omit = [
+    "api/tests/*"
+]
+
+[tool.pyright]
+useLibraryCodeForTypes = true
+
+[tool.setuptools]
+py-modules = [
+    "bid",
+    "app",
+    "play",
+    "self",
+    "events",
+    "discard",
+    "players",
+    "join_game",
+    "game_info",
+    "suggestion",
+    "start_game",
+    "leave_game",
+    "create_game",
+    "search_users",
+    "select_trump",
+    "search_games",
+    "invite_to_game",
+    "rescind_prepass",
+]
+
+[tool.isort]
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
