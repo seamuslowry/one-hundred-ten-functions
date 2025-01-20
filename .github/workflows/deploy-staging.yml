@@ -4,6 +4,10 @@ on:
     branches:
       - main
 
+defaults:
+  run:
+    working-directory: api
+
 jobs:
   tag-new-version:
     uses: seamuslowry/workflows/.github/workflows/tag.yml@main
