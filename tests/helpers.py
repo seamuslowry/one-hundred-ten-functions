@@ -41,7 +41,7 @@ def read_response_body(body: bytes):
 
 def lobby_game(organizer: str = DEFAULT_ID, organizer_name: str = DEFAULT_NAME) -> WaitingGame:
     '''Get a started game waiting for the players'''
-    resp = create_game.main(
+    resp = create_game(
         build_request(
             headers={'x-ms-client-principal-id': organizer,
                      'x-ms-client-principal-name': organizer_name},
@@ -67,7 +67,7 @@ def update_user(identifier: str, name: str = '') -> User:
 
 def __user(method: str, user: models.User) -> User:
     '''Update an existing user if possible'''
-    return read_response_body(self_http.main(
+    return read_response_body(self_http(
         build_request(
             method=method,
             body={'name': user.name, 'picture_url': user.picture_url},
@@ -77,7 +77,7 @@ def __user(method: str, user: models.User) -> User:
 def started_game() -> StartedGame:
     '''Get a started game waiting for the first move'''
     created_game: WaitingGame = lobby_game()
-    resp = start_game.main(
+    resp = start_game(
         build_request(
             route_params={'game_id': created_game['id']},
             headers={'x-ms-client-principal-id': created_game['organizer']['identifier']}))
@@ -91,7 +91,7 @@ def completed_game() -> CompletedGame:
     active_player = game['round']['active_player']
     assert active_player
 
-    resp = leave_game.main(
+    resp = leave_game(
         build_request(
             route_params={'game_id': game['id']},
             headers={'x-ms-client-principal-id': active_player['identifier']}))
@@ -100,7 +100,7 @@ def completed_game() -> CompletedGame:
 
 def request_suggestion(game_id: str, user: str = DEFAULT_ID) -> func.HttpResponse:
     '''get the suggestion for the game'''
-    return suggestion.main(
+    return suggestion(
         build_request(
             route_params={'game_id': game_id},
             headers={'x-ms-client-principal-id': user}))
