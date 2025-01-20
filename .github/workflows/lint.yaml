@@ -2,10 +2,8 @@ name: Code Quality
 on:
   - push
 
-defaults:
-  run:
-    working-directory: ./api
-
 jobs:
   lint:
-    uses: seamuslowry/workflows/.github/workflows/lint_python.yml@main
+    uses: seamuslowry/workflows/.github/workflows/lint_python.yml@feat/working_directory
+    with:
+      path: api

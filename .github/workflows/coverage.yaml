@@ -2,12 +2,9 @@ name: 100% Coverage
 on:
   - push
 
-defaults:
-  run:
-    working-directory: ./api
-
 jobs:
   test:
-    uses: seamuslowry/workflows/.github/workflows/test_python.yml@main
+    uses: seamuslowry/workflows/.github/workflows/test_python.yml@feat/working_directory
     with:
       compose-file: docker-compose.test.yml
+      path: api
