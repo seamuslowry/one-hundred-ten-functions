@@ -32,7 +32,8 @@ test = [
 
 [tool.coverage.run]
 omit = [
-    "api/tests/*"
+    "api/tests/*",
+    "function_app.py"
 ]
 
 [tool.pyright]
