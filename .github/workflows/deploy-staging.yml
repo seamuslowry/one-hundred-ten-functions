@@ -15,6 +15,5 @@ jobs:
     uses: seamuslowry/workflows/.github/workflows/deploy_python_functions.yml@main
     with:
       name: hundredandten
-      path: api
     secrets:
       azure_publish_profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}

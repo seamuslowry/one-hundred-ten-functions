@@ -2,26 +2,6 @@ name: Code Quality
 on:
   - push
 
-# jobs:
-#   lint:
-#     uses: seamuslowry/workflows/.github/workflows/lint_python.yml@feat/working_directory
-#     with:
-#       path: api
-
-
 jobs:
   lint:
-    runs-on: ubuntu-latest
-    name: PyLint
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - run: |
-          pip install --upgrade pip
-          pip install '.[lint]'
-          readarray -t py_files < <(git ls-files '*.py')
-          pylint "${py_files[@]}"
-          pyright
-
+    uses: seamuslowry/workflows/.github/workflows/lint_python.yml@main
