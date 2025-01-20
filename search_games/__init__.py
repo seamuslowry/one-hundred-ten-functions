@@ -1,5 +1,5 @@
 '''
-Endpoint to get games from the DB
+Endpoint to get games from the DB (no un)
 '''
 import json
 
