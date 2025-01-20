@@ -2,6 +2,10 @@ name: 100% Coverage
 on:
   - push
 
+defaults:
+  run:
+    working-directory: api
+
 jobs:
   test:
     uses: seamuslowry/workflows/.github/workflows/test_python.yml@main
